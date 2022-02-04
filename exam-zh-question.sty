@@ -1,0 +1,185 @@
+%
+% Copyright (c) 2022 Zeping Lee
+% Released under the LaTeX Project Public License v1.3c License.
+% Repository: https://gitee.com/zepinglee/exam-zh
+%
+
+\NeedsTeXFormat{LaTeX2e}
+
+\RequirePackage{expl3}
+\RequirePackage{xparse}
+
+\ProvidesExplPackage {exam-zh-question} {2022-02-04} {v0.1.0}
+    {exam-zh question module}
+
+\int_new:N \g__examzh_question_index_int
+\tl_new:N \l_examzh_question_answer_tl
+
+% 题目分数
+\int_new:N \l__examzh_question_points_int
+% 是否显示题目分数
+\bool_new:N \l__examzh_question_show_points_bool
+\bool_new:N \l__examzh_question_show_points_auto_bool
+% 题目分数是否单独成段
+\bool_new:N \l__examzh_question_points_separate_par_bool
+% 是否显示括号
+\bool_new:N \l__examzh_question_show_paren_bool
+% 是否显示答案
+\bool_new:N \l__examzh_question_show_answer_bool
+
+\keys_define:nn { exam-zh }
+  { question .meta:nn = { exam-zh / question } {#1} }
+
+
+\keys_define:nn { exam-zh / question }
+  {
+    points              .int_set:N = \l__examzh_question_points_int ,
+    show-points         .choice: ,
+    show-points / auto  .code:n =
+      { \bool_set_true:N \l__examzh_question_show_points_auto_bool } ,
+    show-points / true  .code:n =
+      {
+        \bool_set_true:N  \l__examzh_question_show_points_bool
+        \bool_set_false:N \l__examzh_question_show_points_auto_bool
+      } ,
+    show-points / false .code:n =
+      {
+        \bool_set_false:N \l__examzh_question_show_points_bool
+        \bool_set_false:N \l__examzh_question_show_points_auto_bool
+      } ,
+    points-separate-par .bool_set:N = \l__examzh_question_points_separate_par_bool ,
+    show-paren          .bool_set:N = \l__examzh_question_show_paren_bool ,
+    show-answer         .bool_set:N = \l__examzh_question_show_answer_bool ,
+  }
+
+
+% 是否按照解答题的格式排版
+\bool_new:N \l__examzh_question_problem_style_bool
+
+
+% 选择题和填空题
+\NewDocumentEnvironment { question } { O { } +b }
+  {
+    \bool_set_false:N \l__examzh_question_problem_style_bool
+    \__examzh_question_begin:nn {#1}{#2}
+  }
+  { \__examzh_question_end:nn {#1}{#2} }
+
+% 解答题
+\NewDocumentEnvironment { problem } { O { } +b }
+  {
+    \bool_set_true:N \l__examzh_question_problem_style_bool
+    \__examzh_question_begin:nn {#1}{#2}
+  }
+  { \__examzh_question_end:nn {#1}{#2} }
+
+
+\cs_new:Npn \__examzh_question_begin:nn #1#2
+  {
+    \par
+    \addvspace { .5em plus .5em minus .2em }
+    % 严格禁止孤行和寡行
+    \int_set:Nn \clubpenalty { 10000 }
+    \int_set:Nn \widowpenalty { 10000 }
+    % 尽量避免在题目中间换行
+    \int_set:Nn \interlinepenalty { 301 }
+    \int_incr:N \@enumdepth
+    \int_gincr:N \g__examzh_question_index_int
+    \tl_clear:N \l_examzh_question_answer_tl
+    \bool_if:NTF \l__examzh_question_problem_style_bool
+      { \keys_set:nn { exam-zh / question } { points-separate-par = true  } }
+      { \keys_set:nn { exam-zh / question } { points-separate-par = false } }
+    \keys_set:nn { exam-zh / question } { #1 }
+    \bool_if:NT \l__examzh_question_show_points_auto_bool
+      {
+        \bool_if:NTF \l__examzh_question_problem_style_bool
+          { \bool_set_true:N  \l__examzh_question_show_points_bool }
+          { \bool_set_false:N \l__examzh_question_show_points_bool }
+      }
+    \list { \int_use:N \g__examzh_question_index_int . }
+      {
+        \dim_set:Nn \topsep    { 0pt }
+        \dim_set:Nn \partopsep { 0pt }
+        \dim_set:Nn \itemsep   { 0pt }
+        \dim_set:Nn \parsep    { 0pt }
+        \bool_if:NTF \l__examzh_question_problem_style_bool
+          {
+            \dim_set:Nn \leftmargin { 0pt }
+            \dim_set:Nn \itemindent { 2em }
+          }
+          {
+            \dim_set:Nn \leftmargin { 2em }
+            \dim_set:Nn \itemindent { 0pt }
+          }
+        \dim_set:Nn \labelsep   { .7em  }
+        \dim_set:Nn \labelwidth { 1.3em }
+        \dim_set_eq:NN \listparindent \itemindent
+       }
+    \item \relax
+    % 输出题目分数
+    \bool_if:NT \l__examzh_question_show_points_bool
+      {
+        \int_compare:nNnT { \l__examzh_question_points_int } > { 0 }
+          { （ \int_use:N \l__examzh_question_points_int ~ 分） }
+        \bool_if:NT \l__examzh_question_points_separate_par_bool
+          { \par \nopagebreak }
+      }
+  }
+
+
+\cs_new:Npn \__examzh_question_end:nn #1#2
+  {
+    #2
+    \endlist
+  }
+
+
+% 选择题括号
+\NewDocumentCommand \paren { O { } }
+  {
+    \tl_set:Nn \l_examzh_question_answer_tl {#1}
+    \bool_if:NT \l__examzh_question_show_answer_bool
+      { \bool_set_true:N \l__examzh_question_show_paren_bool }
+    \bool_if:NT \l__examzh_question_show_paren_bool
+      {
+        % 使括号单独成行时居于右侧
+        \nobreak \hfill \allowbreak
+        \null \nobreak \hfill \nobreak
+        \hbox:n
+          {
+            （
+            \hbox_to_wd:nn { 3em }
+              {
+                \bool_if:NT \l__examzh_question_show_answer_bool
+                  { \hfill \l_examzh_question_answer_tl \hfill }
+              }
+            ） \kern -.4em
+          }
+      }
+  }
+
+
+% 填空命令
+\NewDocumentCommand \fillin { O { } }
+  {
+    \tl_set:Nn \l_examzh_question_answer_tl {#1}
+    \bool_lazy_and:nnTF
+      { \bool_if_p:N \l__examzh_question_show_answer_bool }
+      { \bool_not_p:n { \tl_if_empty_p:N \l_examzh_question_answer_tl } }
+      {
+        \hbox_set:Nn \l_tmpa_box { \l_examzh_question_answer_tl }
+        \dim_compare:nNnT { \box_wd:N \l_tmpa_box } < { 1em }
+          {
+            \hbox_set_to_wd:Nnn \l_tmpa_box { 1em }
+              { \hfill \l_examzh_question_answer_tl \hfill}
+          }
+        \CJKunderline
+          {
+            \hspace* { 1em plus .5em minus .5em }
+            \box_use_drop:N \l_tmpa_box
+            \hspace* { 1em plus .5em minus .5em }
+          }
+      }
+      { \CJKunderline { \hspace* { 3em plus 1em minus 1em } } }
+    \space \ignorespaces
+  }
