@@ -50,9 +50,12 @@
 
 `question` 和 `problem` 环境还接受一个可选参数，其中可以使用以下 key—value 进行设置。
 
-- `points` （默认：`0`）该题目的分数。
-- `show-points` （选择题和填空题默认 `false`，解答题默认 `true`）是否显示题目的分数。
-- `show-answer` （默认：`false`）是否显示答案。
+- `points`（默认：`0`）该题目的分数。
+- `show-points`（选择题和填空题默认 `false`，解答题默认 `true`）是否显示题目的分数。
+- `show-points`（默认 `auto`：选择题和填空题默认 `false`，解答题默认 `true`）是否显示题目的分数。
+- `show-answer`（默认：`false`）是否显示答案。
+- `top-sep`（默认：`.5em plus .5em minus .2em`）题目上方垂直方向的空白距离。
+- `bottom-sep`（默认：`.5em plus .5em minus .2em`）题目下方垂直方向的空白距离，与 `top-sep` 不叠加。
 
 其中 `show-points` 和 `show-answer` 也可以在 `\examsetup` 中统一设置。
 

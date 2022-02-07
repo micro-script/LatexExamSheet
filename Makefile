@@ -1,7 +1,7 @@
 .PHONY: ctan doc install save test
 
 test:
-	l3build ckeck
+	l3build check
 
 ctan:
 	l3build ctan

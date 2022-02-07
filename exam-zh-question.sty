@@ -26,6 +26,9 @@
 \bool_new:N \l__examzh_question_show_paren_bool
 % 是否显示答案
 \bool_new:N \l__examzh_question_show_answer_bool
+% 上下的间距
+\skip_new:N \l__examzh_question_top_sep_skip
+\skip_new:N \l__examzh_question_bottom_sep_skip
 
 \keys_define:nn { exam-zh }
   { question .meta:nn = { exam-zh / question } {#1} }
@@ -50,7 +53,21 @@
     points-separate-par .bool_set:N = \l__examzh_question_points_separate_par_bool ,
     show-paren          .bool_set:N = \l__examzh_question_show_paren_bool ,
     show-answer         .bool_set:N = \l__examzh_question_show_answer_bool ,
+    top-sep             .skip_set:N = \l__examzh_question_top_sep_skip ,
+    bottom-sep          .skip_set:N = \l__examzh_question_bottom_sep_skip ,
   }
+
+\keys_set:nn { exam-zh / question }
+  {
+    points              = 0 ,
+    show-points         = auto ,
+    points-separate-par = false ,
+    show-paren          = false ,
+    show-answer         = false ,
+    top-sep             = .5em plus .5em minus .2em ,
+    bottom-sep          = .5em plus .5em minus .2em ,
+  }
+
 
 
 % 是否按照解答题的格式排版
@@ -77,19 +94,19 @@
 \cs_new:Npn \__examzh_question_begin:nn #1#2
   {
     \par
-    \addvspace { .5em plus .5em minus .2em }
-    % 严格禁止孤行和寡行
-    \int_set:Nn \clubpenalty { 10000 }
-    \int_set:Nn \widowpenalty { 10000 }
-    % 尽量避免在题目中间换行
-    \int_set:Nn \interlinepenalty { 301 }
-    \int_incr:N \@enumdepth
     \int_gincr:N \g__examzh_question_index_int
     \tl_clear:N \l_examzh_question_answer_tl
     \bool_if:NTF \l__examzh_question_problem_style_bool
       { \keys_set:nn { exam-zh / question } { points-separate-par = true  } }
       { \keys_set:nn { exam-zh / question } { points-separate-par = false } }
     \keys_set:nn { exam-zh / question } { #1 }
+    \addvspace { \l__examzh_question_top_sep_skip }
+    % 严格禁止孤行和寡行
+    \int_set:Nn \clubpenalty { 10000 }
+    \int_set:Nn \widowpenalty { 10000 }
+    % 尽量避免在题目中间换行
+    \int_set:Nn \interlinepenalty { 301 }
+    \int_incr:N \@enumdepth
     \bool_if:NT \l__examzh_question_show_points_auto_bool
       {
         \bool_if:NTF \l__examzh_question_problem_style_bool
@@ -131,6 +148,7 @@
   {
     #2
     \endlist
+    \addvspace { \l__examzh_question_bottom_sep_skip }
   }
 
 
