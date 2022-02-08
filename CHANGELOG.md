@@ -10,6 +10,7 @@
 ### Added
 
 - `question` 环境新增 `top-sep` 和 `bottom-sep` 选项（[I4SLWN](https://gitee.com/zepinglee/exam-zh/issues/I4SLWN)）。
+- `question` 环境新增 `index` 选项（[I4SQLI](https://gitee.com/zepinglee/exam-zh/issues/I4SQLI)）。
 
 ## [v0.1.0] - 2022-02-04
 

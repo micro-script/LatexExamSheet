@@ -479,9 +479,10 @@ Completed box being shipped out [1]
 .....\glue 0.0
 .....\glue -13.00005
 .....\glue -6.99997
-.....\hbox(6.44444+0.0)x13.00005, glue set 5.22224fil
+.....\hbox(6.44444+0.0)x13.00005, glue set 0.22223fil
 ......\glue 0.0 plus 1.0fil
 ......\OT1/cmr/m/n/10 4
+......\OT1/cmr/m/n/10 2
 ......\OT1/cmr/m/n/10 .
 .....\glue 6.99997
 ....\penalty 0

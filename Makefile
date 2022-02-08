@@ -1,7 +1,7 @@
-.PHONY: ctan doc install save test
+.PHONY: ctan doc example install save test
 
-test:
-	l3build check
+example:
+	latexmk -xelatex example.tex
 
 ctan:
 	l3build ctan
@@ -14,3 +14,6 @@ install:
 
 save:
 	bash tools/l3build-save.sh
+
+test:
+	l3build check

@@ -49,15 +49,30 @@
 选择题和填空题使用 `question` 环境，解答题使用 `problem` 环境。两者的内容对齐方式不同。
 
 `question` 和 `problem` 环境还接受一个可选参数，其中可以使用以下 key—value 进行设置。
+- `index` 题号。
+- `points` 题目的分数（默认：`0`）。
+- `show-points` 是否显示选择题的括号（默认 `false`）。
+- `show-points` 是否显示题目的分数（默认 `auto`：选择题和填空题默认 `false`，解答题默认 `true`）。
+- `show-answer` 是否显示答案（默认：`false`）。
+- `top-sep` 题目上方垂直方向的空白距离（默认：`.5em plus .5em minus .2em`）。
+- `bottom-sep` 题目下方垂直方向的空白距离，与 `top-sep` 不叠加（默认：`.5em plus .5em minus .2em`）。
 
-- `points`（默认：`0`）该题目的分数。
-- `show-points`（选择题和填空题默认 `false`，解答题默认 `true`）是否显示题目的分数。
-- `show-points`（默认 `auto`：选择题和填空题默认 `false`，解答题默认 `true`）是否显示题目的分数。
-- `show-answer`（默认：`false`）是否显示答案。
-- `top-sep`（默认：`.5em plus .5em minus .2em`）题目上方垂直方向的空白距离。
-- `bottom-sep`（默认：`.5em plus .5em minus .2em`）题目下方垂直方向的空白距离，与 `top-sep` 不叠加。
-
-其中 `show-points` 和 `show-answer` 也可以在 `\examsetup` 中统一设置。
+其中 `index`、`show-points`、`show-answer`、`top-sep` 和 `bottom-sep` 可以使用 `\examsetup` 命令的 `choices` 层级进行全局设置。比如设置同一层级的多个选项：
+```latex
+\examsetup{
+  choices = {
+    show-points = true,
+    show-answer = true,
+  },
+}
+```
+也可以用斜线“/”表示层级并设置单项。
+```latex
+\examsetup{
+  question/show-points = true,
+  question/show-answer = true,
+}
+```
 
 
 ### 选择题的括号 `\paren` 和填空 `\fillin`
@@ -86,22 +101,7 @@
 - `label-width`（默认 `0pt`）标签的宽度；如果宽度不足会自动调整为最长标签的宽度。
 - `max-columns`（默认 `4`）选项的最大列数；排版选项时会优先尝试该列数，如果无法排下内容，依次将列数除以 2 并取整再进行尝试，直到可以排下全部选项。
 
-这些选项可以使用 `\examsetup` 命令的 `choices` 层级进行全局设置。比如设置同一层级的多个选项：
-```latex
-\examsetup{
-  choices = {
-    columns-sep = 1em,
-    max-columns = 4,
-  },
-}
-```
-也可以用斜线“/”表示层级并设置单项。
-```latex
-\examsetup{
-  choices/columns-sep = 1em,
-  choices/max-columns = 4,
-}
-```
+这些选项可以使用 `\examsetup` 命令的 `choices` 层级进行全局设置，类似 `question`。
 
 
 

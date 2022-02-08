@@ -30,7 +30,7 @@
   Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis.
 \end{question}
 
-\begin{question}
+\begin{question}[index=42]
   Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
   Ut purus elit, vestibulum ut, placerat ac, adipiscing vitae, felis.
 \end{question}
