@@ -49,6 +49,7 @@
 选择题和填空题使用 `question` 环境，解答题使用 `problem` 环境。两者的内容对齐方式不同。
 
 `question` 和 `problem` 环境还接受一个可选参数，其中可以使用以下 key—value 进行设置。
+- `answer-color` 答案的颜色（默认：`black`）。
 - `index` 题号。
 - `points` 题目的分数（默认：`0`）。
 - `show-points` 是否显示选择题的括号（默认 `false`）。

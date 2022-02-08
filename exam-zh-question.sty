@@ -15,6 +15,8 @@
 \int_new:N \g__examzh_question_index_int
 \tl_new:N \l_examzh_question_answer_tl
 
+% 答案颜色
+\tl_new:N \l__examzh_question_answer_color_tl
 % 题目分数
 \int_new:N \l__examzh_question_points_int
 % 是否显示题目分数
@@ -36,6 +38,7 @@
 
 \keys_define:nn { exam-zh / question }
   {
+    answer-color        .tl_set:N = \l__examzh_question_answer_color_tl ,
     index               .int_gset:N = \g__examzh_question_index_int ,
     points              .int_set:N = \l__examzh_question_points_int ,
     show-points         .choice: ,
@@ -60,6 +63,7 @@
 
 \keys_set:nn { exam-zh / question }
   {
+    answer-color        = black ,
     points              = 0 ,
     show-points         = auto ,
     points-separate-par = false ,
@@ -170,11 +174,20 @@
             \hbox_to_wd:nn { 3em }
               {
                 \bool_if:NT \l__examzh_question_show_answer_bool
-                  { \hfill \l_examzh_question_answer_tl \hfill }
+                  { \hfill \__examzh_question_print_answer: \hfill }
               }
             ） \kern -.4em
           }
       }
+  }
+
+\cs_new:Npn \__examzh_question_print_answer:
+  {
+    \group_begin:
+      \tl_if_eq:NnF \l__examzh_question_answer_color_tl { black }
+        { \exp_args:NV \color \l__examzh_question_answer_color_tl }
+      \l_examzh_question_answer_tl
+    \group_end:
   }
 
 
@@ -186,11 +199,11 @@
       { \bool_if_p:N \l__examzh_question_show_answer_bool }
       { \bool_not_p:n { \tl_if_empty_p:N \l_examzh_question_answer_tl } }
       {
-        \hbox_set:Nn \l_tmpa_box { \l_examzh_question_answer_tl }
+        \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer: }
         \dim_compare:nNnT { \box_wd:N \l_tmpa_box } < { 1em }
           {
             \hbox_set_to_wd:Nnn \l_tmpa_box { 1em }
-              { \hfill \l_examzh_question_answer_tl \hfill}
+              { \hfill \__examzh_question_print_answer: \hfill}
           }
         \CJKunderline
           {
