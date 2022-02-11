@@ -95,16 +95,20 @@
 \end{choices}
 ```
 其中的可选参数使用 key–value 的方式进行设置，除了 `label-pos` 外还包括以下选项。
-- `column-sep` （默认 `1em`） 选项列之间的最小间隔。
-- `columns`    （默认 `0`）   强制按照该列数排版选项，如果为 0 则自动选择合适的列数。
+- `column-sep`  选项列之间的最小间隔（默认 `1em`）。
+- `columns`     强制按照该列数排版选项，如果为 0 则自动选择合适的列数（默认 `0`）。
 <!-- - `label-align`（可选：`left`, `center`, `right`；默认 `right`）标签内容的对齐方式。 -->
-- `label-pos`  （可选：`auto`, `top-left`, `left`, `bottom`；默认 `auto`）标签相对于选项内容的位置；`auto` 表示自动选择：如果内容高度超过两行时（通常是图片）标签位于左居中 `left`，否则位于左上角跟首行文字对齐（`top-left`）。
-- `label-sep`  （默认 `0.5em`）标签与选项之间的距离。
-- `label-width`（默认 `0pt`）标签的宽度；如果宽度不足会自动调整为最长标签的宽度。
-- `max-columns`（默认 `4`）选项的最大列数；排版选项时会优先尝试该列数，如果无法排下内容，依次将列数除以 2 并取整再进行尝试，直到可以排下全部选项。
+- `label`       标签的格式，类似 `enumitem` 可以在 `\Roman` 等命令后加 `*` 生成数字（默认 `\Alph*.`）。
+- `label-pos`   标签相对于选项内容的位置；`auto` 表示自动选择：如果内容高度超过两行时（通常是图片）标签位于左居中 `left`，否则位于左上角跟首行文字对齐（`top-left`）（可选：`auto`, `top-left`, `left`, `bottom`；默认 `auto`）。
+- `label-sep`   标签与选项之间的距离（默认 `0.5em`）。
+- `label-width` 标签的宽度；如果宽度不足会自动调整为最长标签的宽度（默认 `0pt`）。
+- `max-columns` 选项的最大列数；排版选项时会优先尝试该列数，如果无法排下内容，依次将列数除以 2 并取整再进行尝试，直到可以排下全部选项（默认 `4`）。
 
 这些选项可以使用 `\examsetup` 命令的 `choices` 层级进行全局设置，类似 `question`。
 
+`exam-zh-choices` 模块还提供了 `\circlednumber` 命令调用中文字体生成带圈数字，该命令既可以接受 LaTeX2e 计数器的名字（如 `section`）作为参数，也可以接受数值表达式，比如 `\circlednumber{7}`，但仅限 0～50 的整数。而且有的字体可能没有提供 10 以上的字形，建议只对 10 以内的值使用。
+
+如果用户需要使用其他形式得数字作为 `choices` 的标签，需要使用 `\AddChoicesCounter` 命令将其添加进使 `label` 选项的识别范围内（类似 `enumitem` 的 `\AddEnumerateCounter`）。它的格式是 `\AddChoicesCounter{⟨LaTeX command⟩}{⟨internal command⟩}{⟨widest label⟩}`，其中 `⟨LaTeX command⟩` 是在 `label` 选线中的形式，`⟨internal command⟩` 是内部的实现，`⟨widest label⟩` 是最宽的标签。比如带圈数字的添加方法：`\AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}{1}`。
 
 
 ### 正体的数学常数

@@ -14,6 +14,7 @@
 
 \dim_new:N \l__examzh_choices_column_sep_dim
 \int_new:N \l__examzh_choices_columns_int
+\tl_new:N \l__examzh_choices_label_tl
 \tl_new:N \l__examzh_choices_label_pos_tl
 \dim_new:N \l__examzh_choices_label_sep_dim
 \dim_new:N \l__examzh_choices_label_width_dim
@@ -26,6 +27,7 @@
   {
     column-sep  .dim_set:N = \l__examzh_choices_column_sep_dim ,
     columns     .int_set:N = \l__examzh_choices_columns_int ,
+    label       .tl_set:N  = \l__examzh_choices_label_tl ,
     label-pos   .choices:nn =
       { auto , top-left , left , bottom }
       { \tl_set_eq:NN \l__examzh_choices_label_pos_tl \l_keys_choice_tl } ,
@@ -38,6 +40,7 @@
   {
     column-sep  = 1em ,
     columns     = 0 ,
+    label       = \Alph*. ,
     label-pos   = auto ,
     label-sep   = .5em ,
     label-width = 0pt ,
@@ -46,6 +49,24 @@
 
 \NewDocumentCommand \setchoices { m }
   { \keys_set:nn { exam-zh / choices } {#1} }
+
+
+\tl_new:N \l__examzh_choices_counters_tl
+
+\NewDocumentCommand \AddChoicesCounter { m m m }
+  {
+    \tl_put_right:Nn \l__examzh_choices_counters_tl
+      { \l__examzh_process_counter:NN #1 #2 }
+    \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #1 : } #2
+    \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #2 : } #2
+  }
+
+\AddChoicesCounter \arabic \@arabic { 0 }
+\AddChoicesCounter \alph   \@alph   { m }
+\AddChoicesCounter \Alph   \@Alph   { M }
+\AddChoicesCounter \roman  \@roman  { viii }
+\AddChoicesCounter \Roman  \@Roman  { VIII }
+
 
 \dim_new:N \l__examzh_choices_total_width_dim
 \seq_new:N \l__examzh_choices_seq
@@ -95,7 +116,7 @@
     \seq_map_indexed_inline:Nn #1
       {
         % 标签
-        \hbox_set:Nn \l_tmpa_box { \int_to_Alph:n {##1} . }
+        \hbox_set:Nn \l_tmpa_box { \__examzh_choices_make_label:n {##1} }
         \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box }
         \dim_compare:nNnT
           { \l_tmpa_dim } > { \l__examzh_choices_label_width_dim }
@@ -115,6 +136,37 @@
           { \l_tmpb_dim } < { \l__examzh_choices_item_min_height_dim }
           { \dim_set_eq:NN \l__examzh_choices_item_min_height_dim \l_tmpb_dim }
         \box_clear:N \l_tmpa_box
+      }
+  }
+
+
+\int_new:N \l__examzh_choices_index_int
+
+% \Alph* 生成正确的标签
+\cs_new:Npn \__examzh_choices_make_label:n #1
+  {
+    \group_begin:
+      \int_set:Nn \l__examzh_choices_index_int {#1}
+      \l__examzh_choices_counters_tl
+      \l__examzh_choices_label_tl
+    \group_end:
+  }
+
+\cs_new:Npn \l__examzh_process_counter:NN #1#2
+  {
+    \cs_set:Npn #1 { \l__examzh_process_counter_aux:Nn #2 }
+    \cs_set:Npn #2 { \l__examzh_process_counter_aux:Nn #2 }
+  }
+
+\cs_new:Npn \l__examzh_process_counter_aux:Nn #1#2
+  {
+    \tl_if_eq:nnTF {#2} { * }
+      {
+        \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : }
+          { \l__examzh_choices_index_int }
+      }
+      {
+        \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : } {#2}
       }
   }
 
@@ -268,7 +320,7 @@
       {
         \vcoffin_set:Nnn \l_tmpa_coffin
           { \l__examzh_choices_label_width_dim }
-          { \noindent \hfill \int_to_Alph:n {#1} . \strut }
+          { \noindent \hfill \__examzh_choices_make_label:n {#1} \strut }
         \coffin_typeset:Nnnnn \l_tmpa_coffin {l} {T} {0pt} {0pt}
         \coffin_clear:N \l_tmpa_coffin
       }
@@ -319,3 +371,46 @@
         \coffin_clear:N \l_tmpa_coffin
       }
   }
+
+
+% 使用中文字体直接输出 unicode 带圈数字
+% \circlednumber 的参数既可以接受 LaTeX2e 的 <counter>，也可以直接接受 <intexpr>。
+\NewDocumentCommand \circlednumber { m }
+  {
+    \int_if_exist:cTF { c@ #1 }
+      { \int_set_eq:Nc \l_tmpa_int { c@#1 } }
+      { \int_set:Nn \l_tmpa_int { #1 } }
+    \exp_args:Nx \__examzh_choices_circled_number:n { \int_use:N \l_tmpa_int }
+  }
+
+\cs_new:Npn \__examzh_choices_circled_number:n #1
+  {
+    \int_set:Nn \l_tmpa_int {#1}
+    \int_compare:nNnTF { \l_tmpa_int } = { 0 }
+      { \int_set:Nn \l_tmpa_int { "24EA } }
+      {
+        \int_compare:nNnTF { \l_tmpa_int } < { 21 }
+          { \int_add:Nn \l_tmpa_int { "245F } }
+          {
+            \int_compare:nNnTF { \l_tmpa_int } < { 36 }
+              { \int_add:Nn \l_tmpa_int { "3250 } }
+              {
+                \int_compare:nNnTF { \l_tmpa_int } < { 51 }
+                  { \int_add:Nn \l_tmpa_int { "32B0 } }
+                  {
+                    \msg_error:nnn { exam-zh / choices }
+                      { invalid-circled-number } { \int_use:N \l_tmpa_int }
+                  }
+              }
+          }
+      }
+    \group_begin:
+      \CJKfamily+ { }
+      \symbol { \l_tmpa_int }
+    \group_end:
+  }
+
+\msg_new:nnn { exam-zh / choices } { invalid-circled-number }
+  { Invalid~ circled~ number~ #1. }
+
+\AddChoicesCounter \circlednumber \__examzh_choices_circled_number:n {1}
