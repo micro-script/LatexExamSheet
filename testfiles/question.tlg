@@ -1,14 +1,5 @@
 This is a generated file for the l3build validation system.
 Don't change this file in any respect.
-! Undefined control sequence.
-<argument> ...rint_answer: \hfill }}\CJKunderline 
-                                                  {\hspace *{1emplus.5emminu...
-l. ...\end{question}
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
 Completed box being shipped out [1]
 \vbox(633.0+0.0)x407.0
 .\hbox(0.0+0.0)x0.0
@@ -23,7 +14,7 @@ Completed box being shipped out [1]
 ....\special{color pop}
 ..\glue 25.0
 ..\glue(\lineskip) 0.0
-..\vbox(550.0+0.0)x345.0, glue set 376.95973fil
+..\vbox(550.0+0.0)x345.0, glue set 405.95663fil
 ...\write-{}
 ...\glue(\topskip) 3.06
 ...\hbox(6.94+2.05998)x325.0, glue set 0.61482, shifted 20.0
@@ -232,80 +223,6 @@ Completed box being shipped out [1]
 ....\TU/lmr/m/n/10 Lorem
 ....\glue 3.33 plus 1.665 minus 1.11
 ....\TU/lmr/m/n/10 ipsum
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 dolor
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 sit
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 amet,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 consectetuer
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 adipiscing
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 elit.
-....\glue 4.44 plus 4.99498 minus 0.37
-....\TU/lmr/m/n/10 Ut
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 purus
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 elit,
-....\glue(\rightskip) 0.0
-...\penalty 10451
-...\glue(\baselineskip) 2.89001
-...\hbox(7.05+2.05998)x325.0, glue set 110.34999fil, shifted 20.0
-....\TU/lmr/m/n/10 vestibulum
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 ut,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 placerat
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 ac,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 adipiscing
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 vitae,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 felis.
-....\penalty 10000
-....\glue(\parfillskip) 0.0 plus 1.0fil
-....\glue(\rightskip) 0.0
-...\penalty -51
-...\glue 0.0
-...\glue 5.0 plus 5.0 minus 1.99997
-...\glue -7.05998 plus -5.0 minus -1.99997
-...\penalty -51
-...\glue 2.05998
-...\glue 5.0 plus 5.0 minus 1.99997
-...\glue(\parskip) 0.0
-...\glue(\parskip) 0.0
-...\glue(\baselineskip) 3.00002
-...\hbox(6.94+2.05998)x325.0, glue set - 0.37045, shifted 20.0
-....\hbox(6.77+0.21999)x0.0
-.....\glue 0.0
-.....\glue -13.00003
-.....\glue -6.99997
-.....\hbox(6.77+0.21999)x13.00003, glue set 0.22003fil
-......\special{color push  Black}
-......\glue 0.0 plus 1.0fil
-......\TU/lmr/m/n/10 43.
-......\special{color pop}
-.....\glue 6.99997
-....\penalty 0
-....\TU/lmr/m/n/10 Lorem
-....\glue 3.33 plus 1.665 minus 1.11
-....\rule(*+*)x0.0
-....\penalty 10000
-....\glue 10.0 plus 5.0 minus 5.0
-....\glue 0.0
-....\hbox(6.57+1.93999)x26.17
-.....\special{color push rgb 1 0 0}
-.....\TU/lmr/m/n/10 ipsum
-.....\special{color pop}
-....\rule(*+*)x0.0
-....\penalty 10000
-....\glue 10.0 plus 5.0 minus 5.0
-....\glue 0.0
 ....\glue 3.33 plus 1.665 minus 1.11
 ....\TU/lmr/m/n/10 dolor
 ....\glue 3.33 plus 1.665 minus 1.11
