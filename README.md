@@ -100,6 +100,7 @@
 <!-- - `label-align`（可选：`left`, `center`, `right`；默认 `right`）标签内容的对齐方式。 -->
 - `label`       标签的格式，类似 `enumitem` 可以在 `\Roman` 等命令后加 `*` 生成数字（默认 `\Alph*.`）。
 - `label-pos`   标签相对于选项内容的位置；`auto` 表示自动选择：如果内容高度超过两行时（通常是图片）标签位于左居中 `left`，否则位于左上角跟首行文字对齐（`top-left`）（可选：`auto`, `top-left`, `left`, `bottom`；默认 `auto`）。
+- `label-align` 标签内部的对齐方式。（可选：`left`, `center`, `right`；默认 `right`）
 - `label-sep`   标签与选项之间的距离（默认 `0.5em`）。
 - `label-width` 标签的宽度；如果宽度不足会自动调整为最长标签的宽度（默认 `0pt`）。
 - `max-columns` 选项的最大列数；排版选项时会优先尝试该列数，如果无法排下内容，依次将列数除以 2 并取整再进行尝试，直到可以排下全部选项（默认 `4`）。
