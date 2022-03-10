@@ -2,6 +2,7 @@
 
 - 项目主页：<https://gitee.com/zepinglee/exam-zh>
 - 作者：Zeping Lee
+- 维护者：Zeping Lee, Lijun Guo, Kangwei Xia
 - 授权：[LaTeX Project Public License 1.3c](https://www.latex-project.org/lppl.txt)
 
 
@@ -120,6 +121,8 @@
 ## 待完成
 
 - [ ] 题干与图片的排版（参考 [xkwxdyy/text-figure](https://gitee.com/xkwxdyy/text-figure)）
+- [ ] 选择题答案标记
+- [ ] 整体的答案控制与移动
 
 
 
