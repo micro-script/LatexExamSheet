@@ -16,6 +16,7 @@
 \int_new:N \l__examzh_choices_columns_int
 \tl_new:N \l__examzh_choices_label_tl
 \tl_new:N \l__examzh_choices_label_pos_tl
+\tl_new:N \l__examzh_choices_label_align_tl
 \dim_new:N \l__examzh_choices_label_sep_dim
 \dim_new:N \l__examzh_choices_label_width_dim
 \int_new:N \l__examzh_choices_max_columns_int
@@ -31,6 +32,7 @@
     label-pos   .choices:nn =
       { auto , top-left , left , bottom }
       { \tl_set_eq:NN \l__examzh_choices_label_pos_tl \l_keys_choice_tl } ,
+    label-align .tl_set:N = \l__examzh_choices_label_align_tl ,
     label-sep   .dim_set:N = \l__examzh_choices_label_sep_dim ,
     label-width .dim_set:N = \l__examzh_choices_label_width_dim ,
     max-columns .int_set:N = \l__examzh_choices_max_columns_int ,
@@ -42,6 +44,7 @@
     columns     = 0 ,
     label       = \Alph*. ,
     label-pos   = auto ,
+    label-align = right ,
     label-sep   = .5em ,
     label-width = 0pt ,
     max-columns = 4 ,
@@ -116,7 +119,7 @@
     \seq_map_indexed_inline:Nn #1
       {
         % 标签
-        \hbox_set:Nn \l_tmpa_box { \__examzh_choices_make_label:n {##1} }
+        \hbox_set:Nn \l_tmpa_box { \__examzh_choices_the_label:n {##1} }
         \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box }
         \dim_compare:nNnT
           { \l_tmpa_dim } > { \l__examzh_choices_label_width_dim }
@@ -143,7 +146,7 @@
 \int_new:N \l__examzh_choices_index_int
 
 % \Alph* 生成正确的标签
-\cs_new:Npn \__examzh_choices_make_label:n #1
+\cs_new:Npn \__examzh_choices_the_label:n #1
   {
     \group_begin:
       \int_set:Nn \l__examzh_choices_index_int {#1}
@@ -318,11 +321,18 @@
   {
     \hcoffin_set:Nn \l__examzh_choices_label_coffin
       {
-        \vcoffin_set:Nnn \l_tmpa_coffin
-          { \l__examzh_choices_label_width_dim }
-          { \noindent \hfill \__examzh_choices_make_label:n {#1} \strut }
-        \coffin_typeset:Nnnnn \l_tmpa_coffin {l} {T} {0pt} {0pt}
-        \coffin_clear:N \l_tmpa_coffin
+        \hbox_to_wd:nn { \l__examzh_choices_label_width_dim }
+          { \__examzh_choices_make_label:n {#1} \strut }
+      }
+  }
+
+\cs_new:Npn \__examzh_choices_make_label:n #1
+  {
+    \str_case:Vn \l__examzh_choices_label_align_tl
+      {
+        { left   } { \rlap { \__examzh_choices_the_label:n {#1} } \hss }
+        { center } { \hss \clap { \__examzh_choices_the_label:n {#1} } \hss }
+        { right  } { \hss \llap { \__examzh_choices_the_label:n {#1} } }
       }
   }
 

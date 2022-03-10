@@ -11,7 +11,7 @@ tagfiles = {"*.sty", "*-doc.tex", "CHANGELOG.md"}
 -- textfiles = {"CHANGELOG.md"}
 typesetfiles = {"*.tex"}
 
-checkengines = {"pdftex"}
-stdengine = "pdftex"
+checkengines = {"xetex"}
+stdengine = "xetex"
 
 -- packtdszip = true
