@@ -288,8 +288,8 @@ Completed box being shipped out [1]
 ...\glue 5.0 plus 5.0 minus 1.99997
 ...\glue(\parskip) 0.0
 ...\glue(\parskip) 0.0
-...\glue(\lineskip) 1.0
-...\hbox(11.90126+3.00003)x325.0, glue set 0.18932, shifted 20.0
+...\glue(\baselineskip) 3.00002
+...\hbox(6.94+3.00003)x325.0, glue set - 0.37045, shifted 20.0
 ....\hbox(6.77+0.0)x0.0
 .....\glue 0.0
 .....\glue -13.00003
@@ -298,6 +298,112 @@ Completed box being shipped out [1]
 ......\special{color push  Black}
 ......\glue 0.0 plus 1.0fil
 ......\TU/lmr/m/n/10 4.
+......\special{color pop}
+.....\glue 6.99997
+....\penalty 0
+....\TU/lmr/m/n/10 Lorem
+....\glue 3.33 plus 1.665 minus 1.11
+....\rule(*+*)x0.0
+....\penalty 10000
+....\glue -0.24089
+....\leaders 0.48178
+.....\rule(-2.60004+3.00003)x*
+....\glue -0.24089
+....\kern 0.0
+....\hbox(0.0+0.0)x0.0
+.....\kern -0.00005
+.....\kern 0.00005
+.....\rule(*+*)x0.0
+....\penalty 10000
+....\glue -0.24089
+....\leaders 10.48178 plus 5.0 minus 5.0
+.....\rule(-2.60004+3.00003)x*
+....\glue -0.24089
+....\glue -0.24089
+....\leaders 0.48178
+.....\rule(-2.60004+3.00003)x*
+....\glue -0.24089
+....\rule(*+*)x0.0
+....\penalty 10000
+....\glue -0.24089
+....\leaders 26.65178
+.....\rule(-2.60004+3.00003)x*
+....\glue -0.24089
+....\kern -26.17
+....\hbox(6.57+1.93999)x26.17
+.....\kern -0.00005
+.....\kern 0.00005
+.....\hbox(6.57+1.93999)x26.17
+......\special{color push rgb 1 0 0}
+......\TU/lmr/m/n/10 ipsum
+......\special{color pop}
+.....\rule(*+*)x0.0
+....\penalty 10000
+....\glue -0.24089
+....\leaders 10.48178 plus 5.0 minus 5.0
+.....\rule(-2.60004+3.00003)x*
+....\glue -0.24089
+....\glue -0.24089
+....\leaders 0.48178
+.....\rule(-2.60004+3.00003)x*
+....\glue -0.24089
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 dolor
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 sit
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 amet,
+....\glue 3.33 plus 2.08124 minus 0.888
+....\TU/lmr/m/n/10 consectetuer
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 adipiscing
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 elit.
+....\glue 4.44 plus 4.99498 minus 0.37
+....\TU/lmr/m/n/10 Ut
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 purus
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 elit,
+....\glue(\rightskip) 0.0
+...\penalty 10451
+...\glue(\baselineskip) 1.94997
+...\hbox(7.05+2.05998)x325.0, glue set 110.34999fil, shifted 20.0
+....\TU/lmr/m/n/10 vestibulum
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 ut,
+....\glue 3.33 plus 2.08124 minus 0.888
+....\TU/lmr/m/n/10 placerat
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 ac,
+....\glue 3.33 plus 2.08124 minus 0.888
+....\TU/lmr/m/n/10 adipiscing
+....\glue 3.33 plus 1.665 minus 1.11
+....\TU/lmr/m/n/10 vitae,
+....\glue 3.33 plus 2.08124 minus 0.888
+....\TU/lmr/m/n/10 felis.
+....\penalty 10000
+....\glue(\parfillskip) 0.0 plus 1.0fil
+....\glue(\rightskip) 0.0
+...\penalty -51
+...\glue 0.0
+...\glue 5.0 plus 5.0 minus 1.99997
+...\glue -7.05998 plus -5.0 minus -1.99997
+...\penalty -51
+...\glue 2.05998
+...\glue 5.0 plus 5.0 minus 1.99997
+...\glue(\parskip) 0.0
+...\glue(\parskip) 0.0
+...\glue(\lineskip) 1.0
+...\hbox(11.90126+3.00003)x325.0, glue set 0.18932, shifted 20.0
+....\hbox(6.66+0.21999)x0.0
+.....\glue 0.0
+.....\glue -13.00003
+.....\glue -6.99997
+.....\hbox(6.66+0.21999)x13.00003, glue set 5.22003fil
+......\special{color push  Black}
+......\glue 0.0 plus 1.0fil
+......\TU/lmr/m/n/10 5.
 ......\special{color pop}
 .....\glue 6.99997
 ....\penalty 0
@@ -359,112 +465,6 @@ Completed box being shipped out [1]
 ............\glue 0.0 plus 1.0fil minus 1.0fil
 ..........\hbox(0.0+0.0)x1.2, shifted -2.5
 ........\mathoff
-.....\rule(*+*)x0.0
-....\penalty 10000
-....\glue -0.24089
-....\leaders 10.48178 plus 5.0 minus 5.0
-.....\rule(-2.60004+3.00003)x*
-....\glue -0.24089
-....\glue -0.24089
-....\leaders 0.48178
-.....\rule(-2.60004+3.00003)x*
-....\glue -0.24089
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 dolor
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 sit
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 amet,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 consectetuer
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 adipiscing
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 elit.
-....\glue 4.44 plus 4.99498 minus 0.37
-....\TU/lmr/m/n/10 Ut
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 purus
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 elit,
-....\glue(\rightskip) 0.0
-...\penalty 10451
-...\glue(\baselineskip) 1.94997
-...\hbox(7.05+2.05998)x325.0, glue set 110.34999fil, shifted 20.0
-....\TU/lmr/m/n/10 vestibulum
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 ut,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 placerat
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 ac,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 adipiscing
-....\glue 3.33 plus 1.665 minus 1.11
-....\TU/lmr/m/n/10 vitae,
-....\glue 3.33 plus 2.08124 minus 0.888
-....\TU/lmr/m/n/10 felis.
-....\penalty 10000
-....\glue(\parfillskip) 0.0 plus 1.0fil
-....\glue(\rightskip) 0.0
-...\penalty -51
-...\glue 0.0
-...\glue 5.0 plus 5.0 minus 1.99997
-...\glue -7.05998 plus -5.0 minus -1.99997
-...\penalty -51
-...\glue 2.05998
-...\glue 5.0 plus 5.0 minus 1.99997
-...\glue(\parskip) 0.0
-...\glue(\parskip) 0.0
-...\glue(\baselineskip) 3.00002
-...\hbox(6.94+3.00003)x325.0, glue set - 0.37045, shifted 20.0
-....\hbox(6.66+0.21999)x0.0
-.....\glue 0.0
-.....\glue -13.00003
-.....\glue -6.99997
-.....\hbox(6.66+0.21999)x13.00003, glue set 5.22003fil
-......\special{color push  Black}
-......\glue 0.0 plus 1.0fil
-......\TU/lmr/m/n/10 5.
-......\special{color pop}
-.....\glue 6.99997
-....\penalty 0
-....\TU/lmr/m/n/10 Lorem
-....\glue 3.33 plus 1.665 minus 1.11
-....\rule(*+*)x0.0
-....\penalty 10000
-....\glue -0.24089
-....\leaders 0.48178
-.....\rule(-2.60004+3.00003)x*
-....\glue -0.24089
-....\kern 0.0
-....\hbox(0.0+0.0)x0.0
-.....\kern -0.00005
-.....\kern 0.00005
-.....\rule(*+*)x0.0
-....\penalty 10000
-....\glue -0.24089
-....\leaders 10.48178 plus 5.0 minus 5.0
-.....\rule(-2.60004+3.00003)x*
-....\glue -0.24089
-....\glue -0.24089
-....\leaders 0.48178
-.....\rule(-2.60004+3.00003)x*
-....\glue -0.24089
-....\rule(*+*)x0.0
-....\penalty 10000
-....\glue -0.24089
-....\leaders 26.65178
-.....\rule(-2.60004+3.00003)x*
-....\glue -0.24089
-....\kern -26.17
-....\hbox(6.57+1.93999)x26.17
-.....\kern -0.00005
-.....\kern 0.00005
-.....\hbox(6.57+1.93999)x26.17
-......\special{color push rgb 1 0 0}
-......\TU/lmr/m/n/10 ipsum
-......\special{color pop}
 .....\rule(*+*)x0.0
 ....\penalty 10000
 ....\glue -0.24089
