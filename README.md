@@ -124,6 +124,7 @@
 - [ ] 题干与图片的排版（参考 [xkwxdyy/text-figure](https://gitee.com/xkwxdyy/text-figure)）
 - [ ] 选择题答案标记
 - [ ] 整体的答案控制与移动
+- [ ] A3和A4的切换
 
 
 
