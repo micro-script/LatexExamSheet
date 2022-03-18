@@ -90,6 +90,8 @@
   }
   {
     \seq_set_split:Nnn \l__examzh_choices_seq { \item } {#2}
+    % 收集正确的选项
+    \examzh_choices_collect_correct_chioces:N \l__examzh_choices_seq
     \seq_if_empty:NF \l__examzh_choices_seq
       { \seq_pop_left:NN \l__examzh_choices_seq \l_tmpa_tl }
     % 计算标签和选项内容的最大自然宽度
@@ -103,6 +105,29 @@
     \__examzh_choices_calc_item_width:
     % 输出选项
     \__examzh_print_choices:N \l__examzh_choices_seq
+  }
+
+
+\seq_new:N \l__examzh_choices_correct_choices_seq
+
+% 收集正确的选项，保存在 \l__examzh_choices_correct_choices_seq
+\cs_new:Npn \examzh_choices_collect_correct_chioces:N #1
+  % #1: \l__examzh_choices_seq
+  {
+    \seq_clear:N \l__examzh_choices_correct_choices_seq
+    \seq_clear:N \l_tmpa_seq
+    \seq_map_indexed_inline:Nn #1
+      {
+        % ##1: 选项序号
+        % ##2: 选项内容
+        \tl_if_head_eq_meaning:nNTF {##2} *
+          {
+            \seq_put_right:Nn \l__examzh_choices_correct_choices_seq {##1}
+            % 将去掉 * 号后的内容保存进 \l_tmpa_seq
+            \seq_put_right:Nx \l_tmpa_seq { \tl_tail:n {##2} }
+          }
+      }
+    \seq_set_eq:NN #1 \l_tmpa_seq
   }
 
 
