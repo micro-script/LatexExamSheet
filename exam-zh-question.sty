@@ -14,10 +14,13 @@
 
 
 \RequirePackage{ulem}
+% ulem 宏包重定义了 \emph，使用 \normalem 恢复
 \normalem
 
 
+% question 环境的计数器
 \int_new:N \g__examzh_question_index_int
+% question 环境的内容
 \tl_new:N \l_examzh_question_answer_tl
 
 % 答案颜色
@@ -27,7 +30,7 @@
 % 是否显示题目分数
 \bool_new:N \l__examzh_question_show_points_bool
 \bool_new:N \l__examzh_question_show_points_auto_bool
-% 题目分数是否单独成段
+% 题目分数是否单独成段，解答题需要单独成段
 \bool_new:N \l__examzh_question_points_separate_par_bool
 % 是否显示括号
 \bool_new:N \l__examzh_question_show_paren_bool
@@ -43,9 +46,13 @@
 
 \keys_define:nn { exam-zh / question }
   {
+    % 答案颜色
     answer-color        .tl_set:N = \l__examzh_question_answer_color_tl ,
+    % 手动调整question 环境的计数器
     index               .int_gset:N = \g__examzh_question_index_int ,
+    % 分数
     points              .int_set:N = \l__examzh_question_points_int ,
+    % 分数显示控制
     show-points         .choice: ,
     show-points / auto  .code:n =
       { \bool_set_true:N \l__examzh_question_show_points_auto_bool } ,
@@ -59,10 +66,15 @@
         \bool_set_false:N \l__examzh_question_show_points_bool
         \bool_set_false:N \l__examzh_question_show_points_auto_bool
       } ,
+    % 分数是否单独成段
     points-separate-par .bool_set:N = \l__examzh_question_points_separate_par_bool ,
+    % 是否显示选择题的括号
     show-paren          .bool_set:N = \l__examzh_question_show_paren_bool ,
+    % 是否显示答案
     show-answer         .bool_set:N = \l__examzh_question_show_answer_bool ,
+    % 上方间距
     top-sep             .skip_set:N = \l__examzh_question_top_sep_skip ,
+    % 下方间距
     bottom-sep          .skip_set:N = \l__examzh_question_bottom_sep_skip ,
   }
 
@@ -84,7 +96,7 @@
 \bool_new:N \l__examzh_question_problem_style_bool
 
 
-% 选择题和填空题
+% 选择题和填空题的题干
 \NewDocumentEnvironment { question } { O { } +b }
   {
     \bool_set_false:N \l__examzh_question_problem_style_bool
@@ -104,25 +116,38 @@
 \cs_new:Npn \__examzh_question_begin:nn #1#2
   {
     \par
+    % 题干计数器的值加一
     \int_gincr:N \g__examzh_question_index_int
+    % 答案的内容清空
     \tl_clear:N \l_examzh_question_answer_tl
+    % 根据是否按解答题方式排版来设置是否分数要分段
     \bool_if:NTF \l__examzh_question_problem_style_bool
       { \keys_set:nn { exam-zh / question } { points-separate-par = true  } }
       { \keys_set:nn { exam-zh / question } { points-separate-par = false } }
+    % 设置键值
     \keys_set:nn { exam-zh / question } { #1 }
+    % 设置上方间距
     \addvspace { \l__examzh_question_top_sep_skip }
     % 严格禁止孤行和寡行
     \int_set:Nn \clubpenalty { 10000 }
     \int_set:Nn \widowpenalty { 10000 }
     % 尽量避免在题目中间换行
     \int_set:Nn \interlinepenalty { 301 }
+    % 这部分是仿照 source2e 中 enumerate 的定义写的
+    % \@enumdepth 主要控制 enumerate 不同层级的编号
+    % 这样设置后，在 question 中使用 enumerate 会调用 level 2 的编号
+    % 也就是 question 中的 enumerate 环境直接从第二层开始
     \int_incr:N \@enumdepth
+    % 如果 show-points = auto 那么解答题显示分数，填空题和选择题的不显示分数
+    % 这样设置考虑到选择题和填空题都是每道题一样的分数，在最开始的地方说明即可
+    % 而解答题不太一样
     \bool_if:NT \l__examzh_question_show_points_auto_bool
       {
         \bool_if:NTF \l__examzh_question_problem_style_bool
           { \bool_set_true:N  \l__examzh_question_show_points_bool }
           { \bool_set_false:N \l__examzh_question_show_points_bool }
       }
+    % 使用列表环境输出
     \list { \int_use:N \g__examzh_question_index_int . }
       {
         \dim_set:Nn \topsep    { 0pt }
@@ -131,25 +156,30 @@
         \dim_set:Nn \parsep    { 0pt }
         \bool_if:NTF \l__examzh_question_problem_style_bool
           {
+            % 解答题是正文 + 缩进 2em 的效果
             \dim_set:Nn \leftmargin { 0pt }
             \dim_set:Nn \itemindent { 2em }
           }
           {
+            % 选择和填空题是悬挂效果
             \dim_set:Nn \leftmargin { 2em }
             \dim_set:Nn \itemindent { 0pt }
           }
         \dim_set:Nn \labelsep   { .7em  }
         \dim_set:Nn \labelwidth { 1.3em }
         \dim_set_eq:NN \listparindent \itemindent
-       }
+      }
     \item \relax
     % 输出题目分数
     \bool_if:NT \l__examzh_question_show_points_bool
       {
+        % 如果设置了分数且 show-points 的 bool 是 true 的话就显示
         \int_compare:nNnT { \l__examzh_question_points_int } > { 0 }
-          { （ \int_use:N \l__examzh_question_points_int ~ 分） }
+          { （ \int_use:N \l__examzh_question_points_int ~ 分 ） }
+        % 是否分段（解答题需要分段）
         \bool_if:NT \l__examzh_question_points_separate_par_bool
-          { \par \nopagebreak }
+          % 应该是指par完之后避免分页，导致出现序号和分数出现在页面最后一行
+          { \par \nopagebreak }   
       }
   }
 
@@ -157,7 +187,8 @@
 \cs_new:Npn \__examzh_question_end:nn #1#2
   {
     #2
-    \endlist
+    \endlist   % 结束列表环境
+    % 增加下方间距
     \addvspace { \l__examzh_question_bottom_sep_skip }
   }
 

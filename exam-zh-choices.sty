@@ -111,6 +111,11 @@
 \seq_new:N \l__examzh_choices_correct_choices_seq
 
 % 收集正确的选项，保存在 \l__examzh_choices_correct_choices_seq
+% TODO 这样的话好像乱序功能可以行得通了
+% 因为这个保存了正确选项的内容
+% 但是有个问题，如果是图片的话，可能一般试卷上不会出现“答案：[图]”
+% 不过这样也答案控制也增加了另一个可能性
+% 就是不保存正确选项的序号，而是内容
 \cs_new:Npn \examzh_choices_collect_correct_chioces:N #1
   % #1: \l__examzh_choices_seq
   {
@@ -449,3 +454,18 @@
   { Invalid~ circled~ number~ #1. }
 
 \AddChoicesCounter \circlednumber \__examzh_choices_circled_number:n {1}
+
+
+% TODO 答案控制
+
+% 选择题答案控制
+% - 直接在后面显示
+% - 在括号内显示
+%   - 手动输入
+%   - 能否通过写中途文件方式使得答案可以出现在前面的括号内
+% - 统一移动到最后
+%   - 也是 choices 的形式
+%   - 表格形式
+
+% 答案确定
+% 通过 \item 是否带 * 判断，有的话则标记为正确答案
