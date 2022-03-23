@@ -202,7 +202,12 @@
     \bool_if:NT \l__examzh_question_show_paren_bool
       {
         % 使括号单独成行时居于右侧
-        % TODO 不太理解 nullnull 的作用
+        % \null -> \hbox{}
+        % 𝖅𝖊𝖕𝖎𝖓𝖌 𝕷𝖊𝖊, [Mar 19, 2022 at 22:47:07]:
+          % 这个写法是为了处理这样的情况：假设括号需要 3em 宽度，但是如果题干末尾只剩下了 2em 的空白，括号就必要另起一行，并且用 \hill 把括号推到最右侧
+          % 所以中间用了两个 \hfill
+          % 至于 \nobreak 和 \allowbreak 大概是为了能够同时处理「括号不换行」和「括号换行」两种情况
+          % 这里参考 source2e 的 \@dottedtocline（目录的格式）
         \nobreak \hfill \allowbreak
         \null \nobreak \hfill \nobreak
         \hbox:n
@@ -236,7 +241,7 @@
   {
     % \tl_set:Nn \l_examzh_question_answer_tl {#1}
     \group_begin:
-      % TODO ULdepth 应该是 ulem 宏包的下划线的深度？
+      % \ULdepth 是 \uline 的下划线的深度
       \dim_set:Nn \ULdepth { 0.3em }
       % lazy 版本是指需要判断时才去获取当前用于判断的 bool 值 
       % 而不是类似于提前展开的感觉，就是项子越在 LaTeX3 的 b 站视频里讲到的 lazy evaluation 的味道
@@ -244,8 +249,9 @@
         { \bool_if_p:N \l__examzh_question_show_answer_bool }
         { \bool_not_p:n { \tl_if_empty_p:n {#1} } }
         {
-          % TODO 为什么要用 print answer 的 #1 而不是直接#1呢？
-          % 颜色那个也会影响深度？还是其它原因
+          % 为什么要用 print answer 的 #1 而不是直接 #1 呢？
+          % 是因为后面直接就通过 use_drop tmpa_box 来显示答案
+          % 所以要把颜色加进去
           \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
           \dim_set:Nn \l__examzh_question_answer_depth_dim
             { \box_dp:N \l_tmpa_box }
@@ -254,21 +260,19 @@
               \hspace* { 1em plus .5em minus .5em }
               \dim_compare:nNnTF { \l__examzh_question_answer_depth_dim } > { 0.2em }
                 {
-                  % 如果深度 > 0.2em 就
-                  % TODO 不是很理解为什么要减掉0.2em 再提升？
+                  % 这里是这样计算的：下划线在基线下 0.3em，
+                  % 如果答案的降部超过 0.2 em，就放上移动 （降部 - 0.2em）
+                  % 这样底部跟下划线相隔 0.1 em
                   \dim_sub:Nn \l__examzh_question_answer_depth_dim { 0.2em }
                   \raisebox { \l__examzh_question_answer_depth_dim }
-                    % use_drop 的含义是用完之后就把内容清空 
-                    % TODO 但是这样做和直接 useuse 有区别吗？因为在开头也设置了 hbox_set
-                    % 想法：应该是考虑到，如果内容是空的话，那么 l_tmpa_box 里就会留有上一次的内容，所以要清空
-                    % 但是如果是 只写了一个 [] 这样的话内容应该是 blank 那么这个条件分支都不会执行，那是什么原因呢？
+                    % use_drop 的含义是用完之后就把内容清空
                     { \box_use_drop:N \l_tmpa_box }
                 }
                 { \box_use_drop:N \l_tmpa_box }
               \hspace* { 1em plus .5em minus .5em }
             }
         }
-        % 如果不显示答案或者内容是空的，就画一条线
+        % 如果不显示答案或者内容是空的，就画一条下划线
         { \uline { \hspace* { 3em plus 1em minus 1em } } }
     \group_end:
     % 为什么要额外加一个空格？

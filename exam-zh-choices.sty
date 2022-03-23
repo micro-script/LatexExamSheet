@@ -58,12 +58,15 @@
 
 \NewDocumentCommand \AddChoicesCounter { m m m }
   {
+    % TODO 这一步的作用是什么
     \tl_put_right:Nn \l__examzh_choices_counters_tl
       { \l__examzh_process_counter:NN #1 #2 }
+    % \__examzh_chioces_save_\arabic: 和 \__examzh_chioces_save_\@arabic: 都是一样的含义：\@alph
     \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #1 : } #2
     \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #2 : } #2
   }
 
+% TODO #3 的作用是什么
 \AddChoicesCounter \arabic \@arabic { 0 }
 \AddChoicesCounter \alph   \@alph   { m }
 \AddChoicesCounter \Alph   \@Alph   { M }
@@ -89,11 +92,12 @@
     \keys_set:nn { exam-zh / choices } {#1}
   }
   {
+    % 用 \item 分割选项
     \seq_set_split:Nnn \l__examzh_choices_seq { \item } {#2}
-    % 收集正确的选项
-    \examzh_choices_collect_correct_chioces:N \l__examzh_choices_seq
-    \seq_if_empty:NF \l__examzh_choices_seq
-      { \seq_pop_left:NN \l__examzh_choices_seq \l_tmpa_tl }
+    % TODO 收集正确的选项
+    % \examzh_choices_collect_correct_chioces:N \l__examzh_choices_seq
+    % \seq_if_empty:NF \l__examzh_choices_seq
+      % { \seq_pop_left:NN \l__examzh_choices_seq \l_tmpa_tl }
     % 计算标签和选项内容的最大自然宽度
     \__examzh_choices_calc_max_width:N \l__examzh_choices_seq
     % label-pos = auto 时自动选择标签位置
@@ -107,15 +111,10 @@
     \__examzh_print_choices:N \l__examzh_choices_seq
   }
 
-
+% 用来存正确选项的序号（entry）
 \seq_new:N \l__examzh_choices_correct_choices_seq
 
 % 收集正确的选项，保存在 \l__examzh_choices_correct_choices_seq
-% TODO 这样的话好像乱序功能可以行得通了
-% 因为这个保存了正确选项的内容
-% 但是有个问题，如果是图片的话，可能一般试卷上不会出现“答案：[图]”
-% 不过这样也答案控制也增加了另一个可能性
-% 就是不保存正确选项的序号，而是内容
 \cs_new:Npn \examzh_choices_collect_correct_chioces:N #1
   % #1: \l__examzh_choices_seq
   {
@@ -125,6 +124,8 @@
       {
         % ##1: 选项序号
         % ##2: 选项内容
+        % 如果分割后，第一个字符是 * 的，表明这是一个正确选项
+        %（即用 \item* 来标记正确答案）
         \tl_if_head_eq_meaning:nNTF {##2} *
           {
             \seq_put_right:Nn \l__examzh_choices_correct_choices_seq {##1}
@@ -132,6 +133,7 @@
             \seq_put_right:Nx \l_tmpa_seq { \tl_tail:n {##2} }
           }
       }
+    % 处理之后 \l__examzh_choices_seq 内的选项内容就是正确选项内容
     \seq_set_eq:NN #1 \l_tmpa_seq
   }
 
@@ -144,27 +146,41 @@
 % #1: \l__examzh_choices_seq
 \cs_new:Npn \__examzh_choices_calc_max_width:N #1
   {
+    % 下面这两个的想法是 xchoices 项目可以优化学习的地方
+    % 因为 xchoices 是把变量先设置为第一项的参数，然后让后面的和前面的比
+    % 这里相当于把“设置为第一项的参数”这一步，用默认的“端点量”来代替
+    % 比如取最大的，就和 0 比，这样的话其实也会产生变量会变成第一项的参数的结果
+    % 但是两者性质不同，此处处理让 第一项 「没有特殊性」
+    % 后面的计算最小高度的也是如此
     \dim_zero:N \l__examzh_choices_item_width_dim
     \dim_set_eq:NN \l__examzh_choices_item_min_height_dim \c_max_dim
     \seq_map_indexed_inline:Nn #1
       {
-        % 标签
+        % -- 标签 --
+        % 把标签整体放进 \l_tmpa_box
         \hbox_set:Nn \l_tmpa_box { \__examzh_choices_the_label:n {##1} }
+        % 测量宽度
         \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box }
+        % 与当前最大值比较，最后效果是 \l__examzh_choices_label_width_dim 储存了所有标签中宽度最大的标签的宽度值
         \dim_compare:nNnT
           { \l_tmpa_dim } > { \l__examzh_choices_label_width_dim }
           { \dim_set_eq:NN \l__examzh_choices_label_width_dim \l_tmpa_dim }
-        % 选项内容
+        % -- 选项内容 --
+        % 把内容放进 \l_tmpa_box 中
         \hbox_set:Nn \l_tmpa_box {##2}
+        % 测量宽度
         \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box }
+        % 与当前最大值比较，最后效果是 \l__examzh_choices_item_width_dim 储存了所有选项内容中宽度最大的内容的宽度值
         \dim_compare:nNnT
           { \l_tmpa_dim } > { \l__examzh_choices_item_width_dim }
           {
             \dim_set_eq:NN \l__examzh_choices_item_width_dim
               \l_tmpa_dim
           }
-        % 找到最小高度
+        % -- 找到最小高度 --
+        % 把内容高度储存到 \l_tmpb_dim
         \dim_set:Nn \l_tmpb_dim { \box_ht:N \l_tmpa_box }
+        % 与当前最小值比较，最后效果是 \l__examzh_choices_item_min_height_dim 储存了所有内容中高度最小的内容的高度值
         \dim_compare:nNnT
           { \l_tmpb_dim } < { \l__examzh_choices_item_min_height_dim }
           { \dim_set_eq:NN \l__examzh_choices_item_min_height_dim \l_tmpb_dim }
@@ -195,10 +211,12 @@
   {
     \tl_if_eq:nnTF {#2} { * }
       {
+        % 如果是 \alph* 类型的，效果为 \alph{ \l__examzh_choices_index_int }
         \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : }
           { \l__examzh_choices_index_int }
       }
       {
+        % 否则就是 \alph{...} 效果
         \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : } {#2}
       }
   }
