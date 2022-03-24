@@ -57,6 +57,9 @@
 \tl_new:N \l__examzh_choices_counters_tl
 
 \NewDocumentCommand \AddChoicesCounter { m m m }
+  % #1: \Alph
+  % #2: \@Alph
+  % #3: widest number, not used yet
   {
     \tl_put_right:Nn \l__examzh_choices_counters_tl
       { \l__examzh_process_counter:NN #1 #2 }
@@ -156,12 +159,15 @@
   }
 
 \cs_new:Npn \l__examzh_process_counter:NN #1#2
+  % #1: \Alph
+  % #2: \@Alph
   {
     \cs_set:Npn #1 { \l__examzh_process_counter_aux:Nn #2 }
     \cs_set:Npn #2 { \l__examzh_process_counter_aux:Nn #2 }
   }
 
 \cs_new:Npn \l__examzh_process_counter_aux:Nn #1#2
+  % #1: \@Alph
   {
     \tl_if_eq:nnTF {#2} { * }
       {
