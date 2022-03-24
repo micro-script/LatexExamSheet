@@ -60,8 +60,8 @@
   {
     \tl_put_right:Nn \l__examzh_choices_counters_tl
       { \l__examzh_process_counter:NN #1 #2 }
-    \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #1 : } #2
-    \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #2 : } #2
+    \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #1 : } #2
+    \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #2 : } #2
   }
 
 \AddChoicesCounter \arabic \@arabic { 0 }
@@ -165,11 +165,11 @@
   {
     \tl_if_eq:nnTF {#2} { * }
       {
-        \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : }
+        \use:c { __examzh_choices_save_ \cs_to_str:N #1 : }
           { \l__examzh_choices_index_int }
       }
       {
-        \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : } {#2}
+        \use:c { __examzh_choices_save_ \cs_to_str:N #1 : } {#2}
       }
   }
 
