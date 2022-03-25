@@ -58,12 +58,13 @@
 
 \NewDocumentCommand \AddChoicesCounter { m m m }
   {
-    % TODO 这一步的作用是什么
+    % TODO 这一步的作用是什么，为什么要把函数放在 tl 变量里而不是直接在某处使用？
     \tl_put_right:Nn \l__examzh_choices_counters_tl
       { \l__examzh_process_counter:NN #1 #2 }
-    % \__examzh_chioces_save_\arabic: 和 \__examzh_chioces_save_\@arabic: 都是一样的含义：\@alph
-    \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #1 : } #2
-    \cs_set_eq:cN { __examzh_chioces_save_ \cs_to_str:N #2 : } #2
+    % \__examzh_choices_save_\arabic: 和 \__examzh_choices_save_\@arabic: 都是一样的含义：\@alph
+    % 那为何要有两个
+    \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #1 : } #2
+    \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #2 : } #2
   }
 
 % TODO #3 的作用是什么
@@ -95,7 +96,7 @@
     % 用 \item 分割选项
     \seq_set_split:Nnn \l__examzh_choices_seq { \item } {#2}
     % TODO 收集正确的选项
-    % \examzh_choices_collect_correct_chioces:N \l__examzh_choices_seq
+    % \examzh_choices_collect_correct_choices:N \l__examzh_choices_seq
     % \seq_if_empty:NF \l__examzh_choices_seq
       % { \seq_pop_left:NN \l__examzh_choices_seq \l_tmpa_tl }
     % 计算标签和选项内容的最大自然宽度
@@ -103,6 +104,8 @@
     % label-pos = auto 时自动选择标签位置
     \__examzh_choices_set_auto_label_pos:
     % 如果用户没有声明列数，计算合适的列数
+    % 「学习点」从默认值是否被改变来测试用户是否输入
+    % 用户没有输入的话就采用自动计算列数
     \int_compare:nNnT { \l__examzh_choices_columns_int } < {1}
       { \__examzh_choices_calc_columns: }
     % 计算每个选项内容的宽度 \l__examzh_choices_item_width_dim
@@ -115,7 +118,7 @@
 \seq_new:N \l__examzh_choices_correct_choices_seq
 
 % 收集正确的选项，保存在 \l__examzh_choices_correct_choices_seq
-\cs_new:Npn \examzh_choices_collect_correct_chioces:N #1
+\cs_new:Npn \examzh_choices_collect_correct_choices:N #1
   % #1: \l__examzh_choices_seq
   {
     \seq_clear:N \l__examzh_choices_correct_choices_seq
@@ -188,10 +191,10 @@
       }
   }
 
-
+% TODO 没看懂怎么实现的
 \int_new:N \l__examzh_choices_index_int
 
-% \Alph* 生成正确的标签
+% \Alph* 形式生成正确的标签
 \cs_new:Npn \__examzh_choices_the_label:n #1
   {
     \group_begin:
@@ -212,18 +215,19 @@
     \tl_if_eq:nnTF {#2} { * }
       {
         % 如果是 \alph* 类型的，效果为 \alph{ \l__examzh_choices_index_int }
-        \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : }
+        \use:c { __examzh_choices_save_ \cs_to_str:N #1 : }
           { \l__examzh_choices_index_int }
       }
       {
         % 否则就是 \alph{...} 效果
-        \use:c { __examzh_chioces_save_ \cs_to_str:N #1 : } {#2}
+        \use:c { __examzh_choices_save_ \cs_to_str:N #1 : } {#2}
       }
   }
 
 
 % 超过这一高度阈值的选项视为插图模式
 % 注意使用 tl
+% TODO 为何要使用 tl 而不用 dim ？
 \tl_new:N \l__examzh_choices_figure_mode_threshold_tl
 \tl_set:Nn \l__examzh_choices_figure_mode_threshold_tl { 2 \baselineskip }
 
@@ -246,21 +250,27 @@
 % 计算选项的合适列数，存到 \l__examzh_choices_columns_int
 \cs_new:Npn \__examzh_choices_calc_columns:
   {
-    % 若标签不在底部，将 label-width 和 label-sep 算进来
+    % 若标签不在底部，将 label-width 和 label-sep 加到 \l__examzh_choices_item_width_dim 里面
     \tl_if_eq:NnF \l__examzh_choices_label_pos_tl { bottom }
       {
         \dim_add:Nn \l__examzh_choices_item_width_dim
           { \l__examzh_choices_label_width_dim + \l__examzh_choices_label_sep_dim }
       }
+    % [总宽度 / 最大的选项宽度] = 列数 
+    % 这个计算出来是作为「算出来的、可以排的最大列数」
+    % 将要和下面的手动（或者默认的）最大列数进行比较，来确定最后排多少列
     \int_set:Nn \l__examzh_choices_columns_int
       {
         \int_div_truncate:nn
           { \l__examzh_choices_total_width_dim + \l__examzh_choices_column_sep_dim }
           { \l__examzh_choices_item_width_dim + \l__examzh_choices_column_sep_dim }
       }
+    % 如果上面的计算算出来是 0 的话，就设置为 1
     \int_compare:nNnTF { \l__examzh_choices_columns_int } = {0}
       { \int_set:Nn \l__examzh_choices_columns_int {1} }
     % 从允许的最大列数开始，每次除以 2，直到行宽允许排下
+    % 比如设置了最大列数是 4 ， 但是算出来可以排 5 
+    % 那么就会将 [4 / 2] = 2 < 5 作为列数
     \int_set_eq:NN \l__examzh_tmp_int \l__examzh_choices_max_columns_int
     \int_while_do:nNnn
       { \l__examzh_tmp_int } > { \l__examzh_choices_columns_int }
@@ -277,12 +287,14 @@
   {
     \dim_set:Nn \l__examzh_choices_item_width_dim
       {
+        % TODO 不是很理解这里的算法
         ( \l__examzh_choices_total_width_dim
           - \l__examzh_choices_columns_int \l__examzh_choices_column_sep_dim
           + \l__examzh_choices_column_sep_dim
         ) / \l__examzh_choices_columns_int
       }
     % 若标签不在底部，将 label-width 和 label-sep 算进来
+    % TODO 算进来？那怎么还是 sub？
     \tl_if_eq:NnF \l__examzh_choices_label_pos_tl { bottom }
       {
         \dim_sub:Nn \l__examzh_choices_item_width_dim
@@ -308,6 +320,7 @@
             \newline
             \int_set:Nn \l__examzh_choices_current_col_int {1}
           }
+        % TODO 为什么 > 1 才加呢？ 这样的话第 1 列和第 2 列之间就没有这个间距？
         \int_compare:nNnT { \l__examzh_choices_current_col_int } > {1}
           {
             \skip_horizontal:N \l__examzh_choices_column_sep_dim
@@ -391,7 +404,7 @@
   {
     \hcoffin_set:Nn \l__examzh_choices_item_coffin
       {
-        % 优先尝试使用 bbox，这是因为在 \vcoffin_set 外部能保留原来的 \linewidth 和
+        % 优先尝试使用 hbox，这是因为在 \vcoffin_set 外部能保留原来的 \linewidth 和
         % \textwidth，方便用户在 \includegraphics 中使用
         \hbox_set:Nn \l_tmpa_box {#1}
         % 若盒子的自然高度大于 2 行，且深度为 0pt，设置为插图模式
@@ -463,6 +476,8 @@
           }
       }
     \group_begin:
+      % TODO 为何要用 \CJKfamily+ { }
+      % xeCJK 宏包文档：当 \CJKfamily+ 参数为空时，则使用当前的 CJK 字体族。
       \CJKfamily+ { }
       \symbol { \l_tmpa_int }
     \group_end:
