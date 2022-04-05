@@ -45,6 +45,38 @@
 
 ## 使用方法
 
+### 西文和数学字体
+
+模板中可以设置西文和数学的字体。
+
+```tex
+\examsetup{
+  font      = times,
+  math-font = xits,
+}
+```
+
+西文字体 `font` 有以下选项：
+- `newcm`（默认）New Computer Modern
+- `lm` Latin Modern
+- `times` Times New Roman
+- `termes` TeX Gyre Termes
+- `stix` STIX Two
+- `xits` XITS
+- `libertinus` Libertinus
+
+数学字体 `math-font` 有以下选项：
+- `newcm`（默认）New Computer Modern Math
+- `lm` Latin Modern Math
+- `termes` TeX Gyre Termes Math
+- `stix` STIX Two Math
+- `xits` XITS Math
+- `libertinus` Libertinus Math
+- `cambria` Cambria Math
+
+注意数学字体使用了 `unicode-math` 宏包进行配置。
+
+
 ### 题目环境 `question` 和 `problem`
 
 选择题和填空题使用 `question` 环境，解答题使用 `problem` 环境。两者的内容对齐方式不同。
