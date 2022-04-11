@@ -76,12 +76,7 @@
 \RequirePackage { amsmath }
 \RequirePackage { enumitem }
 
-% 由于 mathtools 需要在 unicode-math 前载入，所以推迟载入 unicode-math
-\AtBeginOfPackageFile* { siunitx }
-  { \RequirePackage { unicode-math } }
-\AtEndPreamble
-  { \RequirePackage { unicode-math } }
-
+\RequirePackage { exam-zh-font }
 \RequirePackage { exam-zh-question }
 \RequirePackage { exam-zh-choices }
 
@@ -124,96 +119,6 @@
 
 % 字体
 
-% 西文字体使用 New Computer Modern
-\setmainfont { NewCM10 }
-  [
-    Extension      = .otf ,
-    UprightFont    = *-Book ,
-    BoldFont       = *-Bold ,
-    ItalicFont     = *-BookItalic ,
-    BoldItalicFont = *-BoldItalic ,
-  ]
-\setsansfont { NewCMSans10 }
-  [
-    Extension         = .otf ,
-    UprightFont       = *-Book ,
-    BoldFont          = *-Bold ,
-    ItalicFont        = *-BookOblique ,
-    BoldItalicFont    = *-BoldOblique ,
-  ]
-\setmonofont { NewCMMono10 }
-  [
-    Extension           = .otf ,
-    UprightFont         = *-Book ,
-    ItalicFont          = *-BookItalic ,
-    BoldFont            = *-Bold ,
-    BoldItalicFont      = *-BoldOblique ,
-  ]
-
-% 数学字体
-
-% 按照国标样式配置 unicode-math
-
-\tl_new:N \l__examzh_save_leq_tl
-\tl_new:N \l__examzh_save_geq_tl
-\AtEndOfPackageFile* { unicode-math }
-  {
-    \unimathsetup
-      {
-        math-style = ISO ,
-        bold-style = ISO ,
-        partial    = upright ,
-      }
-    \AtBeginDocument
-      {
-        \tl_set_eq:NN \leq \l__examzh_save_leq_tl
-        \tl_set_eq:NN \geq \l__examzh_save_geq_tl
-        \tl_set_eq:NN \leq \leqslant
-        \tl_set_eq:NN \geq \geqslant
-      }
-    \cs_set_protected:Npn \mathellipsis { \mathinner { \unicodecdots } }
-  }
-
-\AtEndOfPackageFile* { unicode-math }
-  {
-    \setmathfont { NewCMMath-Book }
-      [
-        Extension    = .otf ,
-        StylisticSet = 2 ,
-      ]
-    \setmathfont { NewCMMath-Book }
-      [
-        Extension    = .otf ,
-        StylisticSet = 1 ,
-        range        = { scr , bfscr } ,
-      ]
-    \setmathrm { NewCM10 }
-      [
-        Extension      = .otf ,
-        UprightFont    = *-Book ,
-        BoldFont       = *-Bold ,
-        ItalicFont     = *-BookItalic ,
-        BoldItalicFont = *-BoldItalic ,
-      ]
-    \setmathsf { NewCMSans10 }
-      [
-        Extension         = .otf ,
-        UprightFont       = *-Book ,
-        BoldFont          = *-Bold ,
-        ItalicFont        = *-BookOblique ,
-        BoldItalicFont    = *-BoldOblique ,
-      ]
-    \setmathtt { NewCMMono10 }
-      [
-        Extension           = .otf ,
-        UprightFont         = *-Book ,
-        ItalicFont          = *-BookItalic ,
-        BoldFont            = *-Bold ,
-        BoldItalicFont      = *-BoldOblique ,
-      ]
-  }
-
-
 % 中文字体
 
 % 在 ctex 的字体配置的基础上进行一些修改
@@ -238,20 +143,6 @@
 \skip_set:Nn \lineskip { .5em }
 
 
-
-% unicode-math 的配置
-
-% 兼容旧的粗体命令：\pkg{bm} 的 \cs{bm} 和 \pkg{amsmath} 的 \cs{boldsymbol}。
-\AtEndOfPackageFile* { unicode-math }
-  {
-    \NewDocumentCommand \bm { m } { { \symbfit { ##1 } } }
-    \RenewDocumentCommand \boldsymbol { m } { { \symbfit { ##1 } } }
-    % 兼容 \pkg{amsfonts} 和 \pkg{amssymb} 中的一些命令。
-    \NewDocumentCommand \square { } { \mdlgwhtsquare }
-    \NewDocumentCommand \blacksquare { } { \mdlgblksquare }
-    \AtBeginDocument
-      { \RenewDocumentCommand \checkmark { } { \ensuremath{ ✓ } } }
-  }
 
 
 

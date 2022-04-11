@@ -5,11 +5,9 @@
 \documentclass[zihao = -4]{exam-zh}
 % \documentclass[fontset = founder]{exam-zh}
 
-\usepackage{graphicx}
-\usepackage{unicode-math}
-\usepackage{siunitx}
-
 \examsetup{
+  font      = newcm,
+  math-font = newcm,
   question = {
     answer-color = black,
     show-points  = auto,   % 显示题目分数
@@ -25,6 +23,9 @@
     max-columns = 4,      % 最大列数
   },
 }
+
+\usepackage{graphicx}
+\usepackage{siunitx}
 
 % 行内公式统一按照行间的样式
 \everymath{\displaystyle}
