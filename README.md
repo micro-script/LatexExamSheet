@@ -85,7 +85,7 @@
 - `answer-color` 答案的颜色（默认：`black`）。
 - `index` 题号。
 - `points` 题目的分数（默认：`0`）。
-- `show-points` 是否显示选择题的括号（默认 `false`）。
+- `show-paren` 是否显示选择题的括号（默认 `false`）。
 - `show-points` 是否显示题目的分数（默认 `auto`：选择题和填空题默认 `false`，解答题默认 `true`）。
 - `show-answer` 是否显示答案（默认：`false`）。
 - `top-sep` 题目上方垂直方向的空白距离（默认：`.5em plus .5em minus .2em`）。
