@@ -141,7 +141,7 @@
         \dim_set:Nn \labelsep   { .7em  }
         \dim_set:Nn \labelwidth { 1.3em }
         \dim_set_eq:NN \listparindent \itemindent
-       }
+      }
     \item \relax
     % 输出题目分数
     \bool_if:NT \l__examzh_question_show_points_bool
@@ -195,6 +195,26 @@
     \group_end:
   }
 
+\bool_new:N \g__examzh_fillin_line_bool
+\keys_define:nn { exam-zh / fillin }
+  {
+    type .choice:,
+    type / line .code:n = 
+      {
+        \bool_gset_true:N \g__examzh_fillin_line_bool
+      },
+    type / paren .code:n = 
+      {
+        \bool_gset_false:N \g__examzh_fillin_line_bool
+      }
+  }
+\keys_set:nn { exam-zh / fillin }
+  {
+    type = line
+  }
+\keys_define:nn { exam-zh }
+  { fillin .meta:nn = { exam-zh / fillin } {#1} }
+
 
 \dim_new:N \l__examzh_question_answer_depth_dim
 
@@ -211,20 +231,54 @@
           \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
           \dim_set:Nn \l__examzh_question_answer_depth_dim
             { \box_dp:N \l_tmpa_box }
-          \uline
-            {
-              \hspace* { 1em plus .5em minus .5em }
-              \dim_compare:nNnTF { \l__examzh_question_answer_depth_dim } > { 0.2em }
-                {
-                  \dim_sub:Nn \l__examzh_question_answer_depth_dim { 0.2em }
-                  \raisebox { \l__examzh_question_answer_depth_dim }
-                    { \box_use_drop:N \l_tmpa_box }
-                }
-                { \box_use_drop:N \l_tmpa_box }
-              \hspace* { 1em plus .5em minus .5em }
-            }
+          \bool_if:NTF \g__examzh_fillin_line_bool
+            { \__examzh_fillin_uline_T: }
+            { \__examzh_fillin_paren_T: }
         }
-        { \uline { \hspace* { 3em plus 1em minus 1em } } }
+        { 
+          \bool_if:NTF \g__examzh_fillin_line_bool
+            { \__examzh_fillin_uline_F: }
+            { \__examzh_fillin_paren_F: }
+        }
       \group_end:
     \space \ignorespaces
+  }
+
+\cs_new:Npn \__examzh_fillin_uline_T:
+  {
+    \uline
+      {
+        \hspace* { 1em plus .5em minus .5em }
+        \dim_compare:nNnTF { \l__examzh_question_answer_depth_dim } > { 0.2em }
+          {
+            \dim_sub:Nn \l__examzh_question_answer_depth_dim { 0.2em }
+            \raisebox { \l__examzh_question_answer_depth_dim }
+              { \box_use_drop:N \l_tmpa_box }
+          }
+          { \box_use_drop:N \l_tmpa_box }
+        \hspace* { 1em plus .5em minus .5em }
+      }
+  }
+
+\cs_new:Npn \__examzh_fillin_paren_T:
+  {
+    (
+      \hspace* { 1em plus .5em minus .5em }
+      \dim_compare:nNnTF { \l__examzh_question_answer_depth_dim } > { 0.2em }
+        {
+          \dim_sub:Nn \l__examzh_question_answer_depth_dim { 0.2em }
+          \raisebox { \l__examzh_question_answer_depth_dim }
+            { \box_use_drop:N \l_tmpa_box }
+        }
+        { \box_use_drop:N \l_tmpa_box }
+      \hspace* { 1em plus .5em minus .5em }
+    )
+  }
+\cs_new:Npn \__examzh_fillin_uline_F:
+  {
+    \uline { \hspace* { 3em plus 1em minus 1em } } 
+  }
+\cs_new:Npn \__examzh_fillin_paren_F:
+  {
+    ( \hspace* { 3em plus 1em minus 1em } )
   }
