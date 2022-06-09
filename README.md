@@ -119,7 +119,7 @@
 ```latex
 \examsetup{
   fillin = {
-    type = paren    %括号风格 
+    type = paren    % 括号风格 
     % type = line    % 下划线风格
   }
 }
