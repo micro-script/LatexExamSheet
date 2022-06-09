@@ -45,6 +45,38 @@
 
 ## 使用方法
 
+### 西文和数学字体
+
+模板中可以设置西文和数学的字体。
+
+```tex
+\examsetup{
+  font      = times,
+  math-font = xits,
+}
+```
+
+西文字体 `font` 有以下选项：
+- `newcm`（默认）New Computer Modern
+- `lm` Latin Modern
+- `times` Times New Roman
+- `termes` TeX Gyre Termes
+- `stix` STIX Two
+- `xits` XITS
+- `libertinus` Libertinus
+
+数学字体 `math-font` 有以下选项：
+- `newcm`（默认）New Computer Modern Math
+- `lm` Latin Modern Math
+- `termes` TeX Gyre Termes Math
+- `stix` STIX Two Math
+- `xits` XITS Math
+- `libertinus` Libertinus Math
+- `cambria` Cambria Math
+
+注意数学字体使用了 `unicode-math` 宏包进行配置。
+
+
 ### 题目环境 `question` 和 `problem`
 
 选择题和填空题使用 `question` 环境，解答题使用 `problem` 环境。两者的内容对齐方式不同。
@@ -53,7 +85,7 @@
 - `answer-color` 答案的颜色（默认：`black`）。
 - `index` 题号。
 - `points` 题目的分数（默认：`0`）。
-- `show-points` 是否显示选择题的括号（默认 `false`）。
+- `show-paren` 是否显示选择题的括号（默认 `false`）。
 - `show-points` 是否显示题目的分数（默认 `auto`：选择题和填空题默认 `false`，解答题默认 `true`）。
 - `show-answer` 是否显示答案（默认：`false`）。
 - `top-sep` 题目上方垂直方向的空白距离（默认：`.5em plus .5em minus .2em`）。
@@ -110,7 +142,7 @@
 
 `exam-zh-choices` 模块还提供了 `\circlednumber` 命令调用中文字体生成带圈数字，该命令既可以接受 LaTeX2e 计数器的名字（如 `section`）作为参数，也可以接受数值表达式，比如 `\circlednumber{7}`，但仅限 0～50 的整数。而且有的字体可能没有提供 10 以上的字形，建议只对 10 以内的值使用。
 
-如果用户需要使用其他形式得数字作为 `choices` 的标签，需要使用 `\AddChoicesCounter` 命令将其添加进使 `label` 选项的识别范围内（类似 `enumitem` 的 `\AddEnumerateCounter`）。它的格式是 `\AddChoicesCounter{⟨LaTeX command⟩}{⟨internal command⟩}{⟨widest label⟩}`，其中 `⟨LaTeX command⟩` 是在 `label` 选线中的形式，`⟨internal command⟩` 是内部的实现，`⟨widest label⟩` 是最宽的标签。比如带圈数字的添加方法：`\AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}{1}`。
+如果用户需要使用其他形式的数字作为 `choices` 的标签，需要使用 `\AddChoicesCounter` 命令将其添加进 `label` 选项的识别范围内（类似 `enumitem` 的 `\AddEnumerateCounter`）。它的格式是 `\AddChoicesCounter{⟨LaTeX command⟩}{⟨internal command⟩}{⟨widest label⟩}`，其中 `⟨LaTeX command⟩` 是在 `label` 选项中的形式，`⟨internal command⟩` 是内部的实现，`⟨widest label⟩` 是最宽的标签。比如带圈数字的添加方法：`\AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}{1}`。
 
 
 ### 正体的数学常数
