@@ -115,6 +115,16 @@
 
 需要注意的是，如果 `\fillin` 的参数重含有不配对的中括号时会报错，如 `\fillin[$(−\infty, 1]$]`。这时需要使用大括号将内容保护起来：`\fillin[{$(−\infty, 1]$}]`。
 
+`\fillin` 提供了样式的切换（目前就是下划线和括号两种）：
+```latex
+\examsetup{
+  fillin = {
+    type = paren    %括号风格 
+    % type = line    % 下划线风格
+  }
+}
+```
+
 
 ### 选项环境 `choices`
 
