@@ -7,6 +7,9 @@
 
 ## [Unreleased]
 
+
+## [0.1.1] - 2022-06-09
+
 ### Added
 
 - 新增 `question` 环境的 `top-sep` 和 `bottom-sep` 选项控制前后距离（[#I4SLWN](https://gitee.com/zepinglee/exam-zh/issues/I4SLWN)）。
@@ -16,6 +19,7 @@
 - 新增 `\circlednumber` 使用中文字体生成带圈数字。
 - 新增 `choices` 环境的 `label-align` 选项控制标签的对齐方式（[#I4TDSA](https://gitee.com/zepinglee/exam-zh/issues/I4TDSA)）。
 - 新增 `exam-zh-font` 模块，提供西文字体 `font` 和数学字体 `math-font` 选项（[#I512EV](https://gitee.com/zepinglee/exam-zh/issues/I512EV)）。
+- 新增 `fillin` 命令的 `type` 选项控制下划线和括号类型
 
 ### Fixed
 
@@ -28,4 +32,5 @@
 - 在 Gitee 发布。
 
 [Unreleased]: https://gitee.com/zepinglee/exam-zh/compare/v0.1.0...HEAD
-[v0.1.0]: https://gitee.com/zepinglee/exam-zh/releases/releases/v0.1.0
+[v0.1.0]: https://gitee.com/zepinglee/exam-zh/releases/v0.1.0
+[v0.1.1]: https://gitee.com/zepinglee/exam-zh/releases/v0.1.1
