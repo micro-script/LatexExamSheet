@@ -6,8 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\RequirePackage{xparse}
-\ProvidesExplClass {exam-zh} {2022-06-09} {v0.1.1} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-06-14} {v0.1.2} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -34,7 +33,7 @@
 % 加载文档类和宏包
 
 % 处理文档类选项
-\PassOptionsToClass { UTF8 , a4paper , scheme = chinese } { ctexart }
+\PassOptionsToClass { UTF8 , twoside, scheme = chinese } { ctexart }
 \DeclareOption* { \PassOptionsToClass { \CurrentOption } { ctexart } }
 \ProcessOptions*
 
@@ -110,10 +109,71 @@
 
 % 纸张和页面布局
 
-\geometry
+% 控制 a3paper 和 a4paper
+\bool_new:c { g__examzh_page_style_a4paper_bool }
+% a3paper 的页脚：两页共用一个或者仍然一页一个
+\bool_new:c { g__examzh_page_a3paper_foot_common_bool }
+
+\keys_define:nn { exam-zh / page }
   {
-    paper  = a4paper,
-    margin = 1in,
+    % 页面大小
+    style .choice:,
+    style / a3paper .code:n =
+      {
+        \bool_gset_false:c { g__examzh_page_style_a4paper_bool }
+      },
+    style / a4paper .code:n =
+      {
+        \bool_gset_true:c { g__examzh_page_style_a4paper_bool }
+      },
+    style .value_required:n = true,
+    % 页脚的类型
+    foot-style .choice:,
+    foot-style / common .code:n =
+      {
+        \bool_gset_true:c 
+          { g__examzh_page_a3paper_foot_common_bool }
+      },
+    foot-style / separate .code:n =
+      {
+        \bool_gset_false:c 
+          { g__examzh_page_a3paper_foot_common_bool }
+      }
+  }
+\keys_set:nn { exam-zh / page }
+  {
+    style = a4paper,
+    foot-style = common,
+  }
+
+\keys_define:nn { exam-zh }
+  {
+    page .meta:nn = { exam-zh / page } {#1} 
+  }
+
+\AtEndPreamble
+  {
+    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
+      {
+        % a4paper
+        \geometry
+        {
+          paper  = a4paper,
+          margin = 1in,
+        }
+      }
+      {
+        % a3paper
+        \geometry
+          {
+            paper      = a3paper,
+            landscape,
+            twocolumn,
+            columnsep  = 60mm,
+            margin     = 1in,
+            % showframe
+          }
+      }
   }
 
 
@@ -153,17 +213,59 @@
 \cs_set_eq:NN \sectionmark \use_none:n
 \cs_set_eq:NN \subsectionmark \use_none:n
 
-\pagestyle { fancy }
+\cs_new:Npn \__examzh_column_box:n #1
+  {
+    \makebox [ \columnwidth ] {#1}
+  }
+
+
 \fancypagestyle { plain }
   {
     \fancyhf { }
-    \fancyfoot [ C ]
+    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
       {
-        \small
-        数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+        % a4paper
+        \fancyfoot [ C ]
+          {
+            \small
+            数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+          }
+      }
+      {
+        % a3paper
+        \bool_if:cTF 
+          { g__examzh_page_a3paper_foot_common_bool }
+          {
+            % 两页共用一个页脚
+            \fancyfoot [ C ]
+              {
+                \small
+                数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+              }
+          }
+          {
+            % 每页一个页脚
+            \fancyfoot [ L ]
+              {
+                \__examzh_column_box:n
+                  {
+                    \small
+                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                  }
+              }
+            \fancyfoot [ R ]
+              {
+                \__examzh_column_box:n
+                  {
+                    \stepcounter { page }
+                    \small
+                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                  }
+              }
+          }
       }
   }
-\pagestyle { plain }
+\AtEndPreamble { \pagestyle { plain } }
 
 
 % 设置 enumitem 列表格式
