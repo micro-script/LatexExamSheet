@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-06-14} {v0.1.2} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-06-15} {v0.1.2} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -112,6 +112,7 @@
 \examzh_package_conflict:nn { unicode-math } { upgreek }
 
 \examzh_package_conflict:nn { enumitem } { paralist }
+
 
 
 % 纸张和页面布局
@@ -341,7 +342,8 @@
                   {
                     % foot-style = separate
                     \int_set:Nn \l__examzh_sealline_page_number_int
-                      { \c@page / 2 }
+                      { \c@page }
+                      % { \c@page / 2 }
                   }
               }
             \put (0cm, 0cm)
@@ -520,7 +522,7 @@
             text~along~path,
             reverse~path,
             text~align = fit~to~path,
-            text       = {密封线内不得答题}
+            text       = {密封线内不答题}
           }
       ]
       ([xshift = -10mm, yshift = -30mm]current~page~text~area.north~west)
@@ -589,17 +591,33 @@
               {
                 \__examzh_column_box:n
                   {
+                    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
                     \small
-                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                    数学试题第 
+                    % \thepage 
+                    \int_eval:n { 2 * \c@page - 1 }
+                    { } 页
+                    （共 
+                    % \pageref { LastPage } 
+                    \int_eval:n { 2 * \l__examzh_tmp_int }
+                    ~ 页）
                   }
               }
             \fancyfoot [ R ]
               {
                 \__examzh_column_box:n
                   {
-                    \int_gincr:N \c@page
+                    % \int_gincr:N \c@page
+                    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
                     \small
-                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                    数学试题第 
+                    \int_eval:n { 2 * \c@page }
+                    { } 
+                    页
+                    （共 
+                    % \pageref { LastPage }
+                    \int_eval:n { 2 * \l__examzh_tmp_int }
+                    ~ 页）
                   }
               }
           }
