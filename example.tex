@@ -8,15 +8,18 @@
 \examsetup{
   page = {
     style       = a3paper,         % 页面尺寸：a3paper|a4paper
-    foot-style  = common,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
+    foot-style  = separate,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
+  },
+  sealline = {
+    show-sealline = true
   },
   font      = newcm,
   math-font = newcm,
   question = {
     answer-color = black,
     show-points  = auto,   % 显示题目分数
-    show-paren   = true,  % 显示选择题括号
-    show-answer  = true,  % 显示答案
+    show-paren   = true,   % 显示选择题括号
+    show-answer  = true,    % 显示答案
     top-sep      = .5em plus .5em minus .2em ,
     bottom-sep   = .5em plus .5em minus .2em ,
   },

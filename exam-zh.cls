@@ -33,7 +33,7 @@
 % 加载文档类和宏包
 
 % 处理文档类选项
-\PassOptionsToClass { UTF8 , twoside, scheme = chinese } { ctexart }
+\PassOptionsToClass { UTF8 , scheme = chinese } { ctexart }
 \DeclareOption* { \PassOptionsToClass { \CurrentOption } { ctexart } }
 \ProcessOptions*
 
@@ -75,9 +75,16 @@
 \RequirePackage { amsmath }
 \RequirePackage { enumitem }
 
+\ExplSyntaxOff
+\RequirePackage { tikzpagenodes }
+\usetikzlibrary { decorations.markings }
+\usetikzlibrary { decorations.text }
+\ExplSyntaxOn
+
 \RequirePackage { exam-zh-font }
 \RequirePackage { exam-zh-question }
 \RequirePackage { exam-zh-choices }
+
 
 
 % 对冲突的宏包报错。
@@ -151,31 +158,6 @@
     page .meta:nn = { exam-zh / page } {#1} 
   }
 
-\AtEndPreamble
-  {
-    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
-      {
-        % a4paper
-        \geometry
-        {
-          paper  = a4paper,
-          margin = 1in,
-        }
-      }
-      {
-        % a3paper
-        \geometry
-          {
-            paper      = a3paper,
-            landscape,
-            twocolumn,
-            columnsep  = 60mm,
-            margin     = 1in,
-            % showframe
-          }
-      }
-  }
-
 
 % 字体
 
@@ -204,70 +186,6 @@
 
 
 
-
-
-% 页眉和页脚
-
-\tl_set:Nn \headrulewidth { 0pt }
-\cs_set_eq:NN \@mkboth \use_none:n
-\cs_set_eq:NN \sectionmark \use_none:n
-\cs_set_eq:NN \subsectionmark \use_none:n
-
-\cs_new:Npn \__examzh_column_box:n #1
-  {
-    \makebox [ \columnwidth ] {#1}
-  }
-
-
-\fancypagestyle { plain }
-  {
-    \fancyhf { }
-    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
-      {
-        % a4paper
-        \fancyfoot [ C ]
-          {
-            \small
-            数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-          }
-      }
-      {
-        % a3paper
-        \bool_if:cTF 
-          { g__examzh_page_a3paper_foot_common_bool }
-          {
-            % 两页共用一个页脚
-            \fancyfoot [ C ]
-              {
-                \small
-                数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-              }
-          }
-          {
-            % 每页一个页脚
-            \fancyfoot [ L ]
-              {
-                \__examzh_column_box:n
-                  {
-                    \small
-                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-                  }
-              }
-            \fancyfoot [ R ]
-              {
-                \__examzh_column_box:n
-                  {
-                    \stepcounter { page }
-                    \small
-                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-                  }
-              }
-          }
-      }
-  }
-\AtEndPreamble { \pagestyle { plain } }
-
-
 % 设置 enumitem 列表格式
 \setlist{nosep}
 
@@ -288,16 +206,17 @@
 \cs_set:Npn \@maketitle
   {
     \newpage
-    \null
-    \vskip 2em
-    \begin { center}
+    % \null
+    % \vskip 2em
+    \secret \par
+    \begin { center }
       \let \footnote \thanks
       { \Large \@title \par }
       \vskip 1.5em
       { \sffamily \bfseries \huge \l__exam_zh_subject_tl }
     \end { center }
     \par
-    \vskip 1.5em
+    \vskip 0.5em
   }
 
 
@@ -310,7 +229,10 @@
     \fi:
   }
 
-
+\NewDocumentCommand \secret { }
+  {
+    绝密 $\bigstar$ 启用前
+  }
 % 祝考试顺利
 \NewDocumentCommand \goodluck { }
   {
@@ -375,3 +297,256 @@
     \ProvideDocumentCommand \qty        { } { \SI }
     \ProvideDocumentCommand \qtyproduct { } { \SI }
   }
+
+
+
+% 密封线
+\bool_new:N \g__examzh_sealline_show_bool
+
+\keys_define:nn { exam-zh / sealline }
+  {
+    show-sealline .bool_gset:N = \g__examzh_sealline_show_bool
+  }
+\keys_set:nn { exam-zh / sealline }
+  {
+    show-sealline = true
+  }
+\keys_define:nn { exam-zh }
+  { sealline .meta:nn = { exam-zh / sealline } {#1} }
+
+\AtEndPreamble
+  {
+    \bool_if:NT \g__examzh_sealline_show_bool
+      {
+        \AddToHook { shipout / background }
+          {
+            \put (0cm, 0cm)
+              {
+                \int_if_odd:nTF { \c@page }
+                  {
+                    \__examzh_sealline_odd:
+                  }
+                  {
+                    \__examzh_sealline_even:
+                  }
+              }
+          }
+      }
+  }
+\AtEndPreamble
+  {
+    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
+      {
+        % a4paper
+        \geometry
+          {
+            paper  = a4paper,
+            margin = 1in,
+          }
+      }
+      {
+        % a3paper
+        \bool_if:NTF \g__examzh_sealline_show_bool
+          {
+            % 有密封线
+            \geometry
+              {
+                paper      = a3paper,
+                landscape,
+                twocolumn,
+                columnsep  = 30mm,
+                margin     = 1in,
+                left       = 1.5in
+                % showframe
+              }
+          }
+          {
+            % 无密封线
+            \geometry
+              {
+                paper      = a3paper,
+                landscape,
+                twocolumn,
+                columnsep  = 30mm,
+                margin     = 1in,
+              }
+          }
+      }
+  }
+
+
+\cs_new:Npn \__examzh_sealline_odd:
+  {
+    \begin{tikzpicture}
+      [
+        remember~picture,
+        overlay,
+        every~node/.style = {fill = white},
+        % transform~shape
+      ]
+      % 密封线：线
+      \__examzh_sealline_odd_line:
+      % 密封线：小圆圈
+      \__examzh_sealline_odd_circle:
+      % 线上的文字
+      \__examzh_sealline_odd_text_around_line:
+    \end{tikzpicture}
+  }
+
+\cs_new:Npn \__examzh_sealline_even:
+  {
+    \begin{tikzpicture}[remember~picture, overlay]
+      \draw 
+        [
+          line~width    = 2.7pt,
+          line~cap      = round,
+          dash~pattern  = 0n~0pt~off~9pt
+        ] 
+        ([xshift = -2.8cm]current~page.north~east)
+          --
+        ([xshift = -2.8cm]current~page.south~east);
+      \fill
+        [
+          decorate,
+          decoration =
+            {
+              markings,
+              mark = between~positions~0.04~and~0.98~step~4cm~with
+                {
+                  \node [circle, draw = black, fill = white] {};
+                }
+            }
+        ] 
+        ([xshift = -2.8cm]current~page.north~east)
+          --
+        ([xshift = -2.8cm]current~page.south~east);
+      \path
+        [
+          decorate,
+          decoration =
+            {
+              text~along~path,
+              text~align = fit~to~path,
+              text = {密封线内不得答题}
+            }
+        ]
+        ([xshift = -2.4cm, yshift = -5cm]current~page.north~east)
+          --
+        ([xshift = -2.4cm, yshift = 5cm]current~page.south~east);
+    \end{tikzpicture}
+  }
+
+% 虚线
+\cs_new:Npn \__examzh_sealline_odd_line:
+  {
+    \draw
+      [
+        line~width   = 2.7pt,
+        line~cap     = round,
+        dash~pattern = 0n~0pt~off~9pt
+      ]
+      ([xshift = -8mm]current~page~text~area.north~west)
+        --
+      ([xshift = -8mm]current~page~text~area.south~west);
+  }
+% 小圆圈
+\cs_new:Npn \__examzh_sealline_odd_circle:
+  {
+    \fill
+      [
+        decorate,
+        decoration =
+          {
+            markings,
+            mark = between~positions~0.07~and~0.98~step~3.5cm~with
+              {
+                \node [circle, draw = black, fill = white] {};
+              }
+          }
+      ]
+      ([xshift = -8mm]current~page~text~area.north~west)
+        --
+      ([xshift = -8mm]current~page~text~area.south~west);
+  }
+% 线上的文字（密封线外不得答题）
+\cs_new:Npn \__examzh_sealline_odd_text_around_line:
+  {
+    \path
+      [
+        decorate,
+        decoration =
+          {
+            text~along~path,
+            reverse~path,
+            text~align = fit~to~path,
+            text       = {密封线内不得答题}
+          }
+      ]
+      ([xshift = -10mm, yshift = -30mm]current~page~text~area.north~west)
+        --
+      ([xshift = -10mm, yshift = 30mm]current~page~text~area.south~west);
+  }
+
+
+
+% 页眉和页脚
+
+\tl_set:Nn \headrulewidth { 0pt }
+\cs_set_eq:NN \@mkboth \use_none:n
+\cs_set_eq:NN \sectionmark \use_none:n
+\cs_set_eq:NN \subsectionmark \use_none:n
+
+\cs_new:Npn \__examzh_column_box:n #1
+  {
+    \makebox [ \columnwidth ] {#1}
+  }
+
+
+\fancypagestyle { plain }
+  {
+    \fancyhf { }
+    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
+      {
+        % a4paper
+        \fancyfoot [ C ]
+          {
+            \small
+            数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+          }
+      }
+      {
+        % a3paper
+        \bool_if:cTF 
+          { g__examzh_page_a3paper_foot_common_bool }
+          {
+            % 两页共用一个页脚
+            \fancyfoot [ C ]
+              {
+                \small
+                数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+              }
+          }
+          {
+            % 每页一个页脚
+            \fancyfoot [ L ]
+              {
+                \__examzh_column_box:n
+                  {
+                    \small
+                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                  }
+              }
+            \fancyfoot [ R ]
+              {
+                \__examzh_column_box:n
+                  {
+                    \int_gincr:N \c@page
+                    \small
+                    数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                    \int_gdecr:N \c@page
+                  }
+              }
+          }
+      }
+  }
+\AtEndPreamble { \pagestyle { plain } }
