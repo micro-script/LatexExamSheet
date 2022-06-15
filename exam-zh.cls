@@ -326,12 +326,23 @@
           {
             \bool_if:cTF { g__examzh_page_style_a4paper_bool }
               {
+                % a4paper
                 \int_set:Nn \l__examzh_sealline_page_number_int
                   { \c@page }
               }
               {
-                \int_set:Nn \l__examzh_sealline_page_number_int
-                  { \c@page / 2 }
+                % a3paper
+                \bool_if:cTF { g__examzh_page_a3paper_foot_common_bool }
+                  {
+                    % foot-style = common
+                    \int_set:Nn \l__examzh_sealline_page_number_int
+                      { \c@page }
+                  }
+                  {
+                    % foot-style = separate
+                    \int_set:Nn \l__examzh_sealline_page_number_int
+                      { \c@page / 2 }
+                  }
               }
             \put (0cm, 0cm)
               {
@@ -385,8 +396,8 @@
                 twocolumn,
                 columnsep  = 30mm,
                 margin     = 1in,
-                outer      = 1.5in,
-                inner      = 0.5in,
+                inner      = 1.3in,
+                outer      = 0.8in,
                 % showframe
               }
           }
