@@ -314,15 +314,28 @@
 \keys_define:nn { exam-zh }
   { sealline .meta:nn = { exam-zh / sealline } {#1} }
 
+
+% 用于处理页码实现密封线的 a4 和 a3 奇偶统一处理
+\int_new:N \l__examzh_sealline_page_number_int
+
 \AtEndPreamble
   {
     \bool_if:NT \g__examzh_sealline_show_bool
       {
         \AddToHook { shipout / background }
           {
+            \bool_if:cTF { g__examzh_page_style_a4paper_bool }
+              {
+                \int_set:Nn \l__examzh_sealline_page_number_int
+                  { \c@page }
+              }
+              {
+                \int_set:Nn \l__examzh_sealline_page_number_int
+                  { \c@page / 2 }
+              }
             \put (0cm, 0cm)
               {
-                \int_if_odd:nTF { \c@page }
+                \int_if_odd:nTF { \l__examzh_sealline_page_number_int }
                   {
                     \__examzh_sealline_odd:
                   }
@@ -338,10 +351,25 @@
     \bool_if:cTF { g__examzh_page_style_a4paper_bool }
       {
         % a4paper
-        \geometry
+        \bool_if:NTF \g__examzh_sealline_show_bool
           {
-            paper  = a4paper,
-            margin = 1in,
+            % 有密封线
+            \geometry
+              {
+                twoside,
+                paper  = a4paper,
+                margin = 1in,
+                inner  = 1.3in,
+                outer  = 0.8in,
+              }
+          }
+          {
+            % 无密封线
+            \geometry
+              {
+                paper  = a4paper,
+                margin = 1in,
+              }
           }
       }
       {
@@ -351,12 +379,14 @@
             % 有密封线
             \geometry
               {
+                twoside,
                 paper      = a3paper,
                 landscape,
                 twocolumn,
                 columnsep  = 30mm,
                 margin     = 1in,
-                left       = 1.5in
+                outer      = 1.5in,
+                inner      = 0.5in,
                 % showframe
               }
           }
@@ -396,43 +426,12 @@
 \cs_new:Npn \__examzh_sealline_even:
   {
     \begin{tikzpicture}[remember~picture, overlay]
-      \draw 
-        [
-          line~width    = 2.7pt,
-          line~cap      = round,
-          dash~pattern  = 0n~0pt~off~9pt
-        ] 
-        ([xshift = -2.8cm]current~page.north~east)
-          --
-        ([xshift = -2.8cm]current~page.south~east);
-      \fill
-        [
-          decorate,
-          decoration =
-            {
-              markings,
-              mark = between~positions~0.04~and~0.98~step~4cm~with
-                {
-                  \node [circle, draw = black, fill = white] {};
-                }
-            }
-        ] 
-        ([xshift = -2.8cm]current~page.north~east)
-          --
-        ([xshift = -2.8cm]current~page.south~east);
-      \path
-        [
-          decorate,
-          decoration =
-            {
-              text~along~path,
-              text~align = fit~to~path,
-              text = {密封线内不得答题}
-            }
-        ]
-        ([xshift = -2.4cm, yshift = -5cm]current~page.north~east)
-          --
-        ([xshift = -2.4cm, yshift = 5cm]current~page.south~east);
+      % 密封线：线
+      \__examzh_sealline_even_line:
+      % 密封线：小圆圈
+      \__examzh_sealline_even_circle:
+      % 线上的文字
+      \__examzh_sealline_even_text_around_line:
     \end{tikzpicture}
   }
 
@@ -449,6 +448,19 @@
         --
       ([xshift = -8mm]current~page~text~area.south~west);
   }
+\cs_new:Npn \__examzh_sealline_even_line:
+  {
+    \draw 
+      [
+        line~width    = 2.7pt,
+        line~cap      = round,
+        dash~pattern  = 0n~0pt~off~9pt
+      ] 
+      ([xshift = 8mm]current~page~text~area.north~east)
+        --
+      ([xshift = 8mm]current~page~text~area.south~east);
+  }
+
 % 小圆圈
 \cs_new:Npn \__examzh_sealline_odd_circle:
   {
@@ -468,6 +480,24 @@
         --
       ([xshift = -8mm]current~page~text~area.south~west);
   }
+\cs_new:Npn \__examzh_sealline_even_circle:
+  {
+    \fill
+      [
+        decorate,
+        decoration =
+          {
+            markings,
+            mark = between~positions~0.04~and~0.98~step~4cm~with
+              {
+                \node [circle, draw = black, fill = white] {};
+              }
+          }
+      ] 
+      ([xshift = 8mm]current~page~text~area.north~east)
+        --
+      ([xshift = 8mm]current~page~text~area.south~east);
+  }
 % 线上的文字（密封线外不得答题）
 \cs_new:Npn \__examzh_sealline_odd_text_around_line:
   {
@@ -485,6 +515,22 @@
       ([xshift = -10mm, yshift = -30mm]current~page~text~area.north~west)
         --
       ([xshift = -10mm, yshift = 30mm]current~page~text~area.south~west);
+  }
+\cs_new:Npn \__examzh_sealline_even_text_around_line:
+  {
+    \path
+      [
+        decorate,
+        decoration =
+          {
+            text~along~path,
+            text~align = fit~to~path,
+            text = {密封线内不得答题}
+          }
+      ]
+      ([xshift = 10mm, yshift = -30mm]current~page~text~area.north~east)
+        --
+      ([xshift = 10mm, yshift = 30mm]current~page~text~area.south~east);
   }
 
 
@@ -543,7 +589,6 @@
                     \int_gincr:N \c@page
                     \small
                     数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-                    \int_gdecr:N \c@page
                   }
               }
           }
