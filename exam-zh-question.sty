@@ -9,8 +9,8 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-02-04} {v0.1.0}
-    {exam-zh question module}
+\ProvidesExplPackage {exam-zh-question} {2022-06-15} {v0.1.2}
+  {exam-zh question module}
 
 
 \RequirePackage{ulem}
@@ -18,11 +18,10 @@
 \normalem
 
 
-% question 环境的计数器
-\int_new:N \g__examzh_question_index_int
-% question 环境的内容
-\tl_new:N \l_examzh_question_answer_tl
+% question 环境相关变量
 
+% 计数器
+\int_new:N \g__examzh_question_index_int
 % 答案颜色
 \tl_new:N \l__examzh_question_answer_color_tl
 % 题目分数
@@ -40,6 +39,7 @@
 \skip_new:N \l__examzh_question_top_sep_skip
 \skip_new:N \l__examzh_question_bottom_sep_skip
 
+
 \keys_define:nn { exam-zh }
   { question .meta:nn = { exam-zh / question } {#1} }
 
@@ -48,7 +48,7 @@
   {
     % 答案颜色
     answer-color        .tl_set:N = \l__examzh_question_answer_color_tl ,
-    % 手动调整question 环境的计数器
+    % 手动调整 question 环境的计数器
     index               .int_gset:N = \g__examzh_question_index_int ,
     % 分数
     points              .int_set:N = \l__examzh_question_points_int ,
@@ -118,8 +118,6 @@
     \par
     % 题干计数器的值加一
     \int_gincr:N \g__examzh_question_index_int
-    % 答案的内容清空
-    \tl_clear:N \l_examzh_question_answer_tl
     % 根据是否按解答题方式排版来设置是否分数要分段
     \bool_if:NTF \l__examzh_question_problem_style_bool
       { \keys_set:nn { exam-zh / question } { points-separate-par = true  } }
@@ -138,7 +136,7 @@
     % 这样设置后，在 question 中使用 enumerate 会调用 level 2 的编号
     % 也就是 question 中的 enumerate 环境直接从第二层开始
     \int_incr:N \@enumdepth
-    % 如果 show-points = auto 那么解答题显示分数，填空题和选择题的不显示分数
+    % 如果 show-points = auto 那么解答题显示分数，选择题和填空题不显示分数
     % 这样设置考虑到选择题和填空题都是每道题一样的分数，在最开始的地方说明即可
     % 而解答题不太一样
     \bool_if:NT \l__examzh_question_show_points_auto_bool
@@ -178,7 +176,7 @@
           { （ \int_use:N \l__examzh_question_points_int ~ 分 ） }
         % 是否分段（解答题需要分段）
         \bool_if:NT \l__examzh_question_points_separate_par_bool
-          % 应该是指par完之后避免分页，导致出现序号和分数出现在页面最后一行
+          % \par 分段之后使用 \nopagebreak 避免分页导致序号和分数出现在页面最后一行
           { \par \nopagebreak }   
       }
   }
@@ -187,7 +185,8 @@
 \cs_new:Npn \__examzh_question_end:nn #1#2
   {
     #2
-    \endlist   % 结束列表环境
+    % 结束列表环境
+    \endlist
     % 增加下方间距
     \addvspace { \l__examzh_question_bottom_sep_skip }
   }
@@ -222,10 +221,9 @@
           }
       }
   }
-% 本意是显示答案内容 因为 show 被用作“显示与否”的含义了，所以此处用 print
+% “打印出”答案内容 因为 show 被用作“显示与否”的含义了，所以此处用 print
 \cs_new:Npn \__examzh_question_print_answer:n #1
   {
-    % \tl_set:Nn \l_examzh_question_answer_tl {#1}
     \group_begin:
       \tl_if_eq:NnF \l__examzh_question_answer_color_tl { black }
         { \exp_args:NV \color \l__examzh_question_answer_color_tl }
@@ -233,7 +231,9 @@
     \group_end:
   }
 
+% fillin 的下划线样式控制
 \bool_new:N \g__examzh_fillin_line_bool
+
 \keys_define:nn { exam-zh / fillin }
   {
     type .choice:,
@@ -250,6 +250,7 @@
   {
     type = line
   }
+
 \keys_define:nn { exam-zh }
   { fillin .meta:nn = { exam-zh / fillin } {#1} }
 
@@ -259,19 +260,15 @@
 % 填空命令
 \NewDocumentCommand \fillin { O { } }
   {
-    % \tl_set:Nn \l_examzh_question_answer_tl {#1}
     \group_begin:
       % \ULdepth 是 \uline 的下划线的深度
       \dim_set:Nn \ULdepth { 0.3em }
       % lazy 版本是指需要判断时才去获取当前用于判断的 bool 值 
-      % 而不是类似于提前展开的感觉，就是项子越在 LaTeX3 的 b 站视频里讲到的 lazy evaluation 的味道
+      % 而不是类似于“提前展开”，和项子越在 LaTeX3 的 b站视频里讲到的 lazy evaluation 想法相同
       \bool_lazy_and:nnTF
         { \bool_if_p:N \l__examzh_question_show_answer_bool }
         { \bool_not_p:n { \tl_if_empty_p:n {#1} } }
         {
-          % 为什么要用 print answer 的 #1 而不是直接 #1 呢？
-          % 是因为后面直接就通过 use_drop tmpa_box 来显示答案
-          % 所以要把颜色加进去
           \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
           \dim_set:Nn \l__examzh_question_answer_depth_dim
             { \box_dp:N \l_tmpa_box }
