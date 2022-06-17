@@ -303,6 +303,7 @@
 
 % 密封线
 
+% 只在第一页出现
 \cs_new:Npn \__examzh_sealline_type_firstpage:
   {
     \AtEndPreamble
@@ -317,6 +318,7 @@
           }
       }
   }
+% 只在奇数页出现
 \cs_new:Npn \__examzh_sealline_type_oddpage:
   {
     \AtEndPreamble
@@ -334,6 +336,7 @@
           }
       }
   }
+% 每页都有，奇偶不同
 \cs_new:Npn \__examzh_sealline_type_everypage:
   {
     \AtEndPreamble
@@ -450,9 +453,9 @@
     odd-circle-xshift    = 8mm,
     even-circle-xshift   = 8mm,
     odd-info-content     = {
-      {\heiti 学校}：{\underline{\hspace*{10em}}},
+      {\kaishu 学校}：{\underline{\hspace*{10em}}},
       {\kaishu 班级}：{\underline{\hspace*{8em}}},
-      {\zihao{-3}姓名}：{\underline{\hspace*{8em}}},
+      {\kaishu 姓名}：{\underline{\hspace*{8em}}},
     },
     odd-info-seperator   = \hspace*{3em},
     odd-info-align       = center,
