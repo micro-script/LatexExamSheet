@@ -1,12 +1,12 @@
-# 高考数学试卷 LaTeX 模板
+# 高考试卷 LaTeX 模板
 
 - 项目主页：<https://gitee.com/zepinglee/exam-zh>
 - 作者：Zeping Lee
-- 维护者：Zeping Lee, Lijun Guo, Kangwei Xia
+- 维护者：Zeping Lee, Kangwei Xia, Lijun Guo
 - 授权：[LaTeX Project Public License 1.3c](https://www.latex-project.org/lppl.txt)
 
 
-本项目提供了一个中国高考数学试卷样式的 LaTeX 模板，旨在帮助中小学教师更方便地使用 LaTeX。模板具有以下特性：
+本项目提供了一个中国高考试卷样式的 LaTeX 模板，旨在帮助中小学教师更方便地使用 LaTeX。模板具有以下特性：
 
 1. 样式与内容尽可能分离；
 2. 选择题选项可以自动排版成合适的列数；
