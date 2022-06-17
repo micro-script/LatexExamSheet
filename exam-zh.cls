@@ -118,23 +118,23 @@
 % 纸张和页面布局
 
 % 控制 a3paper 和 a4paper
-\bool_new:c { g__examzh_page_style_a4paper_bool }
+\bool_new:c { g__examzh_page_size_a4paper_bool }
 % a3paper 的页脚：两页共用一个或者仍然一页一个
 \bool_new:c { g__examzh_page_a3paper_foot_common_bool }
 
 \keys_define:nn { exam-zh / page }
   {
     % 页面大小
-    style .choice:,
-    style / a3paper .code:n =
+    size .choice:,
+    size / a3paper .code:n =
       {
-        \bool_gset_false:c { g__examzh_page_style_a4paper_bool }
+        \bool_gset_false:c { g__examzh_page_size_a4paper_bool }
       },
-    style / a4paper .code:n =
+    size / a4paper .code:n =
       {
-        \bool_gset_true:c { g__examzh_page_style_a4paper_bool }
+        \bool_gset_true:c { g__examzh_page_size_a4paper_bool }
       },
-    style .value_required:n = true,
+    size .value_required:n = true,
     % 页脚的类型
     foot-style .choice:,
     foot-style / common .code:n =
@@ -150,7 +150,7 @@
   }
 \keys_set:nn { exam-zh / page }
   {
-    style = a4paper,
+    size = a4paper,
     foot-style = common,
   }
 
@@ -506,7 +506,7 @@
 
 \AtEndPreamble
   {
-    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
+    \bool_if:cTF { g__examzh_page_size_a4paper_bool }
       {
         % a4paper
         \bool_if:NTF \g__examzh_sealline_show_bool
@@ -780,7 +780,7 @@
 \fancypagestyle { plain }
   {
     \fancyhf { }
-    \bool_if:cTF { g__examzh_page_style_a4paper_bool }
+    \bool_if:cTF { g__examzh_page_size_a4paper_bool }
       {
         % a4paper
         \fancyfoot [ C ]
