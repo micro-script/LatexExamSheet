@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-06-15} {v0.1.2} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-06-22} {v0.1.3} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -303,122 +303,143 @@
 
 % 密封线
 
-% 只在第一页出现
-\cs_new:Npn \__examzh_sealline_type_firstpage:
-  {
-    \AtEndPreamble
-      {
-        \bool_if:NT \g__examzh_sealline_show_bool
-          {
-            \AddToHook { shipout / firstpage }
-              {
-                \put (0cm, 0cm)
-                  { \__examzh_sealline_odd: }
-              }
-          }
-      }
-  }
-% 只在奇数页出现
-\cs_new:Npn \__examzh_sealline_type_oddpage:
-  {
-    \AtEndPreamble
-      {
-        \bool_if:NT \g__examzh_sealline_show_bool
-          {
-            \AddToHook { shipout / background }
-              {
-                \put (0cm, 0cm)
-                  {
-                    \int_if_odd:nT { \c@page }
-                      { \__examzh_sealline_odd: }
-                  }
-              }
-          }
-      }
-  }
-% 每页都有，奇偶不同
-\cs_new:Npn \__examzh_sealline_type_everypage:
-  {
-    \AtEndPreamble
-      {
-        \bool_if:NT \g__examzh_sealline_show_bool
-          {
-            \AddToHook { shipout / background }
-              {
-                \put (0cm, 0cm)
-                  {
-                    \int_if_odd:nTF { \c@page }
-                      { \__examzh_sealline_odd: }
-                      { \__examzh_sealline_even: }
-                  }
-              }
-          }
-      }
-  }
 
-% 不同类型的线的参数列表
-\clist_new:N \l__examzh_sealline_odd_type_parameter_clist
-\clist_new:N \l__examzh_sealline_even_type_parameter_clist
 
 \keys_define:nn { exam-zh / sealline }
   {
     % 是否显示密封线
     show-sealline .bool_gset:N = \g__examzh_sealline_show_bool,
     % 密封线类型（也理解为出现的类型，比如只在第一页，只在奇数页）
-    sealline-type .choice:,
-    sealline-type / firstpage .code:n =
-      { \__examzh_sealline_type_firstpage: },
-    sealline-type / oddpage .code:n =
-      { \__examzh_sealline_type_oddpage: },
-    sealline-type / everypage .code:n =
-      { \__examzh_sealline_type_everypage: },
+    % sealline-type .choice:,
+    % sealline-type / firstpage .code:n =
+    %   { \__examzh_sealline_type_firstpage: },
+    % sealline-type / oddpage .code:n =
+    %   { \__examzh_sealline_type_oddpage: },
+    % sealline-type / everypage .code:n =
+    %   { \__examzh_sealline_type_everypage: },
+    sealline-type .code:n = 
+      {
+        \str_gset:Nn \g__examzh_sealline_type_str {#1}
+      },
     % 线的厚度
-    odd-line-thickness .dim_set:N = \l__examzh_sealline_odd_line_thickness_dim,
-    even-line-thickness .dim_set:N = \l__examzh_sealline_even_line_thickness_dim,
+    odd-line-thickness .dim_set:N = \g__examzh_sealline_odd_line_thickness_dim,
+    even-line-thickness .dim_set:N = \g__examzh_sealline_even_line_thickness_dim,
+    line-thickness .code:n =
+      {
+        \dim_set:Nn \g__examzh_sealline_odd_line_thickness_dim {#1}
+        \dim_set:Nn \g__examzh_sealline_even_line_thickness_dim {#1}
+      },
     % 线的偏移
-    odd-line-xshift .dim_set:N = \l__examzh_sealline_odd_line_xshift_dim,
-    odd-line-yshift .dim_set:N = \l__examzh_sealline_odd_line_yshift_dim,
-    even-line-xshift .dim_set:N = \l__examzh_sealline_even_line_xshift_dim,
-    even-line-yshift .dim_set:N = \l__examzh_sealline_even_line_yshift_dim,
+    odd-line-xshift .dim_set:N = \g__examzh_sealline_odd_line_xshift_dim,
+    odd-line-yshift .dim_set:N = \g__examzh_sealline_odd_line_yshift_dim,
+    even-line-xshift .dim_set:N = \g__examzh_sealline_even_line_xshift_dim,
+    even-line-yshift .dim_set:N = \g__examzh_sealline_even_line_yshift_dim,
+    line-xshift .code:n =
+      {
+        \dim_gset:Nn \g__examzh_sealline_odd_line_xshift_dim {#1}
+        \dim_gset:Nn \g__examzh_sealline_even_line_xshift_dim {#1}
+      },
+    line-yshift .code:n =
+      {
+        \dim_set:Nn \g__examzh_sealline_odd_line_yshift_dim {#1}
+        \dim_set:Nn \g__examzh_sealline_even_line_yshift_dim {#1}
+      },
     % 密封线的线类型
-    odd-line-type .str_set:N = \l__examzh_sealline_odd_type_str,
-    even-line-type .str_set:N = \l__examzh_sealline_even_type_str,
+    odd-line-type .str_set:N = \g__examzh_sealline_odd_type_str,
+    even-line-type .str_set:N = \g__examzh_sealline_even_type_str,
+    line-type .code:n = 
+      {
+        \str_gset:Nn \g__examzh_sealline_odd_type_str {#1}
+        \str_gset:Nn \g__examzh_sealline_even_type_str {#1}
+      },
     % 密封线路径的文字内容
-    odd-text .tl_set:N = \l__examzh_sealline_odd_text_tl,
-    even-text .tl_set:N = \l__examzh_sealline_even_text_tl,
+    odd-text .tl_set:N = \g__examzh_sealline_odd_text_tl,
+    even-text .tl_set:N = \g__examzh_sealline_even_text_tl,
+    text .code:n = 
+      {
+        \tl_gset:Nn \g__examzh_sealline_odd_text_tl {#1}
+        \tl_gset:Nn \g__examzh_sealline_even_text_tl {#1}
+      },
     % 密封线路径的文字内容偏移
-    odd-text-xshift .dim_set:N = \l__examzh_sealline_odd_text_xshift_dim,
-    even-text-xshift .dim_set:N = \l__examzh_sealline_even_text_xshift_dim,
-    odd-text-yshift .dim_set:N = \l__examzh_sealline_odd_text_yshift_dim,
-    even-text-yshift .dim_set:N = \l__examzh_sealline_even_text_yshift_dim,
+    odd-text-xshift .dim_set:N = \g__examzh_sealline_odd_text_xshift_dim,
+    even-text-xshift .dim_set:N = \g__examzh_sealline_even_text_xshift_dim,
+    odd-text-yshift .dim_set:N = \g__examzh_sealline_odd_text_yshift_dim,
+    even-text-yshift .dim_set:N = \g__examzh_sealline_even_text_yshift_dim,
+    text-xshift .code:n = 
+      {
+        \dim_gset:Nn \g__examzh_sealline_odd_text_xshift_dim {#1}
+        \dim_gset:Nn \g__examzh_sealline_even_text_xshift_dim {#1}
+      },
+    text-yshift .code:n = 
+      {
+        \dim_gset:Nn \g__examzh_sealline_odd_text_yshift_dim {#1}
+        \dim_gset:Nn \g__examzh_sealline_even_text_yshift_dim {#1}
+      },
     % 密封线上圆圈的参数
     % --控制显示--
-    odd-circle-show .bool_set:N = \l__examzh_sealline_odd_circle_show_bool,
-    even-circle-show .bool_set:N = \l__examzh_sealline_even_circle_show_bool,
+    odd-circle-show .bool_set:N = \g__examzh_sealline_odd_circle_show_bool,
+    even-circle-show .bool_set:N = \g__examzh_sealline_even_circle_show_bool,
+    circle-show .choice:,
+    circle-show / true .code:n =
+      {
+        \bool_gset_true:N \g__examzh_sealline_odd_circle_show_bool
+        \bool_gset_true:N \g__examzh_sealline_even_circle_show_bool
+      },
+    circle-show / false .code:n =
+      {
+        \bool_gset_false:N \g__examzh_sealline_odd_circle_show_bool
+        \bool_gset_false:N \g__examzh_sealline_even_circle_show_bool
+      },
     % --开始--
-    odd-circle-start .fp_set:N = \l__examzh_sealline_odd_circle_start_fp,
-    even-circle-start .fp_set:N = \l__examzh_sealline_even_circle_start_fp,
+    odd-circle-start .fp_set:N = \g__examzh_sealline_odd_circle_start_fp,
+    even-circle-start .fp_set:N = \g__examzh_sealline_even_circle_start_fp,
+    circle-start .code:n = 
+      {
+        \fp_gset:Nn \g__examzh_sealline_odd_circle_start_fp {#1}
+        \fp_gset:Nn \g__examzh_sealline_even_circle_start_fp {#1}
+      },
     % --结束--
-    odd-circle-end .fp_set:N = \l__examzh_sealline_odd_circle_end_fp,
-    even-circle-end .fp_set:N = \l__examzh_sealline_even_circle_end_fp,
+    odd-circle-end .fp_set:N = \g__examzh_sealline_odd_circle_end_fp,
+    even-circle-end .fp_set:N = \g__examzh_sealline_even_circle_end_fp,
+    circle-end .code:n = 
+      {
+        \fp_gset:Nn \g__examzh_sealline_odd_circle_end_fp {#1}
+        \fp_gset:Nn \g__examzh_sealline_even_circle_end_fp {#1}
+      },
     % --步长--
-    odd-circle-step .dim_set:N = \l__examzh_sealline_odd_circle_step_dim,
-    even-circle-step .dim_set:N = \l__examzh_sealline_even_circle_step_dim,
+    odd-circle-step .dim_set:N = \g__examzh_sealline_odd_circle_step_dim,
+    even-circle-step .dim_set:N = \g__examzh_sealline_even_circle_step_dim,
+    circle-step .code:n = 
+      {
+        \dim_gset:Nn \g__examzh_sealline_odd_circle_step_dim {#1}
+        \dim_gset:Nn \g__examzh_sealline_even_circle_step_dim {#1}
+      },
     % --直径--
-    odd-circle-diameter .dim_set:N = \l__examzh_sealline_odd_circle_diameter_dim,
-    even-circle-diameter .dim_set:N = \l__examzh_sealline_even_circle_diameter_dim,
+    odd-circle-diameter .dim_set:N = \g__examzh_sealline_odd_circle_diameter_dim,
+    even-circle-diameter .dim_set:N = \g__examzh_sealline_even_circle_diameter_dim,
+    circle-diameter .code:n = 
+      {
+        \dim_gset:Nn \g__examzh_sealline_odd_circle_diameter_dim {#1}
+        \dim_gset:Nn \g__examzh_sealline_even_circle_diameter_dim {#1}
+      },
     % --偏移--
-    odd-circle-xshift .dim_set:N = \l__examzh_sealline_odd_circle_xshift_dim,
-    even-circle-xshift .dim_set:N = \l__examzh_sealline_even_circle_xshift_dim,
+    odd-circle-xshift .dim_set:N = \g__examzh_sealline_odd_circle_xshift_dim,
+    even-circle-xshift .dim_set:N = \g__examzh_sealline_even_circle_xshift_dim,
+    circle-xshift .code:n = 
+      {
+        \dim_gset:Nn \g__examzh_sealline_odd_circle_xshift_dim {#1}
+        \dim_gset:Nn \g__examzh_sealline_even_circle_xshift_dim {#1}
+      },
     % 学生信息
     % --内容--
-    odd-info-content .clist_set:N = \l__examzh_sealline_odd_info_content_clist,
+    odd-info-content .clist_set:N = \g__examzh_sealline_odd_info_content_clist,
     % --分隔符--
-    odd-info-seperator .tl_set:N = \l__examzh_sealline_odd_info_seperator_tl,
+    odd-info-seperator .tl_set:N = \g__examzh_sealline_odd_info_seperator_tl,
     % --对齐--
-    odd-info-align .tl_set:N = \l__examzh_sealline_odd_info_align_tl,
+    odd-info-align .tl_set:N = \g__examzh_sealline_odd_info_align_tl,
     % --偏移--
-    odd-info-xshift .dim_set:N = \l__examzh_sealline_odd_info_xshift_dim,
+    odd-info-xshift .dim_set:N = \g__examzh_sealline_odd_info_xshift_dim,
+    odd-info-yshift .dim_set:N = \g__examzh_sealline_odd_info_yshift_dim,
   }
 \keys_set:nn { exam-zh / sealline }
   {
@@ -426,82 +447,164 @@
     % sealline-type      = firstpage,
     % sealline-type      = oddpage,
     sealline-type        = everypage,
-    odd-line-thickness   = 2pt,
-    even-line-thickness  = 2pt,
-    odd-line-xshift      = 8mm,
-    odd-line-yshift      = 0mm,
-    even-line-xshift     = 8mm,
-    even-line-yshift     = 0mm,
-    odd-line-type        = loosely-dotted,
-    even-line-type       = loosely-dotted,
-    odd-text             = 密封线内不得答题,
-    even-text            = 密封线内不得答题,
-    odd-text-xshift      = 11mm,
-    even-text-xshift     = 11mm,
-    odd-text-yshift      = 30mm,
-    even-text-yshift     = 30mm,
-    odd-circle-show      = true,
-    even-circle-show     = true,
-    odd-circle-start     = 0.07,
-    even-circle-start    = 0.07,
-    odd-circle-end       = 0.98,
-    even-circle-end      = 0.98,
-    odd-circle-step      = 3.5em,
-    even-circle-step     = 3.5em,
-    odd-circle-diameter  = 3mm,
-    even-circle-diameter = 3mm,
-    odd-circle-xshift    = 8mm,
-    even-circle-xshift   = 8mm,
+    line-thickness       = 1pt,
+    line-xshift          = 8mm,
+    line-yshift          = 0mm,
+    line-type            = solid,
+    text                 = 测试一下,
+    text-xshift          = 11mm,
+    text-yshift          = 30mm,
+    circle-show          = true,
+    circle-start         = 0.07,
+    circle-end           = 0.92,
+    circle-step          = 3.5em,
+    circle-diameter      = 3mm,
+    circle-xshift        = 8mm,
     odd-info-content     = {
-      {\kaishu 学校}：{\underline{\hspace*{10em}}},
-      {\kaishu 班级}：{\underline{\hspace*{8em}}},
       {\kaishu 姓名}：{\underline{\hspace*{8em}}},
+      {\kaishu 准考证号}：{\underline{\hspace*{8em}}},
+      {\kaishu 考场号}：{\underline{\hspace*{8em}}},
+      {\kaishu 座位号}：{\underline{\hspace*{8em}}},
     },
     odd-info-seperator   = \hspace*{3em},
     odd-info-align       = center,
-    odd-info-xshift      = 20mm
+    odd-info-xshift      = 20mm,
+    odd-info-yshift      = 0mm
   }
+% \keys_set:nn { exam-zh / sealline }
+%   {
+%     show-sealline        = true,
+%     % sealline-type      = firstpage,
+%     % sealline-type      = oddpage,
+%     sealline-type        = everypage,
+%     odd-line-thickness   = 2pt,
+%     even-line-thickness  = 2pt,
+%     odd-line-xshift      = 8mm,
+%     odd-line-yshift      = 0mm,
+%     even-line-xshift     = 8mm,
+%     even-line-yshift     = 0mm,
+%     odd-line-type        = loosely-dotted,
+%     even-line-type       = loosely-dotted,
+%     odd-text             = 密封线内不得答题,
+%     even-text            = 密封线内不得答题,
+%     odd-text-xshift      = 11mm,
+%     even-text-xshift     = 11mm,
+%     odd-text-yshift      = 30mm,
+%     even-text-yshift     = 30mm,
+%     odd-circle-show      = true,
+%     even-circle-show     = true,
+%     odd-circle-start     = 0.07,
+%     even-circle-start    = 0.07,
+%     odd-circle-end       = 0.98,
+%     even-circle-end      = 0.98,
+%     odd-circle-step      = 3.5em,
+%     even-circle-step     = 3.5em,
+%     odd-circle-diameter  = 3mm,
+%     even-circle-diameter = 3mm,
+%     odd-circle-xshift    = 8mm,
+%     even-circle-xshift   = 8mm,
+%     odd-info-content     = {
+%       {\kaishu 学校}：{\underline{\hspace*{10em}}},
+%       {\kaishu 班级}：{\underline{\hspace*{8em}}},
+%       {\kaishu 姓名}：{\underline{\hspace*{8em}}},
+%     },
+%     odd-info-seperator   = \hspace*{3em},
+%     odd-info-align       = center,
+%     odd-info-xshift      = 20mm
+%   }
 \keys_define:nn { exam-zh }
   { sealline .meta:nn = { exam-zh / sealline } {#1} }
 
-\clist_set:Nx \l__examzh_sealline_odd_type_parameter_clist
+% 只在第一页出现
+\cs_new:Npn \__examzh_sealline_type_firstpage:
   {
-    \str_case:Vn \l__examzh_sealline_odd_type_str
+    \AddToHook { shipout / firstpage }
       {
-        { solid }  { solid }
-        { dotted } { dotted }
-        { densely-dotted } { densely~dotted }
-        { loosely-dotted } { loosely~dotted }
-        { dashed } { dashed }
-        { densely-dashed } { densely~dashed }
-        { loosely-dashed } { loosely~dashed }
-        { dash-dot } { dash~dot }
-        { densely-dash-dot } { densely~dash~dot }
-        { loosely-dash-dot } { loosely~dash~dot }
-        { dash-dot-dot } { dash~dot~dot }
-        { densely-dash-dot-dot } { densely~dash~dot~dot }
-        { loosely-dash-dot-dot } { loosely~dash~dot~dot }
+        \put (0cm, 0cm)
+          { \__examzh_sealline_odd: }
       }
   }
-\clist_set:Nx \l__examzh_sealline_even_type_parameter_clist
+% 只在奇数页出现
+\cs_new:Npn \__examzh_sealline_type_oddpage:
   {
-    \str_case:Vn \l__examzh_sealline_even_type_str
+    \AddToHook { shipout / background }
       {
-        { solid }  { solid }
-        { dotted } { dotted }
-        { densely-dotted } { densely~dotted }
-        { loosely-dotted } { loosely~dotted }
-        { dashed } { dashed }
-        { densely-dashed } { densely~dashed }
-        { loosely-dashed } { loosely~dashed }
-        { dash-dot } { dash~dot }
-        { densely-dash-dot } { densely~dash~dot }
-        { loosely-dash-dot } { loosely~dash~dot }
-        { dash-dot-dot } { dash~dot~dot }
-        { densely-dash-dot-dot } { densely~dash~dot~dot }
-        { loosely-dash-dot-dot } { loosely~dash~dot~dot }
+        \put (0cm, 0cm)
+          {
+            \int_if_odd:nT { \c@page }
+              { \__examzh_sealline_odd: }
+          }
       }
   }
+% 每页都有，奇偶不同
+\cs_new:Npn \__examzh_sealline_type_everypage:
+  {
+    \AddToHook { shipout / background }
+      {
+        \put (0cm, 0cm)
+          {
+            \int_if_odd:nTF { \c@page }
+              { \__examzh_sealline_odd: }
+              { \__examzh_sealline_even: }
+          }
+      }
+  }
+
+\AtEndPreamble
+  {
+    \bool_if:NT \g__examzh_sealline_show_bool
+      {
+        \__examzh_sealline_type_set:
+        \str_case:Vn \g__examzh_sealline_type_str
+          {
+            { firstpage } { \__examzh_sealline_type_firstpage: }
+            { oddpage   } { \__examzh_sealline_type_oddpage:   }
+            { everypage } { \__examzh_sealline_type_everypage: }
+          }
+      }
+  }
+\cs_new:Npn \__examzh_sealline_type_set:
+  {
+    \tl_gset:Nx \g__examzh_sealline_odd_type_parameter_tl
+      {
+        \str_case:Vn \g__examzh_sealline_odd_type_str
+          {
+            { solid }  { solid }
+            { dotted } { dotted }
+            { densely-dotted } { densely~dotted }
+            { loosely-dotted } { loosely~dotted }
+            { dashed } { dashed }
+            { densely-dashed } { densely~dashed }
+            { loosely-dashed } { loosely~dashed }
+            { dash-dot } { dash~dot }
+            { densely-dash-dot } { densely~dash~dot }
+            { loosely-dash-dot } { loosely~dash~dot }
+            { dash-dot-dot } { dash~dot~dot }
+            { densely-dash-dot-dot } { densely~dash~dot~dot }
+            { loosely-dash-dot-dot } { loosely~dash~dot~dot }
+          }
+      }
+    \tl_gset:Nx \g__examzh_sealline_even_type_parameter_tl
+      {
+        \str_case:Vn \g__examzh_sealline_even_type_str
+          {
+            { solid }  { solid }
+            { dotted } { dotted }
+            { densely-dotted } { densely~dotted }
+            { loosely-dotted } { loosely~dotted }
+            { dashed } { dashed }
+            { densely-dashed } { densely~dashed }
+            { loosely-dashed } { loosely~dashed }
+            { dash-dot } { dash~dot }
+            { densely-dash-dot } { densely~dash~dot }
+            { loosely-dash-dot } { loosely~dash~dot }
+            { dash-dot-dot } { dash~dot~dot }
+            { densely-dash-dot-dot } { densely~dash~dot~dot }
+            { loosely-dash-dot-dot } { loosely~dash~dot~dot }
+          }
+      }
+  }
+
 
 
 \AtEndPreamble
@@ -600,13 +703,13 @@
       {
         \exp_not:N \draw
           [
-            \l__examzh_sealline_odd_type_parameter_clist,
-            line~width   = \dim_use:N \l__examzh_sealline_odd_line_thickness_dim
+            \g__examzh_sealline_odd_type_parameter_tl,
+            line~width   = \dim_use:N \g__examzh_sealline_odd_line_thickness_dim
           ]
       }
-      ([xshift = -\l__examzh_sealline_odd_line_xshift_dim, yshift = -\l__examzh_sealline_odd_line_yshift_dim]current~page~text~area.north~west)
+      ([xshift = -\g__examzh_sealline_odd_line_xshift_dim, yshift = -\g__examzh_sealline_odd_line_yshift_dim]current~page~text~area.north~west)
         --
-      ([xshift = -\l__examzh_sealline_odd_line_xshift_dim, yshift = \l__examzh_sealline_odd_line_yshift_dim]current~page~text~area.south~west);
+      ([xshift = -\g__examzh_sealline_odd_line_xshift_dim, yshift = \g__examzh_sealline_odd_line_yshift_dim]current~page~text~area.south~west);
   }
 \cs_new:Npn \__examzh_sealline_even_line:
   {
@@ -614,19 +717,19 @@
       {
         \exp_not:N \draw
           [
-            \l__examzh_sealline_even_type_parameter_clist,
-            line~width    = \dim_use:N \l__examzh_sealline_even_line_thickness_dim
+            \g__examzh_sealline_even_type_parameter_tl,
+            line~width    = \dim_use:N \g__examzh_sealline_even_line_thickness_dim
           ] 
       }
-      ([xshift = \l__examzh_sealline_even_line_xshift_dim, yshift = -\l__examzh_sealline_even_line_yshift_dim]current~page~text~area.north~east)
+      ([xshift = \g__examzh_sealline_even_line_xshift_dim, yshift = -\g__examzh_sealline_even_line_yshift_dim]current~page~text~area.north~east)
         --
-      ([xshift = \l__examzh_sealline_even_line_xshift_dim, yshift = \l__examzh_sealline_even_line_yshift_dim]current~page~text~area.south~east);
+      ([xshift = \g__examzh_sealline_even_line_xshift_dim, yshift = \g__examzh_sealline_even_line_yshift_dim]current~page~text~area.south~east);
   }
 
 % 小圆圈
 \cs_new:Npn \__examzh_sealline_odd_circle:
   {
-    \bool_if:NT \l__examzh_sealline_odd_circle_show_bool
+    \bool_if:NT \g__examzh_sealline_odd_circle_show_bool
       {
         \use:x
           {
@@ -639,11 +742,11 @@
                     markings,
                     mark = 
                     between~positions~
-                    \fp_use:N \l__examzh_sealline_odd_circle_start_fp
+                    \fp_use:N \g__examzh_sealline_odd_circle_start_fp
                     ~and~
-                    \fp_use:N \l__examzh_sealline_odd_circle_end_fp
+                    \fp_use:N \g__examzh_sealline_odd_circle_end_fp
                     ~step~
-                    \dim_use:N \l__examzh_sealline_odd_circle_step_dim
+                    \dim_use:N \g__examzh_sealline_odd_circle_step_dim
                     ~with
                       {
                         \exp_not:N
@@ -652,21 +755,21 @@
                             circle,
                             draw         = black, 
                             fill         = white,
-                            minimum~size = \dim_use:N \l__examzh_sealline_odd_circle_diameter_dim
+                            minimum~size = \dim_use:N \g__examzh_sealline_odd_circle_diameter_dim
                           ]
                           {};
                       }
                   }
               ]
           }
-        ([xshift = -\l__examzh_sealline_odd_circle_xshift_dim]current~page~text~area.north~west)
+        ([xshift = -\g__examzh_sealline_odd_circle_xshift_dim]current~page~text~area.north~west)
           --
-        ([xshift = -\l__examzh_sealline_odd_circle_xshift_dim]current~page~text~area.south~west);
+        ([xshift = -\g__examzh_sealline_odd_circle_xshift_dim]current~page~text~area.south~west);
       }
   }
 \cs_new:Npn \__examzh_sealline_even_circle:
   {
-    \bool_if:NT \l__examzh_sealline_even_circle_show_bool
+    \bool_if:NT \g__examzh_sealline_even_circle_show_bool
       {
         \use:x
           {
@@ -679,11 +782,11 @@
                     markings,
                     mark = 
                     between~positions~
-                    \fp_use:N \l__examzh_sealline_even_circle_start_fp
+                    \fp_use:N \g__examzh_sealline_even_circle_start_fp
                     ~and~
-                    \fp_use:N \l__examzh_sealline_even_circle_end_fp
+                    \fp_use:N \g__examzh_sealline_even_circle_end_fp
                     ~step~
-                    \dim_use:N \l__examzh_sealline_even_circle_step_dim
+                    \dim_use:N \g__examzh_sealline_even_circle_step_dim
                     ~with
                       {
                         \exp_not:N
@@ -692,16 +795,16 @@
                             circle,
                             draw         = black, 
                             fill         = white,
-                            minimum~size = \dim_use:N \l__examzh_sealline_even_circle_diameter_dim
+                            minimum~size = \dim_use:N \g__examzh_sealline_even_circle_diameter_dim
                           ]
                           {};
                       }
                   }
               ]
           }
-        ([xshift = \l__examzh_sealline_even_circle_xshift_dim]current~page~text~area.north~east)
+        ([xshift = \g__examzh_sealline_even_circle_xshift_dim]current~page~text~area.north~east)
           --
-        ([xshift = \l__examzh_sealline_even_circle_xshift_dim]current~page~text~area.south~east);
+        ([xshift = \g__examzh_sealline_even_circle_xshift_dim]current~page~text~area.south~east);
       }
   }
 % 线上的文字（密封线外不得答题）
@@ -715,12 +818,12 @@
             text~along~path,
             reverse~path,
             text~align = fit~to~path,
-            text       = {\l__examzh_sealline_odd_text_tl}
+            text       = {\g__examzh_sealline_odd_text_tl}
           }
       ]
-      ([xshift = -\l__examzh_sealline_odd_text_xshift_dim, yshift = -\l__examzh_sealline_odd_text_yshift_dim]current~page~text~area.north~west)
+      ([xshift = -\g__examzh_sealline_odd_text_xshift_dim, yshift = -\g__examzh_sealline_odd_text_yshift_dim]current~page~text~area.north~west)
         --
-      ([xshift = -\l__examzh_sealline_odd_text_xshift_dim, yshift = \l__examzh_sealline_odd_text_yshift_dim]current~page~text~area.south~west);
+      ([xshift = -\g__examzh_sealline_odd_text_xshift_dim, yshift = \g__examzh_sealline_odd_text_yshift_dim]current~page~text~area.south~west);
   }
 \cs_new:Npn \__examzh_sealline_even_text_around_line:
   {
@@ -731,12 +834,12 @@
           {
             text~along~path,
             text~align = fit~to~path,
-            text = {\l__examzh_sealline_even_text_tl}
+            text = { \g__examzh_sealline_even_text_tl }
           }
       ]
-      ([xshift = \l__examzh_sealline_even_text_xshift_dim, yshift = -\l__examzh_sealline_even_text_yshift_dim]current~page~text~area.north~east)
+      ([xshift = \g__examzh_sealline_even_text_xshift_dim, yshift = -\g__examzh_sealline_even_text_yshift_dim]current~page~text~area.north~east)
         --
-      ([xshift = \l__examzh_sealline_even_text_xshift_dim, yshift = \l__examzh_sealline_even_text_yshift_dim]current~page~text~area.south~east);
+      ([xshift = \g__examzh_sealline_even_text_xshift_dim, yshift = \g__examzh_sealline_even_text_yshift_dim]current~page~text~area.south~east);
   }
 % 学生信息
 \cs_new:Npn \__examzh_sealline_odd_infomation:
@@ -750,18 +853,18 @@
             decoration =
               {
                 text~along~path,
-                text~align = \l__examzh_sealline_odd_info_align_tl,
+                text~align = \g__examzh_sealline_odd_info_align_tl,
                 reverse~path,
                 text = {
-                  \clist_use:Nn \l__examzh_sealline_odd_info_content_clist 
-                    { { \l__examzh_sealline_odd_info_seperator_tl } }
+                  \clist_use:Nn \g__examzh_sealline_odd_info_content_clist 
+                    { { \g__examzh_sealline_odd_info_seperator_tl } }
                 }
               }
           ]
       }
-      ([xshift = -\l__examzh_sealline_odd_info_xshift_dim, yshift = 0mm]current~page~text~area.north~west)
+      ([xshift = -\g__examzh_sealline_odd_info_xshift_dim, yshift = 0mm]current~page~text~area.north~west)
         --
-      ([xshift = -\l__examzh_sealline_odd_info_xshift_dim, yshift = 0mm]current~page~text~area.south~west);
+      ([xshift = -\g__examzh_sealline_odd_info_xshift_dim, yshift = \g__examzh_sealline_odd_info_yshift_dim]current~page~text~area.south~west);
   }
 
 % 页眉和页脚
