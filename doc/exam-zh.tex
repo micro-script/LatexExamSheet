@@ -34,24 +34,40 @@
 % 介绍
 \input{./body/introduction.tex}
 % 安装
-% \input{./body/installation.tex}
+\input{./body/installation.tex}
+
+\clearpage
+% 使用
+\input{./body/usage.tex}
 
 
+
+% 主要更新
+\input{./back/main-changelog.tex}
 
 % 参与开发
-% \input{./back/development.tex}
-
+\input{./back/development.tex}
 
 
 % 关于作者
-% \input{./back/about-author.tex}
+\input{./back/about-author.tex}
 
 
 
-\section{TODO}
+\section{\cls{exam-zh}：TODO}
 
 \begin{itemize}
   \item 密封线的格子连续排版
+  \item 密封线上字的旋转
+  \item 全国大学生数学竞赛的密封线
+  \item 水印
+  \item 草稿纸（jnuexam）
+  \item 答卷纸
+  \item 增加试卷范例（语文，英语）
+  \item a3paper 的两栏之间的线
+    \begin{latexexample}[gobble = 6]
+      \setlength{\columnseprule}{0.4pt}
+    \end{latexexample}
   \item 学生信息在顶部的设计（参考2022年高考）
   \item 设计接口
     \begin{itemize}
@@ -61,6 +77,23 @@
       \item \tn{goodluck} 的显示
     \end{itemize}
   \item 答案控制
+  \item 图文排版（参考 xkwxdyy 的 \pkg{text-figure} 宏包）
+  \item 解答的分数线
+  \item 解答环境
+    \begin{latexexample}[gobble = 6]
+      % 解：xxx
+      \begin{solution}
+        xxx
+      \end{solution}
+
+      % 解法一：xxx
+      % 解法二：xxx
+      \begin{solution}
+        \item xxx
+        \item xxx
+      \end{solution}
+    \end{latexexample}
+  \item 评分的框
 \end{itemize}
 
 % 参考文献
