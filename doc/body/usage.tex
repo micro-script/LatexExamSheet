@@ -48,6 +48,21 @@
 
 \subsection{命令和环境介绍}
 
+\subsection{正体的数学常数}
+
+\begin{function}{\eu}
+  正体的自然对数的底“e”。
+\end{function}
+
+\begin{function}{\iu}
+  正体的虚数单位“i”。
+\end{function}
+
+\tn{eu} 可以理解为 “e upright” 的缩写或者 “Euler's number” 的首字母，\tn{iu} 可以理解为 “i upright” 或 “imaginary unit” 的缩写，这样更方便记忆。
+
+\begin{latexexample}{\tn{eu} 和 \tn{iu} 的效果}
+  $\eu \quad \iu$
+\end{latexexample}
 
 \subsubsection{题干}
 
@@ -119,7 +134,7 @@
 \end{latexexample}
 
 
-\subsubsection{选择题}
+\subsubsection{选择题} \label{subsubsec:命令环境-选择题}
 
 \begin{function}{choices 环境}
   \begin{ccnusyntax}[emph={[2]choices}]
@@ -149,11 +164,41 @@
 
 \begin{function}{\AddChoicesCounter}
   \begin{ccnusyntax}[emph={[2]\AddChoicesCounter}]
-    \AddChoicesCounter(*\marg{}*)(*\marg{}*)(*\marg{}*)
+    \AddChoicesCounter(*\marg{LaTeX command}*)(*\marg{internal command}*)(*\marg{widest label}*)
   \end{ccnusyntax}
-  增加 \env{choices} 环境中 \cmd{label} 可兼容的计数器。
+  如果用户需要使用其它形式的数字作为 \env{choices} 环境的标签，需要使用 \tn{AddChoicesCounter} 命令将其添加进 \opt{label} 选项的识别范围内（类似 \pkg{enumitem} 宏包的 \tn{AddChoicesCounter} ）。其中 \meta{LaTeX command} 是在 \opt{label} 选项中的形式，\meta{internal command} 是内部的实现，\meta{widest label} 是最宽的标签。比如带圈数字的添加方法：
+  \begin{latexcode}[gobble=4]
+    \AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}{1}
+  \end{latexcode}
 \end{function}
 
+
+\begin{latexexample}{\tn{AddChoicesCounter} 使用示例}
+  \ExplSyntaxOn
+  \cs_new:Npn \test_counter:n #1
+    {
+      \int_set:Nn \l_tmpa_int { \int_eval:n { #1 + 1 } }
+      \int_use:N \l_tmpa_int
+    }
+  \AddChoicesCounter \test \test_counter:n {1}
+  \ExplSyntaxOff
+  \begin{choices}[label = \test*]
+    \item 1
+    \item 2
+  \end{choices}
+\end{latexexample}
+
+
+\begin{function}{\circlednumber}
+  \begin{ccnusyntax}[emph={[2]\circlednumber}]
+    \circlednumber(*\meta{数字或计数器名字}*)
+  \end{ccnusyntax}
+  带圈数字命令。
+  \begin{latexexample}{\tn{circlednumber} 的使用示例}
+    \circlednumber{1} \circlednumber{2}
+    \circlednumber{page} \circlednumber{section}
+  \end{latexexample}
+\end{function}
 
 
 \subsubsection{填空题}
@@ -178,6 +223,8 @@
     }
   \end{latexcode}
   即可。
+
+需要注意的是，如果 \tn{fillin} 的参数重含有不配对的中括号时会报错，如 |\fillin[$(−\infty, 1]$]|。这时需要使用大括号将内容保护起来：|\fillin[{$(−\infty, 1]$}]|。
 
 
 
@@ -678,11 +725,32 @@
   该选项包含许多子项目，用于设置 \env{choices} 环境。具体内容见下，可以通过 \tn{examsetup} 进行统一处理，也可以用于 \env{choices} 环境的 \meta{键值列表} 针对某一 \env{choices} 环境调整。
 \end{function}
 
+\begin{function}{choices/index}
+  \begin{ccnusyntax}[emph={[1]index}]
+    index = (*\meta{integer}*)
+  \end{ccnusyntax}
+  选项第一项 label 的计数器的起始值。
+\end{function}
+\begin{latexexample}{\opt{choices/index} 示例}
+  \begin{choices}
+    \item 1
+    \item 2
+    \item 3
+  \end{choices}
+
+  \begin{choices}[index = 2]
+    \item 1
+    \item 2
+    \item 3
+  \end{choices}
+\end{latexexample}
+
+
 \begin{function}{choices/column-sep}
   \begin{ccnusyntax}[emph={[1]column-sep}]
     column-sep = (*\meta{dimension}*)
   \end{ccnusyntax}
-  两列之间的间距。
+  选项列之间的最小间隔。默认为 |1em|。
 \end{function}
 
 
@@ -690,7 +758,8 @@
   \begin{ccnusyntax}[emph={[1]columns}]
     columns = (*\meta{integer}*)
   \end{ccnusyntax}
-  手动设置 \env{choices} 环境排出的选项的列数，否则会根据选项内容自动计算。一般用于 \env{choices} 环境的 \meta{参数列表}。
+  强制按照该列数排版选项，如果为 0 则自动选择合适的列数。
+  % 手动设置 \env{choices} 环境排出的选项的列数，否则会根据选项内容自动计算。一般用于 \env{choices} 环境的 \meta{参数列表}。
 \end{function}
 
 
@@ -698,7 +767,7 @@
   \begin{ccnusyntax}[emph={[1]label}]
     label = (*\meta{label}*)
   \end{ccnusyntax}
-  选项的 label。主要有以下几种：
+  标签的格式。默认效果等效于 |label = \Alph*.|。计数器样式主要有以下几种：
 \end{function}
 
 \begin{choices}[label = \circlednumber*]
@@ -710,12 +779,33 @@
   \item circlednumber（带圈数字）
 \end{choices}
 
+还可以使用~\ref{subsubsec:命令环境-选择题} 节的 \tn{AddChoicesCounter} 命令自定义计数器样式。
+
+使用方式为（以 \opt{arabic} 为例）：\kvopt{label}{<pre>\textbackslash arabic*<post>}（类似 \pkg{enumitem} 宏包），其中 \meta{pre} 和 \meta{post} 表示计数器前后的内容，举例：
+\begin{latexexample}{\env{choices} 环境 label 的使用示例}
+  \begin{choices}
+    \item 第一项
+    \item 第二项
+    \item 第三项
+    \item 第四项
+  \end{choices}
+
+  \begin{choices}[label = \arabic*)]
+    \item 第一项
+    \item 第二项
+    \item 第三项
+    \item 第四项
+  \end{choices}
+\end{latexexample}
+
+如果想要隐藏或去掉 label 的话，可以使用 |label = {}|，但一般这个需求可能使用表格或其它方法会更好。
+
 
 \begin{function}{choices/label-pos}
   \begin{ccnusyntax}[emph={[1]label-pos}]
     label-pos = (*<(auto)|top-left|left|bottom>*)
   \end{ccnusyntax}
-  
+  标签相对于选项内容的位置。\opt{auto} 会根据内容高度来判断，当高度到达一定程度时会判断为插图，并将 label 放置于 内容 的 \opt{bottom} 位置；\opt{top-left} 表示在内容左侧并置于顶部；\opt{top-left} 表示在内容左侧并置于中间；\opt{top-left} 表示在内容底部；
 \end{function}
 
 
@@ -723,29 +813,50 @@
   \begin{ccnusyntax}[emph={[1]label-align}]
     label-align = (*left|center|(right)*)
   \end{ccnusyntax}
-  
+  标签内部的对齐方式。
 \end{function}
+
+\begin{latexexample}{\opt{label-align} 的效果示例}
+  \begin{choices}[index = 8, label = \arabic*.]
+    \item 1
+    \item 2
+    \item 3
+    \item 4
+  \end{choices}
+  \begin{choices}[index = 8, label = \arabic*., label-align = left]
+    \item 1
+    \item 2
+    \item 3
+    \item 4
+  \end{choices}
+  \begin{choices}[index = 8, label = \arabic*., label-align = center]
+    \item 1
+    \item 2
+    \item 3
+    \item 4
+  \end{choices}
+\end{latexexample}
 
 
 \begin{function}{choices/label-sep}
   \begin{ccnusyntax}[emph={[1]label-sep}]
     label-sep = (*\meta{dimension}*)
   \end{ccnusyntax}
-  
+  标签与选项之间的距离。默认为 |0.5em|。
 \end{function}
 
 \begin{function}{choices/label-width}
   \begin{ccnusyntax}[emph={[1]label-width}]
     label-width = (*\meta{dimension}*)
   \end{ccnusyntax}
-  
+  标签的宽度。如果宽度不足会自动调整为最长标签的宽度。默认 |0pt|
 \end{function}
 
 \begin{function}{choices/max-columns}
   \begin{ccnusyntax}[emph={[1]max-columns}]
     max-columns = (*\meta{integer}*)
   \end{ccnusyntax}
-  
+  选项的最大列数。排版选项时会优先尝试该列数，如果无法排下内容，依次将列数除以 2 并取整再进行尝试，直到可以排下全部选项。默认为 |4| 。
 \end{function}
 
 

@@ -140,7 +140,7 @@
 其中的可选参数使用 key–value 的方式进行设置，除了 `label-pos` 外还包括以下选项。
 - `column-sep`  选项列之间的最小间隔（默认 `1em`）。
 - `columns`     强制按照该列数排版选项，如果为 0 则自动选择合适的列数（默认 `0`）。
-<!-- - `label-align`（可选：`left`, `center`, `right`；默认 `right`）标签内容的对齐方式。 -->
+- `label-align`（可选：`left`, `center`, `right`；默认 `right`）标签内容的对齐方式。
 - `label`       标签的格式，类似 `enumitem` 可以在 `\Roman` 等命令后加 `*` 生成数字（默认 `\Alph*.`）。
 - `label-pos`   标签相对于选项内容的位置；`auto` 表示自动选择：如果内容高度超过两行时（通常是图片）标签位于左居中 `left`，否则位于左上角跟首行文字对齐（`top-left`）（可选：`auto`, `top-left`, `left`, `bottom`；默认 `auto`）。
 - `label-align` 标签内部的对齐方式。（可选：`left`, `center`, `right`；默认 `right`）
@@ -157,7 +157,7 @@
 
 ### 正体的数学常数
 
-按照国标，数学常数应使用正体。模板中提供了命令 `\eu` 和 `\iu` 分别表示自然对数的底“e”和虚数单位“i”。`\eu` 可以理解为 “e upright” 的缩写或者 “Euler‘s number” 的首字母，`\iu` 可以理解为 “i upright” 或 “imaginary unit” 的缩写，这样更方便记忆。圆周率“π”直接使用 `\uppi` 命令。
+按照国标，数学常数应使用正体。模板中提供了命令 `\eu` 和 `\iu` 分别表示自然对数的底“e”和虚数单位“i”。`\eu` 可以理解为 “e upright” 的缩写或者 “Euler's number” 的首字母，`\iu` 可以理解为 “i upright” 或 “imaginary unit” 的缩写，这样更方便记忆。圆周率“π”直接使用 `\uppi` 命令。
 
 
 
