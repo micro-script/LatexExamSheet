@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-06-22} {v0.1.3} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-06-24} {v0.1.4} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -151,7 +151,7 @@
 \keys_set:nn { exam-zh / page }
   {
     size = a4paper,
-    foot-style = common,
+    foot-style = separate,
   }
 
 \keys_define:nn { exam-zh }
@@ -308,18 +308,18 @@
 \keys_define:nn { exam-zh / sealline }
   {
     % 是否显示密封线
-    show-sealline .bool_gset:N = \g__examzh_sealline_show_bool,
+    show .bool_gset:N = \g__examzh_sealline_show_bool,
     % 密封线类型（也理解为出现的类型，比如只在第一页，只在奇数页）
-    % sealline-type .choice:,
-    % sealline-type / firstpage .code:n =
-    %   { \__examzh_sealline_type_firstpage: },
-    % sealline-type / oddpage .code:n =
-    %   { \__examzh_sealline_type_oddpage: },
-    % sealline-type / everypage .code:n =
-    %   { \__examzh_sealline_type_everypage: },
-    sealline-type .code:n = 
+    % scope .choice:,
+    % scope / firstpage .code:n =
+    %   { \__examzh_sealline_scope_firstpage: },
+    % scope / oddpage .code:n =
+    %   { \__examzh_sealline_scope_oddpage: },
+    % scope / everypage .code:n =
+    %   { \__examzh_sealline_scope_everypage: },
+    scope .code:n = 
       {
-        \str_gset:Nn \g__examzh_sealline_type_str {#1}
+        \str_gset:Nn \g__examzh_sealline_scope_str {#1}
       },
     % 线的厚度
     odd-line-thickness .dim_set:N = \g__examzh_sealline_odd_line_thickness_dim,
@@ -443,15 +443,15 @@
   }
 \keys_set:nn { exam-zh / sealline }
   {
-    show-sealline        = true,
-    % sealline-type      = firstpage,
-    % sealline-type      = oddpage,
-    sealline-type        = everypage,
+    show        = false,
+    % scope      = firstpage,
+    % scope      = oddpage,
+    scope        = everypage,
     line-thickness       = 1pt,
     line-xshift          = 8mm,
     line-yshift          = 0mm,
-    line-type            = solid,
-    text                 = 测试一下,
+    line-type            = loosely-dashed,
+    text                 = 密封线内不得答题,
     text-xshift          = 11mm,
     text-yshift          = 30mm,
     circle-show          = true,
@@ -464,7 +464,7 @@
       {\kaishu 姓名}：{\underline{\hspace*{8em}}},
       {\kaishu 准考证号}：{\underline{\hspace*{8em}}},
       {\kaishu 考场号}：{\underline{\hspace*{8em}}},
-      {\kaishu 座位号}：{\underline{\hspace*{8em}}},
+      {\kaishu 座位号}：{\underline{\hspace*{8em}}}
     },
     odd-info-seperator   = \hspace*{3em},
     odd-info-align       = center,
@@ -474,9 +474,9 @@
 % \keys_set:nn { exam-zh / sealline }
 %   {
 %     show-sealline        = true,
-%     % sealline-type      = firstpage,
-%     % sealline-type      = oddpage,
-%     sealline-type        = everypage,
+%     % sealline-scope      = firstpage,
+%     % sealline-scope      = oddpage,
+%     sealline-scope        = everypage,
 %     odd-line-thickness   = 2pt,
 %     even-line-thickness  = 2pt,
 %     odd-line-xshift      = 8mm,
@@ -516,7 +516,7 @@
   { sealline .meta:nn = { exam-zh / sealline } {#1} }
 
 % 只在第一页出现
-\cs_new:Npn \__examzh_sealline_type_firstpage:
+\cs_new:Npn \__examzh_sealline_scope_firstpage:
   {
     \AddToHook { shipout / firstpage }
       {
@@ -525,7 +525,7 @@
       }
   }
 % 只在奇数页出现
-\cs_new:Npn \__examzh_sealline_type_oddpage:
+\cs_new:Npn \__examzh_sealline_scope_oddpage:
   {
     \AddToHook { shipout / background }
       {
@@ -537,7 +537,7 @@
       }
   }
 % 每页都有，奇偶不同
-\cs_new:Npn \__examzh_sealline_type_everypage:
+\cs_new:Npn \__examzh_sealline_scope_everypage:
   {
     \AddToHook { shipout / background }
       {
@@ -554,16 +554,16 @@
   {
     \bool_if:NT \g__examzh_sealline_show_bool
       {
-        \__examzh_sealline_type_set:
-        \str_case:Vn \g__examzh_sealline_type_str
+        \__examzh_sealline_scope_set:
+        \str_case:Vn \g__examzh_sealline_scope_str
           {
-            { firstpage } { \__examzh_sealline_type_firstpage: }
-            { oddpage   } { \__examzh_sealline_type_oddpage:   }
-            { everypage } { \__examzh_sealline_type_everypage: }
+            { firstpage } { \__examzh_sealline_scope_firstpage: }
+            { oddpage   } { \__examzh_sealline_scope_oddpage:   }
+            { everypage } { \__examzh_sealline_scope_everypage: }
           }
       }
   }
-\cs_new:Npn \__examzh_sealline_type_set:
+\cs_new:Npn \__examzh_sealline_scope_set:
   {
     \tl_gset:Nx \g__examzh_sealline_odd_type_parameter_tl
       {
