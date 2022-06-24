@@ -19,8 +19,14 @@
   xunicode,
   zref-base,
   tikz,
-  tikzpagenodes
+  tikzpagenodes,
+  tcolorbox,
+  accsupp       % PDF accessibility support
 }
+% \tcbuselibrary{listings}
+\tcbuselibrary{hooks, minted, skins, xparse, breakable}
+\definecolor{main}{HTML}{5989cf}    % setting main color to be used
+\definecolor{sub}{HTML}{cde4ff}     % setting sub color to be used
 \def\macro@code{%
   \topsep \MacrocodeTopsep
   \@beginparpenalty \predisplaypenalty
@@ -1004,12 +1010,88 @@
     emphstyle     = [1]\color{MaterialGreen800},
     emphstyle     = [2]\color{MaterialTeal}
   }
-\lstnewenvironment{shellexample}[1][]{%
+\lstnewenvironment{shellcode}[1][]{%
   \lstset{style=style@shell, #1}}{}
-\lstnewenvironment{latexexample}[1][]{%
+\lstnewenvironment{latexcode}[1][]{%
   \lstset{style=style@latex, breaklines = true, #1}}{}
 \lstnewenvironment{ccnusyntax}[1][]{%
   \lstset{style=style@syntax, #1}\vspace{-1.8ex}}{}
-\endinput
+% \newtcblisting{latexexample}[2][]{%
+%   colback    = sub, 
+%   colframe   = main, 
+%   boxrule    = 0pt, 
+%   toprule    = 3pt, % top rule weight
+%   bottomrule = 3pt, % bottom rule weight
+%   fonttitle  = \bfseries,
+%   title      = {#2}, 
+%   #1
+% }
+
+% make line numbers unable to be selected
+% ref: https://liam.page/2013/11/04/LaTeX-listings-copy/
+\ExplSyntaxOn
+\newcommand\emptyaccsupp[1]{
+  \BeginAccSupp{ActualText={}} #1 \EndAccSupp{}
+}
+
+\renewcommand\theFancyVerbLine{
+  \emptyaccsupp{
+    \textcolor[rgb]{0.5, 0.5, 1.0}{
+      \scriptsize\arabic{FancyVerbLine}
+    }
+  }
+}
+\ExplSyntaxOff
+
+
+% option "minted options app" has been added to tcolorbox,
+%   "hooks" library since v4.21, see
+%   https://github.com/T-F-S/tcolorbox/issues/73
+% \makeatletter
+% \tcbset{
+%   % see tcbminted.code.tex, def of "minted options"
+%   %   minted options/.store in=\kvtcb@minted@options,
+%   minted options app/.code=\appto\kvtcb@minted@options{,#1}
+% }
+% \makeatother
+
+% define new option
+\fvset{gobble=0}
+\tcbset{
+  example options/.style={
+    skin=bicolor,
+    colbacklower=white,
+    fonttitle=\sffamily,
+    minted options app={
+      % line numbers
+      linenos,
+      numberfirstline=true,
+      stepnumber=1,
+      numbersep=5pt,
+      % break point
+      breakbefore=\\,
+    }
+  },
+  example title/.style 2 args={
+    title=Example\ifblank{#1}{}{ #1}\ifblank{#2}{}{: #2}
+  }
+}
+
+
+% new env: example
+% #1 - <kv list>, tcb-listing options
+% #2 - <token list>, title
+\NewTCBListing[auto counter]{latexexample}{ O{} m }{
+  example options,
+  example title={\thetcbcounter}{#2},
+  #1
+}
+
+% new env: example*
+% like example, except that it is un-numbered
+\NewTCBListing{latexexample*}{ O{} m }{
+  example options,
+  example title={}{#2},
+  #1
+}
 %%
-%% End of file `fdudoc.cls'.

@@ -6,7 +6,7 @@
 
 以下是一份简单的 \TeX{} 文档，它演示了 \cls{exam-zh} 的最基本用法：
 
-\begin{latexexample}[deletetexcs={\documentclass},
+\begin{latexcode}[deletetexcs={\documentclass},
     moretexcs={\chapter},morekeywords={\documentclass},
     emph={[2]document}]
   % main.tex
@@ -15,7 +15,7 @@
     \section{Welcome to exam-zh!}
     你好，\LaTeX{}！
   \end{document}
-\end{latexexample}
+\end{latexcode}
 
 
 按照~\ref{subsec:编译方式} 小节中的方式编译，您应当得到一篇 1 页的文档。
@@ -26,24 +26,158 @@
 本模板不支持 \pdfTeX{} 引擎，仅支持使用 \XeLaTeX{} 。为了生成正确的目录、脚注以及交叉引用，您至少需要连续编译两次。
 
 以下代码中，假设您的 \TeX{} 源文件名为 \file{example.tex}。请在命令行中执行
-\begin{shellexample}[morekeywords={xelatex}]
+\begin{shellcode}[morekeywords={xelatex}]
   xelatex example
-\end{shellexample}
+\end{shellcode}
 
 
 \subsection{模板选项}
 
 所谓“模板选项”，指需要在引入文档类的时候指定的选项：
-\begin{latexexample}[deletetexcs={\documentclass},
+\begin{latexcode}[deletetexcs={\documentclass},
     morekeywords={\documentclass}]
   \documentclass(*\oarg{模板选项}*){exam-zh}
-\end{latexexample}
+\end{latexcode}
 
 有些模板选项为布尔型，它们只能在 \opt{true} 和 \opt{false}
 中取值。对于这些选项，\kvopt{\meta{选项}}{true} 中的“|= true|”
 可以省略。
 
 \cls{exam-zh} 的模版选项接口与 \cls{ctexart} 相同，具体可 \cmd{texdoc ctex} 查阅 \pkg{ctex} 宏包文档。
+
+
+\subsection{命令和环境介绍}
+
+
+\subsubsection{题干}
+
+\begin{function}{question 环境}
+  \begin{ccnusyntax}[emph={[2]question}]
+    \begin{question}(*\oarg{键值列表}*)
+      <题干>
+    \end{question}
+  \end{ccnusyntax}
+  选择题和填空题题干环境。
+\end{function}
+
+\begin{function}{problem 环境}
+  \begin{ccnusyntax}[emph={[2]problem}]
+    \begin{problem}(*\oarg{键值列表}*)
+      <题干>
+    \end{problem}
+  \end{ccnusyntax}
+  解答题题干环境。
+\end{function}
+
+\cls{question} 和 \cls{problem} 环境的区别仅在于若 \kvopt{show-paren}{true} （下面会介绍这个键值），则 \cls{question} 的题干会紧接在分数后而  \cls{problem} 的题干会在分数后新起一段后开始。
+
+\ExplSyntaxOn
+\keys_set:nn { exam-zh / question }
+  {
+    show-points = true
+  }
+\ExplSyntaxOff
+\begin{latexexample}{\cls{question} 和 \cls{problem} 环境的区别}
+  % \examsetup{
+  %   question/show-points = true
+  % }
+  \begin{question}[points = 1]
+    题干测试
+  \end{question}
+  \begin{problem}[points = 2]
+    题干测试
+  \end{problem}
+\end{latexexample}
+
+
+\ExplSyntaxOn
+\keys_set:nn { exam-zh / question }
+  {
+    show-points = auto,
+    index = 0,
+    show-paren
+  }
+\ExplSyntaxOff
+\begin{function}{\paren}
+  \begin{ccnusyntax}[emph={[2]\paren}]
+    \paren(*\oarg{答案}*)
+  \end{ccnusyntax}
+  括号。\meta{答案} 可以受下面介绍的 \cmd{show-answer} 键值控制隐藏。会自动到行末尾，若单行内容较长会自动到下一行末尾
+\end{function}
+
+
+\begin{latexexample}{\tn{paren} 的换行效果}
+  % \examsetup{
+  %   question/show-paren = true
+  % }
+  \begin{question}
+    短题干选项 \paren
+  \end{question}
+  \begin{question}
+    长长长长长长长长长长长长长长长长长长长长长长长长长长长题干选项 \paren
+  \end{question}
+\end{latexexample}
+
+
+\subsubsection{选择题}
+
+\begin{function}{choices 环境}
+  \begin{ccnusyntax}[emph={[2]choices}]
+    \begin{choices}(*\oarg{键值列表}*)
+      \item (*\meta{选项1}*)
+      \item (*\meta{选项2}*)
+      ...
+    \end{choices}
+  \end{ccnusyntax}
+  选择题选项排版环境。\meta{键值列表} 见~\ref{subsubsec:参数-选择题}。
+\end{function}
+
+\begin{function}{\setchoices}
+  \begin{ccnusyntax}[emph={[2]\setchoices}]
+    \setchoices(*\marg{键值列表}*)
+  \end{ccnusyntax}
+  \env{choices} 环境的参数设置。和
+  \begin{latexcode}[gobble=4]
+    \examsetup{
+      choices = {
+        ...
+      }
+    }
+  \end{latexcode}
+  效果相同。开发此命令原因是 \file{exam-zh-choices.sty} 是独立的模块，可以独立于 \cls{exam-zh} 外使用。
+\end{function}
+
+\begin{function}{\AddChoicesCounter}
+  \begin{ccnusyntax}[emph={[2]\AddChoicesCounter}]
+    \AddChoicesCounter(*\marg{}*)(*\marg{}*)(*\marg{}*)
+  \end{ccnusyntax}
+  增加 \env{choices} 环境中 \cmd{label} 可兼容的计数器。
+\end{function}
+
+
+
+\subsubsection{填空题}
+
+\begin{function}{\fillin}
+  \begin{ccnusyntax}[emph={[2]\fillin}]
+    \fillin(*\oarg{键值列表}*)(*\oarg{答案}*)
+  \end{ccnusyntax}
+  填空（下划线或括号）。\meta{答案} 可以受~\ref{subsubsec:参数-题干} 节的 \cmd{question/show-answer} 键值控制隐藏。\meta{键值列表} 见~\ref{subsubsec:参数-填空题} 节。
+\end{function}
+
+注意，\tn{fillin} 命令经过处理，|\fillin[<1>]| 表示 |\fillin[<答案>]|（而不是通常定义两个可选参数命令，若只写一个的时候默认为第一个参数），而如果仅仅改变 \tn{fillin} 的类型（见下）而不输入答案，则需要使用 |\fillin[type=paren][]|。这样设计是考虑到：大部分时候都是无答案和输入答案两种情况，而单独改某一个 \tn{fillin} 的类型的情况很少，一般都是一些题目统一改，这个时候在需要修改的 \tn{fillin} 之前使用
+  \begin{latexcode}[gobble=4]
+    \examsetup{
+      fillin/type = paren
+    }
+  \end{latexcode}
+  更改即可。如果后续需要换回来，则只需要使用
+  \begin{latexcode}[gobble=4]
+    \examsetup{
+      fillin/type = line
+    }
+  \end{latexcode}
+  即可。
 
 
 
@@ -71,7 +205,7 @@
 另有一些选项包含子选项，如 \opt{page} 和 \opt{choices} 等。它们可以
 按如下两种等价方式来设定：
 
-\begin{latexexample}[morekeywords={\examsetup},
+\begin{latexcode}[morekeywords={\examsetup},
     emph={[1]page,size,choices,column-sep,label-pos,label-sep,max-columns}]
   \examsetup{
     page = {
@@ -84,11 +218,11 @@
       max-columns = 4
     }
   }
-\end{latexexample}
+\end{latexcode}
 
 或者
 
-\begin{latexexample}[morekeywords={\examsetup},
+\begin{latexcode}[morekeywords={\examsetup},
     emph={[1]page,size,choices,column-sep,label-pos,label-sep,max-columns}]
   \examsetup{
     page/size            = a3paper,
@@ -97,13 +231,13 @@
     choices/label-sep    = 0.5em,
     choices/max-columns  = 4
   }
-\end{latexexample}
+\end{latexcode}
 
 
 注意 “|/|” 的前后均不可以出现空白字符。
 
 
-\subsubsection{页面设置} \label{subsubsec:页面设置}
+\subsubsection{页面设置}
 
 \begin{function}{page}
   \begin{ccnusyntax}[emph={[1]page}]
@@ -113,41 +247,23 @@
   该选项包含许多子项目，用于设置页面设置。具体内容见下。
 \end{function}
 
-
-\begin{function}{style/font}
-  \begin{ccnusyntax}[emph={[1]font}]
-    font = (*<newtx|(times)|stixtwo|xits|tg|none>*)
+\begin{function}{page/size}
+  \begin{ccnusyntax}[emph={[1]size}]
+    size = (*<a3paper|(a4paper)>*)
   \end{ccnusyntax}
-  【本｜硕｜博】设置西文字体（包括数学字体）。具体配置见表~\ref{tab:font}。
+  试卷尺寸。\opt{a4paper} 表示一页为 A4 纸大小；\opt{a3paper} 表示一页为 A3 纸大小，内容为连续两页 A4 拼接。
 \end{function}
 
-\begin{table}[htbp]
-  \centering
-  \begin{threeparttable}
-    \caption{西文字体配置}
-    \label{tab:font}
-    \small
-    \begin{tabular}{ccccc}
-      \toprule
-        & \textbf{正文字体} & \textbf{无衬线字体} & \textbf{等宽字体} & \textbf{数学字体} \\
-      \midrule
-      |stixtwo| & STIX Two Text   & TG Heros\tnote{a} & TG Cursor   & STIX Two Math \\
-      |xits |   & XITS            & TG Heros & TG Cursor   & XITS Math \\
-      |times|\tnote{b}   & Times New Roman & Arial    & Courier New & newtxmath \\
-      |newtx|   & TG Termes   & TG Heros & TG Cursor   & newtxmath \\
-      |tg|      & TG Termes       & TG Heros & TG Cursor   & TG Termes Math \\
-      \bottomrule
-    \end{tabular}
-    \begin{tablenotes}
-      % \item[a] “LM”是 Latin Modern 的缩写。
-      \item[a] “TG”是 TeX Gyre 的缩写。
-      \item[b] 本行中，Times New Roman、Arial 和 Courier New 是商业字体，
-        不包含在 \TeXLive{} 发行版中，但在 Windows 和 macOS 系统上均默认安装。
-    \end{tablenotes}
-  \end{threeparttable}
-  \end{table}
+\begin{function}{page/foot-style}
+  \begin{ccnusyntax}[emph={[1]foot-style}]
+    foot-style = (*<common|(separate)>*)
+  \end{ccnusyntax}
+  \kvopt{page/size}{a3paper} 时页脚的类型。\opt{common} 表示两页 A4 纸（即一页 A3 纸）共用一个页脚；\opt{separate} 表示两页 A4 纸各自有一个页脚。
+\end{function}
 
-\subsubsection{密封线} \label{subsubsec:密封线}
+
+
+\subsubsection{密封线}
 
 \begin{function}{sealline}
   \begin{ccnusyntax}[emph={[1]sealline}]
@@ -158,24 +274,299 @@
 \end{function}
 
 
-\subsubsection{字体} \label{subsubsec:字体}
+\begin{function}{sealline/show}
+  \begin{ccnusyntax}[emph={[1]show}]
+    show = (*\TFF*)
+  \end{ccnusyntax}
+  是否显示密封线。
+\end{function}
+
+\begin{function}{sealline/scope}
+  \begin{ccnusyntax}[emph={[1]scope}]
+    scope = (*<firstpage|oddpage|(everypage)>*)
+  \end{ccnusyntax}
+  密封线的作用范围。\opt{firstpage} 表示仅在第一页有密封线；\opt{oddpage} 表示仅有奇数页有密封线，在页面左侧；\opt{everypage} 表示每页都有密封线，奇数页密封线在页面左侧，偶数页密封线在页面右侧。
+\end{function}
+
+
+下面介绍密封线的具体细节参数控制。在此之前，先对参数进行说明，若为：
+\begin{latexcode}
+  foo      = ...
+  odd-foo  = ...
+  even-foo = ...
+\end{latexcode}
+
+则
+\begin{itemize}
+  \item \opt{foo} 表示统一控制奇偶页的密封线参数；
+  \item \opt{odd-foo} 表示控制奇数页的密封线参数；
+  \item \opt{even-foo} 表示控制偶数页的密封线参数。
+\end{itemize}
+
+若仅有
+\begin{latexcode}
+  odd-foo  = ...
+\end{latexcode}
+
+则表示该参数仅作用于奇数页的密封线。
+
+关于下面出现的“水平”或“垂直”，不额外说明就默认是正常的参考系，即“左右”为“水平”、“上下”为“垂直”。
+
+
+\begin{function}{sealline/line-thickness,sealline/odd-line-thickness,sealline/even-line-thickness}
+  \begin{ccnusyntax}[emph={[1]line-thickness,odd-line-thickness,even-line-thickness}]
+    line-thickness = (*\meta{dimension}*)
+    odd-line-thickness = (*\meta{dimension}*)
+    even-line-thickness = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  密封线的线厚度。
+\end{function}
+
+\begin{function}{sealline/line-xshift,sealline/odd-line-xshift,sealline/even-line-xshift}
+  \begin{ccnusyntax}[emph={[1]line-xshift,odd-line-xshift,even-line-xshift}]
+    line-xshift = (*\meta{dimension}*)
+    odd-line-xshift = (*\meta{dimension}*)
+    even-line-xshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  密封线的水平偏移量。默认为 |8mm|。\meta{dimension} 为正值时，奇数页密封线往左偏移，偶数页密封线往右偏移。
+\end{function}
+
+\begin{function}{sealline/line-yshift,sealline/odd-line-yshift,sealline/even-line-yshift}
+  \begin{ccnusyntax}[emph={[1]line-yshift,odd-line-yshift,even-line-yshift}]
+    line-yshift = (*\meta{dimension}*)
+    odd-line-yshift = (*\meta{dimension}*)
+    even-line-yshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  密封线的垂直伸缩量。默认为 |0mm|，奇偶页效果相同。\meta{dimension} 为正值时，密封线上下同时“往内缩 \meta{dimension} 长度”。0mm 的效果是密封线长度为版心高度。
+\end{function}
+
+\begin{function}{sealline/line-type,sealline/odd-line-type,sealline/even-line-type}
+  \begin{ccnusyntax}[emph={[1]line-type,odd-line-type,even-line-type}]
+    line-type = (*\meta{dimension}*)
+    odd-line-type = (*\meta{dimension}*)
+    even-line-type = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  密封线的类型。参考了 \TikZ 的线类型，主要有以下几种，从名称可以看出几种线的类型和效果，这里就不做解释：
+\end{function}
+\begin{choices}[label = \circlednumber*]
+  \item solid
+  \item dotted
+  \item densely-dotted
+  \item loosely-dotted
+  \item dashed
+  \item densely-dashed
+  \item loosely-dashed
+  \item dash-dot
+  \item densely-dash-dot
+  \item loosely-dash-dot
+  \item dash-dot-dot
+  \item densely-dash-dot-dot
+  \item loosely-dash-dot-dot
+\end{choices}
+
+
+\begin{function}{sealline/text,sealline/odd-text,sealline/even-text}
+  \begin{ccnusyntax}[emph={[1]text,odd-text,even-text}]
+    text = (*\meta{content}*)
+    odd-text = (*\meta{content}*)
+    even-text = (*\meta{content}*)
+  \end{ccnusyntax}
+  沿着密封线的文字，效果为均匀分散，类似于 \tn{makebox} 的 \cmd{s} 选项。默认值为 |密封线内不得答题|
+\end{function}
+
+\begin{function}{sealline/text-xshift,sealline/odd-text-xshift,sealline/even-text-xshift}
+  \begin{ccnusyntax}[emph={[1]text-xshift,odd-text-xshift,even-text-xshift}]
+    text-xshift = (*\meta{dimension}*)
+    odd-text-xshift = (*\meta{dimension}*)
+    even-text-xshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  沿着密封线的文字的水平偏移量。默认为 |11mm|。\meta{dimension} 为正值时，奇数页文字往左偏移，偶数页文字往右偏移。
+\end{function}
+
+
+\begin{function}{sealline/text-yshift,sealline/odd-text-yshift,sealline/even-text-yshift}
+  \begin{ccnusyntax}[emph={[1]text-yshift,odd-text-yshift,even-text-yshift}]
+    text-yshift = (*\meta{dimension}*)
+    odd-text-yshift = (*\meta{dimension}*)
+    even-text-yshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  沿着密封线的文字的垂直伸缩量。默认为 |30mm|。作用与 \opt{line-yshift} 类似，奇偶页效果相同。\meta{dimension} 为正值时，文字部分同时“往内缩 \meta{dimension} 长度”。如果设置成为 0mm，则文字部分的总长度为版心高度。
+\end{function}
+
+\begin{function}{sealline/circle-show,sealline/odd-circle-show,sealline/even-circle-show}
+  \begin{ccnusyntax}[emph={[1]circle-show,odd-circle-show,even-circle-show}]
+    circle-show = (*\TTF*)
+    odd-circle-show = (*\TTF*)
+    even-circle-show = (*\TTF*)
+  \end{ccnusyntax}
+  密封线上的圆的显示与否。
+\end{function}
+
+\begin{function}{sealline/circle-start,sealline/odd-circle-start,sealline/even-circle-start,sealline/circle-end,sealline/odd-circle-end,sealline/even-circle-end}
+  \begin{ccnusyntax}[emph={[1]circle-start,odd-circle-start,even-circle-start,circle-end,odd-circle-end,even-circle-end}]
+    circle-start = (*\meta{float point}*)
+    odd-circle-start = (*\meta{float point}*)
+    even-circle-start = (*\meta{float point}*)
+    circle-end = (*\meta{float point}*)
+    odd-circle-end = (*\meta{float point}*)
+    even-circle-end = (*\meta{float point}*)
+  \end{ccnusyntax}
+  密封线上的圈的起始点占线总场的比例，\meta{float point} 的范围为 $[0,1]$。分别默认为 |0.07| 和 |0.92| 。\opt{circle-start} 和 \opt{circle-end} 的值分别表示圆圈的起点和终点在线（以页面垂直的北到南方向为正方向）上的比例。
+\end{function}
+
+\begin{function}{sealline/circle-step,sealline/odd-circle-step,sealline/even-circle-step}
+  \begin{ccnusyntax}[emph={[1]circle-step,odd-circle-step,even-circle-step}]
+    circle-step = (*\meta{dimension}*)
+    odd-circle-step = (*\meta{dimension}*)
+    even-circle-step = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  密封线上的两个圈之间的距离。默认为 |3.5em|。若倒数第二个圈加上 \opt{circle-step} 的值“超出了密封线的范围”，则最后一个圈并不会显示。
+\end{function}
+
+\begin{function}{sealline/circle-diameter,sealline/odd-circle-diameter,sealline/even-circle-diameter}
+  \begin{ccnusyntax}[emph={[1]circle-diameter,odd-circle-diameter,even-circle-diameter}]
+    circle-diameter = (*\meta{dimension}*)
+    odd-circle-diameter = (*\meta{dimension}*)
+    even-circle-diameter = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  密封线上的圆的直径。默认为 |3mm|。
+\end{function}
+
+
+\begin{function}{sealline/circle-xshift,sealline/odd-circle-xshift,sealline/even-circle-xshift}
+  \begin{ccnusyntax}[emph={[1]circle-xshift,odd-circle-xshift,even-circle-xshift}]
+    circle-xshift = (*\meta{dimension}*)
+    odd-circle-xshift = (*\meta{dimension}*)
+    even-circle-xshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  密封线上的圆的水平偏移量。默认为 |8mm|。
+\end{function}
+
+\begin{function}{sealline/odd-info-content}
+  \begin{ccnusyntax}[emph={[1]odd-info-content}]
+    odd-info-content = (*\marg{comma list}*)
+  \end{ccnusyntax}
+  奇数页密封线旁的学生信息。输入内容需要用 |{}| 包起来并用西文逗号隔开。示例（也是默认）如下：
+  \begin{latexcode}[gobble=4]
+    \examsetup{
+      odd-info-content = {
+        {\kaishu 姓名}：{\underline{\hspace*{8em}}},
+        {\kaishu 准考证号}：{\underline{\hspace*{8em}}},
+        {\kaishu 考场号}：{\underline{\hspace*{8em}}},
+        {\kaishu 座位号}：{\underline{\hspace*{8em}}}
+      }
+    }
+  \end{latexcode}
+  其中需要注意的是：由于接口沿用的是 \TikZ 的 \cmd{decoration} 的 \cmd{text} 接口，所以命令必须要用 |{}| 包起来（具体原因感兴趣的用户可以 \cmd{texdoc tikz} 自行查阅），如所示的 |{\underline{\hspace*{8em}}}|
+\end{function}
+
+
+\begin{function}{sealline/odd-info-seperator}
+  \begin{ccnusyntax}[emph={[1]odd-info-seperator}]
+    odd-info-seperator = (*\meta{seperator}*)
+  \end{ccnusyntax}
+  奇数页密封线旁的学生信息的分隔符。即上方 \cmd{odd-info-content} 几个内容之间的分隔符，默认为 |\hspace*{3em}|，即用 |3em| 的空白分隔。一般为水平空白。
+\end{function}
+
+
+\begin{function}{sealline/odd-info-align}
+  \begin{ccnusyntax}[emph={[1]odd-info-align}]
+    odd-info-align = (*<left|(center)|right>*)
+  \end{ccnusyntax}
+  奇数页密封线旁的学生信息的对齐方式。将试卷顺时针方向旋转 90 度视角后为参考（即此时密封线为水平线）。
+\end{function}
+
+\begin{function}{sealline/odd-info-xshift}
+  \begin{ccnusyntax}[emph={[1]odd-info-xshift}]
+    odd-info-xshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  奇数页密封线旁的学生信息的水平偏移量。默认值为 |20mm|
+\end{function}
+
+\begin{function}{sealline/odd-info-yshift}
+  \begin{ccnusyntax}[emph={[1]odd-info-yshift}]
+    odd-info-yshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  奇数页密封线旁的学生信息的垂直偏移量。默认值为 |0mm|，此时若 \kvopt{odd-info-align}{left} 则 \cmd{odd-info-content} 的左侧与版心底部对齐。
+\end{function}
+
+
+
+\subsubsection{字体}
+
 
 \begin{function}{font}
   \begin{ccnusyntax}[emph={[1]font}]
-    font = (*\marg{键值列表}*)
+    font = (*(newcm)|lm|times|termes|stix|xits|libertinus|none*)
   \end{ccnusyntax}
-  设置西文字体。
+  设置西文字体。具体配置见表~\ref{tab:font}。
 \end{function}
 
 \begin{function}{math-font}
   \begin{ccnusyntax}[emph={[1]math-font}]
-    math-font = (*\marg{键值列表}*)
+    math-font = (*(newcm)|lm|termes|stix|xits|libertinus|cambria|none*)
   \end{ccnusyntax}
-  设置数学字体。
+  设置数学字体。具体配置见表~\ref{tab:math-font}。
 \end{function}
 
 
-\subsubsection{题干} \label{subsubsec:题干}
+\begin{table}[htbp]
+  \centering
+  \begin{threeparttable}
+    \caption{西文字体配置}
+    \label{tab:font}
+    \small
+    \begin{tabular}{ccccc}
+      \toprule
+        & \textbf{正文字体} & \textbf{无衬线字体} & \textbf{等宽字体}\\
+      \midrule
+      |newcm|      & NewCM10         & NewCMSans10    & NewCMMono10   \\
+      |lm|         & lmroman10       & lmsans10       & lmmonolt10    \\
+      |times|      & Times New Roman & Arial          & Courier New   \\
+      |termes|     & texgyretermes   & texgyreheros   & texgyrecursor \\
+      |stix|       & STIXTwoText\tnote{a}     & texgyreheros   & texgyrecursor \\
+      |xits|       & XITS\tnote{b}         & texgyreheros   & texgyrecursor \\
+      |libertinus| & LibertinusSerif\tnote{c}  & LibertinusSans\tnote{d} & lmmonolt10 \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+      \item[a] 或 STIX2Text
+      \item[b] 或 xits
+      \item[c] 或 libertinusserif
+      \item[d] 或 libertinussans
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \begin{threeparttable}
+    \caption{数学字体配置}
+    \label{tab:math-font}
+    \small
+    \begin{tabular}{ccccc}
+      \toprule
+        & \textbf{mathfont} & \textbf{mathrm} & \textbf{mathsf} & \textbf{mathtt} \\
+      \midrule
+      |newcm|      & NewCMMath-Book        & NewCM10    & NewCMSans10  & NewCMMono10 \\
+      |lm|         & latinmodern-math      & lmroman10  & lmsans10     & lmmonolt10    \\
+      |stix|       & STIXTwoMath-Regular\tnote{a}  & & & \\
+      |xits|       & XITSMath-Regular\tnote{b}       & & & \\
+      |libertinus| & LibertinusMath-Regular\tnote{c} & & & \\
+      |cambria|    & Cambria Math                & & & \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+      \item[a] 或 STIX2Math
+      \item[b] 或 xits-math
+      \item[c] 或 libertinusmath-regular
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+
+
+\subsubsection{题干} \label{subsubsec:参数-题干}
 
 \begin{function}{question}
   \begin{ccnusyntax}[emph={[1]question}]
@@ -186,23 +577,198 @@
 \end{function}
 
 
-\subsubsection{选择题} \label{subsubsec:选择题}
+\begin{function}{question/show-answer}
+  \begin{ccnusyntax}[emph={[1]show-answer}]
+    show-answer = (*\TFF*)
+  \end{ccnusyntax}
+  控制 \tn{paren} 和 \tn{fillin} 中答案的显示与否。
+\end{function}
+
+
+\begin{function}{question/answer-color}
+  \begin{ccnusyntax}[emph={[1]answer-color}]
+    answer-color = (*\meta{color}*)
+  \end{ccnusyntax}
+  设置 \tn{paren} 和 \tn{fillin} 中答案的颜色。
+\end{function}
+
+\examsetup{
+  question/index=0
+}
+\begin{latexexample}{\cmd{question/answer-color} 的效果}
+  \begin{question}
+    题干 \paren[A]
+  \end{question}
+  \begin{question}
+    答案是 \fillin[答案]
+  \end{question}
+
+  \examsetup{
+    question = {
+      show-answer  = true,
+      answer-color = red
+    }
+  }
+
+  \begin{question}
+    题干 \paren[A]
+  \end{question}
+  \begin{question}
+    答案是 \fillin[答案]
+  \end{question}
+\end{latexexample}
+
+
+\begin{function}{question/points}
+  \begin{ccnusyntax}[emph={[1]points}]
+    points = (*\meta{color}*)
+  \end{ccnusyntax}
+  \env{question} 和 \env{problem} 环境中的分数。
+\end{function}
+
+
+\env{question} 和 \env{problem} 环境的参数大部分通过 \tn{examsetup} 和本节的参数控制，但也有一般在 \env{question} 和 \env{problem} 环境的 \oarg{键值列表} 中使用的，比如 \cmd{points}。（很容易理解，每道题的分值很有可能不尽相同，所以一般都是采用“个性化”，而不是 \tn{examsetup} 的“全局化”。除非是选择题和填空题这种一般每道题分数一样的）
+
+\begin{function}{question/show-points}
+  \begin{ccnusyntax}[emph={[1]show-points}]
+    show-points = (*true|(auto)|false*)
+  \end{ccnusyntax}
+  控制 \env{question} 和 \env{problem} 环境中的分数的显示与否。\opt{auto} 表示 \env{question} 环境的分数不显示（比如选择、填空题，因为每道题一般分数相同），而 \env{problem} 环境的分数显示（比如解答题，每道题一般分数不同）；\opt{true} 和 \opt{false} 分别表示 \env{question} 和 \env{problem} 环境中的分数全都显示和全都不显示。
+\end{function}
+
+\begin{function}{question/points-separate-par}
+  \begin{ccnusyntax}[emph={[1]points-separate-par}]
+    points-separate-par = (*\TFF*)
+  \end{ccnusyntax}
+  \env{question} 和 \env{problem} 环境中的分数是否单独成段。\env{question} 环境默认为 \opt{false}，\env{problem} 环境默认为 \opt{true}。
+\end{function}
+
+\begin{function}{question/show-paren}
+  \begin{ccnusyntax}[emph={[1]show-paren}]
+    show-paren = (*\TFF*)
+  \end{ccnusyntax}
+  是否显示 \tn{paren} 命令的括号。
+\end{function}
+
+\begin{function}{question/top-sep,question/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep,bottom-sep}]
+    top-sep = (*\meta{skip}*)
+    bottom-sep = (*\meta{skip}*)
+  \end{ccnusyntax}
+  \env{question} 和 \env{problem} 环境的上下方的弹性间距。默认均为 |.5em plus .5em minus .2em|
+\end{function}
+
+
+\begin{function}{question/index}
+  \begin{ccnusyntax}[emph={[1]index}]
+    index = (*\meta{integer}*)
+  \end{ccnusyntax}
+  手动设置 \env{question} 和 \env{problem} 环境的计数器值。一般用于两个环境的 \meta{键值列表} 中。
+\end{function}
+
+
+
+\subsubsection{选择题} \label{subsubsec:参数-选择题}
 
 \begin{function}{choices}
   \begin{ccnusyntax}[emph={[1]choices}]
     choices = (*\marg{键值列表}*)
     choices/(*\meta{key}*) = (*\meta{value}*)
   \end{ccnusyntax}
-  该选项包含许多子项目，用于设置页面设置。具体内容见下。
+  该选项包含许多子项目，用于设置 \env{choices} 环境。具体内容见下，可以通过 \tn{examsetup} 进行统一处理，也可以用于 \env{choices} 环境的 \meta{键值列表} 针对某一 \env{choices} 环境调整。
+\end{function}
+
+\begin{function}{choices/column-sep}
+  \begin{ccnusyntax}[emph={[1]column-sep}]
+    column-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  两列之间的间距。
 \end{function}
 
 
-\subsubsection{填空题} \label{subsubsec:填空题}
+\begin{function}{choices/columns}
+  \begin{ccnusyntax}[emph={[1]columns}]
+    columns = (*\meta{integer}*)
+  \end{ccnusyntax}
+  手动设置 \env{choices} 环境排出的选项的列数，否则会根据选项内容自动计算。一般用于 \env{choices} 环境的 \meta{参数列表}。
+\end{function}
+
+
+\begin{function}{choices/label}
+  \begin{ccnusyntax}[emph={[1]label}]
+    label = (*\meta{label}*)
+  \end{ccnusyntax}
+  选项的 label。主要有以下几种：
+\end{function}
+
+\begin{choices}[label = \circlednumber*]
+  \item arabic（阿拉伯数字）
+  \item alph（小写英文）
+  \item Alph（大写英文）
+  \item roman（小写罗马数字）
+  \item Roman（大写罗马数字）
+  \item circlednumber（带圈数字）
+\end{choices}
+
+
+\begin{function}{choices/label-pos}
+  \begin{ccnusyntax}[emph={[1]label-pos}]
+    label-pos = (*<(auto)|top-left|left|bottom>*)
+  \end{ccnusyntax}
+  
+\end{function}
+
+
+\begin{function}{choices/label-align}
+  \begin{ccnusyntax}[emph={[1]label-align}]
+    label-align = (*left|center|(right)*)
+  \end{ccnusyntax}
+  
+\end{function}
+
+
+\begin{function}{choices/label-sep}
+  \begin{ccnusyntax}[emph={[1]label-sep}]
+    label-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  
+\end{function}
+
+\begin{function}{choices/label-width}
+  \begin{ccnusyntax}[emph={[1]label-width}]
+    label-width = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  
+\end{function}
+
+\begin{function}{choices/max-columns}
+  \begin{ccnusyntax}[emph={[1]max-columns}]
+    max-columns = (*\meta{integer}*)
+  \end{ccnusyntax}
+  
+\end{function}
+
+
+
+\subsubsection{填空题} \label{subsubsec:参数-填空题}
+
 
 \begin{function}{fillin}
   \begin{ccnusyntax}[emph={[1]fillin}]
     fillin = (*\marg{键值列表}*)
     fillin/(*\meta{key}*) = (*\meta{value}*)
   \end{ccnusyntax}
-  该选项包含许多子项目，用于设置页面设置。具体内容见下。
+  该选项暂时包含一个子项目，用于设置填空命令 \tn{fillin} 的类型。具体内容见下。
+\end{function}
+
+\begin{function}{fillin/type}
+  \begin{ccnusyntax}[emph={[1]type}]
+    type = (*<(line)|paren>*)
+  \end{ccnusyntax}
+  填空命令 \tn{fillin} 的类型。\opt{line} 表示下划线，\opt{paren} 表示括号。
+  \begin{latexexample}{\tn{fillin} 的两个类型以及参数使用方式}
+    答案是 \fillin \par
+    答案是 \fillin[answer] \par
+    答案是 \fillin[type = paren][]
+  \end{latexexample}
 \end{function}

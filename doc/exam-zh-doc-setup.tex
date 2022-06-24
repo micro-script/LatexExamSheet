@@ -1,6 +1,13 @@
 \usepackage{xeCJKfntef, xpinyin}
 \usepackage{graphicx}
 \usepackage{tabularray}
+\usepackage{../exam-zh-choices}
+\usepackage{../exam-zh-question}
+
+\ExplSyntaxOn
+\NewDocumentCommand \examsetup { m }
+  { \keys_set:nn { exam-zh } {#1} }
+\ExplSyntaxOff
 % \usepackage[
 %   backend = biber,
 %   style = gb7714-2015
