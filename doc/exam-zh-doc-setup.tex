@@ -1,6 +1,13 @@
 \usepackage{xeCJKfntef, xpinyin}
 \usepackage{graphicx}
 \usepackage{tabularray}
+\usepackage{../exam-zh-choices}
+\usepackage{../exam-zh-question}
+
+\ExplSyntaxOn
+\NewDocumentCommand \examsetup { m }
+  { \keys_set:nn { exam-zh } {#1} }
+\ExplSyntaxOff
 % \usepackage[
 %   backend = biber,
 %   style = gb7714-2015
@@ -22,8 +29,13 @@
 \title{\textcolor{MaterialIndigo800}{%
   \textbf{exam-zh: 高考试卷 \LaTeX \xpinyin[font=\sffamily,format=\color{MaterialIndigo800}]{模}{mu2}板}}}
 \author{李泽平，夏康玮，郭李军}
-\date{2022/06/17\quad v0.1.2%
+\date{2022/06/24\quad v0.1.4%
   \thanks{%
     \url{https://gitee.com/zepinglee/exam-zh}
   }
 }
+
+\ExplSyntaxOn
+\NewDocumentCommand \eu { } { \mathrm{ e } }
+\NewDocumentCommand \iu { } { \mathrm{ i } }
+\ExplSyntaxOff

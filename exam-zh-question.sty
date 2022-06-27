@@ -232,18 +232,18 @@
   }
 
 % fillin 的下划线样式控制
-\bool_new:N \g__examzh_fillin_line_bool
+\bool_new:N \l__examzh_fillin_line_bool
 
 \keys_define:nn { exam-zh / fillin }
   {
     type .choice:,
     type / line .code:n = 
       {
-        \bool_gset_true:N \g__examzh_fillin_line_bool
+        \bool_set_true:N \l__examzh_fillin_line_bool
       },
     type / paren .code:n = 
       {
-        \bool_gset_false:N \g__examzh_fillin_line_bool
+        \bool_set_false:N \l__examzh_fillin_line_bool
       }
   }
 \keys_set:nn { exam-zh / fillin }
@@ -258,33 +258,47 @@
 \dim_new:N \l__examzh_question_answer_depth_dim
 
 % 填空命令
-\NewDocumentCommand \fillin { O { } }
+\NewDocumentCommand \fillin { O{} o }
   {
     \group_begin:
-      % \ULdepth 是 \uline 的下划线的深度
-      \dim_set:Nn \ULdepth { 0.3em }
-      % lazy 版本是指需要判断时才去获取当前用于判断的 bool 值 
-      % 而不是类似于“提前展开”，和项子越在 LaTeX3 的 b站视频里讲到的 lazy evaluation 想法相同
-      \bool_lazy_and:nnTF
-        { \bool_if_p:N \l__examzh_question_show_answer_bool }
-        { \bool_not_p:n { \tl_if_empty_p:n {#1} } }
+      \IfNoValueTF {#2}
         {
-          \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
-          \dim_set:Nn \l__examzh_question_answer_depth_dim
-            { \box_dp:N \l_tmpa_box }
-          \bool_if:NTF \g__examzh_fillin_line_bool
-            { \__examzh_fillin_uline_T: }
-            { \__examzh_fillin_paren_T: }
+          % \fillin[]
+          \__examzh_fillin:n {#1}
         }
-        { 
-          \bool_if:NTF \g__examzh_fillin_line_bool
-            { \__examzh_fillin_uline_F: }
-            { \__examzh_fillin_paren_F: }
+        {
+          % \fillin[][]
+          \keys_set:nn { exam-zh / fillin }
+            {#1}
+          \__examzh_fillin:n {#2}
         }
       \group_end:
     \space \ignorespaces
   }
 
+\cs_new:Npn \__examzh_fillin:n #1
+  {
+    % \ULdepth 是 \uline 的下划线的深度
+    \dim_set:Nn \ULdepth { 0.3em }
+    % lazy 版本是指需要判断时才去获取当前用于判断的 bool 值 
+    % 而不是类似于“提前展开”，和项子越在 LaTeX3 的 b站视频里讲到的 lazy evaluation 想法相同
+    \bool_lazy_and:nnTF
+      { \bool_if_p:N \l__examzh_question_show_answer_bool }
+      { \bool_not_p:n { \tl_if_empty_p:n {#1} } }
+      {
+        \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
+        \dim_set:Nn \l__examzh_question_answer_depth_dim
+          { \box_dp:N \l_tmpa_box }
+        \bool_if:NTF \l__examzh_fillin_line_bool
+          { \__examzh_fillin_uline_T: }
+          { \__examzh_fillin_paren_T: }
+      }
+      { 
+        \bool_if:NTF \l__examzh_fillin_line_bool
+          { \__examzh_fillin_uline_F: }
+          { \__examzh_fillin_paren_F: }
+      }
+  }
 \cs_new:Npn \__examzh_fillin_uline_T:
   {
     \uline

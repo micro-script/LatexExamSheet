@@ -1,5 +1,4 @@
 \documentclass{ccnudoc}
-
 \input{exam-zh-doc-setup.tex}
 
 
@@ -36,7 +35,7 @@
 % 安装
 \input{./body/installation.tex}
 
-\clearpage
+% \clearpage
 % 使用
 \input{./body/usage.tex}
 
@@ -58,16 +57,17 @@
 
 \begin{itemize}
   \item 密封线的格子连续排版
-  \item 密封线上字的旋转
+  \item 密封线上字的旋转、是否分散排布，对齐
   \item 全国大学生数学竞赛的密封线
   \item 水印
-  \item 草稿纸（jnuexam）
+  \item 草稿纸（参考jnuexam）
   \item 答卷纸
+  \item 填空题的黑三角形
   \item 增加试卷范例（语文，英语）
   \item a3paper 的两栏之间的线
-    \begin{latexexample}[gobble = 6]
+    \begin{latexcode}[gobble = 6]
       \setlength{\columnseprule}{0.4pt}
-    \end{latexexample}
+    \end{latexcode}
   \item 学生信息在顶部的设计（参考2022年高考）
   \item 设计接口
     \begin{itemize}
@@ -77,22 +77,29 @@
       \item \tn{goodluck} 的显示
     \end{itemize}
   \item 答案控制
+    \begin{itemize}
+      \item 选择题
+        \begin{itemize}
+          \item 题目下方
+          \item 括号内
+          \item 最后：列表形式、表格形式
+        \end{itemize}
+      \item 填空题
+        \begin{itemize}
+          \item 题目下方
+          \item 划线内
+          \item 最后
+        \end{itemize}
+      \item 解答题
+        \begin{itemize}
+          \item 题目下方
+          \item 移动到最后
+        \end{itemize}
+    \end{itemize}
+  \item 选择题答案标记
   \item 图文排版（参考 xkwxdyy 的 \pkg{text-figure} 宏包）
-  \item 解答的分数线
-  \item 解答环境
-    \begin{latexexample}[gobble = 6]
-      % 解：xxx
-      \begin{solution}
-        xxx
-      \end{solution}
-
-      % 解法一：xxx
-      % 解法二：xxx
-      \begin{solution}
-        \item xxx
-        \item xxx
-      \end{solution}
-    \end{latexexample}
+  \item 解答的分数线（参考jnuexam）
+  \item 解答环境、解法（method）、步骤（step）环境
   \item 评分的框
 \end{itemize}
 

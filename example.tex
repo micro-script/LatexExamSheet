@@ -9,13 +9,13 @@
 \examsetup{
   page = {
     size       = a4paper,         % 页面尺寸：a3paper|a4paper
-    % foot-style  = common,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
+    % foot-style  = separate,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
   },
   sealline = {
-    show-sealline        = true,
-    % sealline-type        = firstpage,
-    % sealline-type        = oddpage,
-    sealline-type        = everypage,
+    show        = true,
+    % scope        = firstpage,
+    % scope        = oddpage,
+    scope        = everypage,
     line-thickness       = 1pt,
     line-xshift          = 8mm,
     line-yshift          = 0mm,
@@ -103,7 +103,7 @@
 }
 
 % 1.
-\begin{question}
+\begin{question}[points = 2]
   设集合 $A = \{x \mid -1 < x < 4\}$，$B = \{2, 3, 4, 5\}$，则 $A \cap B = $ \paren
 
   \begin{choices}
@@ -263,7 +263,7 @@
 
 % 13.
 \begin{question}
-  已知函数 $f(x) = x^3 (a \cdot 2^x - 2^{-x})$ 是偶函数，则 $a = $ \fillin[$1$] 。
+  已知函数 $f(x) = x^3 (a \cdot 2^x - 2^{-x})$ 是偶函数，则 $a = $ \fillin[type = paren][$1$] 。
 \end{question}
 
 % 14.

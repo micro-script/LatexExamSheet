@@ -10,7 +10,8 @@
 
 1. 样式与内容尽可能分离；
 2. 选择题选项可以自动排版成合适的列数；
-3. 在 Windows, macOS 和 Linux 跨平台编译。
+3. 通过用户接口可以方便更改密封线样式；
+4. 在 Windows, macOS 和 Linux 跨平台编译。
 
 ## 示例
 
@@ -45,6 +46,7 @@
 
 ## 使用方法
 
+下面简要叙述 `exam-zh` 的使用方法，**更多使用细节请阅读手册 `exam-zh.pdf`。**
 ### 西文和数学字体
 
 模板中可以设置西文和数学的字体。
@@ -124,6 +126,7 @@
   }
 }
 ```
+也可以局部更改单个 `\fillin` 的样式：`\fill[type = paren][foo]`（有答案）或`\fill[type = paren][]`（无答案）
 
 
 ### 选项环境 `choices`
@@ -138,9 +141,10 @@
 \end{choices}
 ```
 其中的可选参数使用 key–value 的方式进行设置，除了 `label-pos` 外还包括以下选项。
+- `index`       第一个选项标签的计数器的数字值（默认为 `1`）。
 - `column-sep`  选项列之间的最小间隔（默认 `1em`）。
 - `columns`     强制按照该列数排版选项，如果为 0 则自动选择合适的列数（默认 `0`）。
-<!-- - `label-align`（可选：`left`, `center`, `right`；默认 `right`）标签内容的对齐方式。 -->
+- `label-align`（可选：`left`, `center`, `right`；默认 `right`）标签内容的对齐方式。
 - `label`       标签的格式，类似 `enumitem` 可以在 `\Roman` 等命令后加 `*` 生成数字（默认 `\Alph*.`）。
 - `label-pos`   标签相对于选项内容的位置；`auto` 表示自动选择：如果内容高度超过两行时（通常是图片）标签位于左居中 `left`，否则位于左上角跟首行文字对齐（`top-left`）（可选：`auto`, `top-left`, `left`, `bottom`；默认 `auto`）。
 - `label-align` 标签内部的对齐方式。（可选：`left`, `center`, `right`；默认 `right`）
@@ -157,34 +161,46 @@
 
 ### 正体的数学常数
 
-按照国标，数学常数应使用正体。模板中提供了命令 `\eu` 和 `\iu` 分别表示自然对数的底“e”和虚数单位“i”。`\eu` 可以理解为 “e upright” 的缩写或者 “Euler‘s number” 的首字母，`\iu` 可以理解为 “i upright” 或 “imaginary unit” 的缩写，这样更方便记忆。圆周率“π”直接使用 `\uppi` 命令。
+按照国标，数学常数应使用正体。模板中提供了命令 `\eu` 和 `\iu` 分别表示自然对数的底“e”和虚数单位“i”。`\eu` 可以理解为 “e upright” 的缩写或者 “Euler's number” 的首字母，`\iu` 可以理解为 “i upright” 或 “imaginary unit” 的缩写，这样更方便记忆。圆周率“π”直接使用 `\uppi` 命令。
 
 
+### 密封线
 
-## 待完成
+```latex
+  \examsetup{
+    sealline = {
+      show        = true,
+      % scope        = firstpage,
+      % scope        = oddpage,
+      scope        = everypage,
+      line-thickness       = 1pt,
+      line-xshift          = 8mm,
+      line-yshift          = 0mm,
+      line-type            = densely-dashed,
+      text                 = 密封线内不得答题,
+      text-xshift          = 11mm,
+      text-yshift          = 30mm,
+      circle-show          = true,
+      circle-start         = 0.07,
+      circle-end           = 0.92,
+      circle-step          = 3.5em,
+      circle-diameter      = 3mm,
+      circle-xshift        = 8mm,
+      odd-info-content     = {
+        {\kaishu 姓名}：{\underline{\hspace*{8em}}},
+        {\kaishu 准考证号}：{\underline{\hspace*{8em}}},
+        {\kaishu 考场号}：{\underline{\hspace*{8em}}},
+        {\kaishu 座位号}：{\underline{\hspace*{8em}}},
+      },
+      odd-info-seperator   = \hspace*{3em},
+      odd-info-align       = center,
+      odd-info-xshift      = 20mm,
+      odd-info-yshift      = 0mm
+    }
+  }
+```
 
-- [ ] 题干与图片的排版（参考 [xkwxdyy/text-figure](https://gitee.com/xkwxdyy/text-figure)）
-- [ ] 选择题答案标记
-- [ ] 整体的答案控制与移动
-  - 选择题
-    - 题目下方
-    - 括号内
-    - 最后
-      - 列表形式
-      - 表格形式
-  - 填空题
-    - 题目下方
-    - 划线内
-    - 最后
-  - 解答题
-    - 题目下方
-    - 移动到最后
-  - 评分引导线
-- [ ] A3和A4的切换
-- [ ] 手册
-  - [ ] choices，不需要 label：`label = {}`
-
-
+具体密封线参数含义从参数名称基本可以知道，具体的可以看手册 `exam-zh.pdf`。
 
 ## 反馈
 

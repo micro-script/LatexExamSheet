@@ -36,6 +36,7 @@
     label-sep   .dim_set:N = \l__examzh_choices_label_sep_dim ,
     label-width .dim_set:N = \l__examzh_choices_label_width_dim ,
     max-columns .int_set:N = \l__examzh_choices_max_columns_int ,
+    index .int_set:N = \l__examzh_choices_item_index_int
   }
 
 \keys_set:nn { exam-zh / choices }
@@ -48,6 +49,7 @@
     label-sep   = .5em ,
     label-width = 0pt ,
     max-columns = 4 ,
+    index       = 1,
   }
 
 \NewDocumentCommand \setchoices { m }
@@ -235,7 +237,13 @@
 \cs_new:Npn \__examzh_choices_the_label:n #1
   {
     \group_begin:
-      \int_set:Nn \l__examzh_choices_index_int {#1}
+      \int_set:Nn \l__examzh_choices_index_int 
+        {
+          \int_eval:n
+            {
+              \l__examzh_choices_item_index_int + #1 - 1
+            }
+        }
       \l__examzh_choices_counters_tl
       \l__examzh_choices_label_tl
     \group_end:
