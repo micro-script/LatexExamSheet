@@ -13,6 +13,7 @@
   {exam-zh question module}
 
 \RequirePackage{amsthm}
+\RequirePackage{zref-savepos}
 \RequirePackage{ulem}
 % ulem 宏包重定义了 \emph，使用 \normalem 恢复
 \normalem
@@ -384,17 +385,18 @@
     \endtrivlist 
     \@endpefalse
   }
+
+% https://github.com/CTeX-org/forum/issues/256#issuecomment-1172319787
+\zref@require@unique
+
 \NewDocumentCommand { \score } { O{} m }
   {
-    \pushQED
-      {
-        \mode_if_math:TF
-          { \__examzh_cdotfill: \tag*{#2 \text{~分}} }
-          { \__examzh_cdotfill: #2 分 }
+    \mode_if_math:TF
+      { 
+        \__examzh_math_cdotfill:n { #2 \text { ~ 分 } }
       }
-    \popQED
-    \mode_if_math:F 
-      {
+      { 
+        \__examzh_cdotfill: #2 分 
         \par \noindent \ignorespaces
       }
   }
@@ -402,6 +404,28 @@
 \cs_new:Npn \__examzh_cdotfill:
   {
     \mode_leave_vertical:
-    \cleaders \hb@xt@ .44em {\hss $\cdot$ \hss} \hfill
-    \kern\z@
+    \cleaders
+      \hbox_to_wd:nn { .44em } { \hss $\cdot$ \hss }
+      \hfill \kern\z@
+  }
+
+\cs_new_protected:Npn \__examzh_math_cdotfill:n #1
+  {
+    \stepcounter { zref@unique }
+    \hbox_overlap_right:n
+      {
+        \zsaveposx { \thezref@unique L }
+        \zref@ifrefundefined { \thezref@unique R }
+          { }
+          {
+            \cleaders
+              \hbox_to_wd:nn { .44em } { \hss $\cdot$ \hss }
+              \skip_horizontal:n
+                {
+                    \zposx { \thezref@unique R } sp
+                  - \zposx { \thezref@unique L } sp
+                }
+          }
+      }
+    \tag * { \zsaveposx { \thezref@unique R } #1 }
   }
