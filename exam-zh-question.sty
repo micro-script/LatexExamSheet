@@ -12,7 +12,7 @@
 \ProvidesExplPackage {exam-zh-question} {2022-06-27} {v0.1.4}
   {exam-zh question module}
 
-
+\RequirePackage{amsthm}
 \RequirePackage{ulem}
 % ulem 宏包重定义了 \emph，使用 \normalem 恢复
 \normalem
@@ -87,7 +87,7 @@
     show-paren          = false ,
     show-answer         = false ,
     top-sep             = .5em plus .5em minus .2em ,
-    bottom-sep          = .5em plus .5em minus .2em ,
+    bottom-sep          = .5em plus .5em minus .2em 
   }
 
 
@@ -336,4 +336,72 @@
 \cs_new:Npn \__examzh_fillin_paren_F:
   {
     ( \hspace* { 3em plus 1em minus 1em } )
+  }
+
+
+\keys_define:nn { exam-zh / solution }
+  {
+    show-solution .bool_set:N = \l__examzh_solution_show_bool,
+    show-qed      .bool_set:N = \l__examzh_solution_show_qed_bool ,
+    name          .tl_set:N   = \l__examzh_solution_name_tl,
+    punct         .tl_set:N   = \l__examzh_solution_punct_tl,
+  }
+\keys_set:nn { exam-zh / solution }
+  {
+    show-solution = true,
+    show-qed      = true ,
+    name          = {解答},
+    punct         = {},
+  }
+\keys_define:nn { exam-zh }
+  { solution .meta:nn = { exam-zh / solution } {#1} }
+% 解答题环境
+\NewDocumentEnvironment { solution } { O{\l__examzh_solution_name_tl} +b }
+  {
+    \bool_if:NT \l__examzh_solution_show_bool
+      {
+        \__examzh_solution_print_answer:nn {#1} {#2}
+      }
+  }
+  {}
+
+\cs_new:Npn \__examzh_solution_print_answer:nn #1#2
+  {
+    \par
+    \pushQED { \qed }
+    \normalfont \topsep6 \p@ \@plus6 \p@ \relax
+    \trivlist
+    \item \relax
+    \group_begin:
+      \hspace* { 2\ccwd }
+      \bfseries #1 
+      \@addpunct { \l__examzh_solution_punct_tl }
+    \group_end:
+    \hspace \labelsep \ignorespaces
+    #2
+    \bool_if:NT \l__examzh_solution_show_qed_bool
+      { \popQED }
+    \endtrivlist 
+    \@endpefalse
+  }
+\NewDocumentCommand { \score } { O{} m }
+  {
+    \pushQED
+      {
+        \mode_if_math:TF
+          { \__examzh_cdotfill: \tag*{#2 \text{~分}} }
+          { \__examzh_cdotfill: #2 分 }
+      }
+    \popQED
+    \mode_if_math:F 
+      {
+        \par \noindent \ignorespaces
+      }
+  }
+% 仿照 latex.ltx, line 651 的 \dotfill
+\cs_new:Npn \__examzh_cdotfill:
+  {
+    \mode_leave_vertical:
+    \cleaders \hb@xt@ .44em {\hss $\cdot$ \hss} \hfill
+    \kern\z@
   }
