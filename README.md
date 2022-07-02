@@ -159,6 +159,18 @@
 如果用户需要使用其他形式的数字作为 `choices` 的标签，需要使用 `\AddChoicesCounter` 命令将其添加进 `label` 选项的识别范围内（类似 `enumitem` 的 `\AddEnumerateCounter`）。它的格式是 `\AddChoicesCounter{⟨LaTeX command⟩}{⟨internal command⟩}{⟨widest label⟩}`，其中 `⟨LaTeX command⟩` 是在 `label` 选项中的形式，`⟨internal command⟩` 是内部的实现，`⟨widest label⟩` 是最宽的标签。比如带圈数字的添加方法：`\AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}{1}`。
 
 
+### 解答环境 `solution` 和分数命令 `\score`
+
+```latex
+\begin{solution}
+  函数的定义域为 $(0, +\infty)$,
+  又 \[f^{\prime}(x) = 1 - \ln x-1 = -\ln x, \score{2}\]
+  当 $x \in(0, 1)$ 时, $f^{\prime}(x) > 0$, 当 $x \in(1, +\infty)$ 时, $f^{\prime}(x) < 0$,
+  故 $f(x)$ 的递增区间为 $(0,1)$, 递减区间为 $(1, +\infty)$.
+\end{solution}
+```
+用于解答题的解答环境，以及 `\score` 命令输出给分点，具体使用和相关键值请阅读手册。
+
 ### 正体的数学常数
 
 按照国标，数学常数应使用正体。模板中提供了命令 `\eu` 和 `\iu` 分别表示自然对数的底“e”和虚数单位“i”。`\eu` 可以理解为 “e upright” 的缩写或者 “Euler's number” 的首字母，`\iu` 可以理解为 “i upright” 或 “imaginary unit” 的缩写，这样更方便记忆。圆周率“π”直接使用 `\uppi` 命令。
