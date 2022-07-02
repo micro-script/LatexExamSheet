@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-06-27} {v0.1.4}
+\ProvidesExplPackage {exam-zh-question} {2022-07-02} {v0.1.5}
   {exam-zh question module}
 
 \RequirePackage{amsthm}
@@ -343,29 +343,38 @@
 \keys_define:nn { exam-zh / solution }
   {
     show-solution .bool_set:N = \l__examzh_solution_show_bool,
-    show-qed      .bool_set:N = \l__examzh_solution_show_qed_bool ,
-    name          .tl_set:N   = \l__examzh_solution_name_tl,
-    punct         .tl_set:N   = \l__examzh_solution_punct_tl,
+    show-qed      .bool_set:N = \l__examzh_solution_show_qed_bool,
+    qedsymbol     .tl_set:N = \l__examzh_solution_qedsymbol_tl,
+    label-content  .tl_set:N   = \l__examzh_solution_label_content_tl,
+    label-punct    .tl_set:N   = \l__examzh_solution_label_punct_tl,
+    score-pre-content .tl_set:N = \l__examzh_score_pre_content_tl,
+    score-post-content .tl_set:N = \l__examzh_score_post_content_tl,
+    score-style .tl_set:N = \l__examzh_score_style_tl
   }
 \keys_set:nn { exam-zh / solution }
   {
-    show-solution = true,
-    show-qed      = true ,
-    name          = {解答},
-    punct         = {},
+    show-solution      = true,
+    show-qed           = true,
+    qedsymbol          = $\square$,
+    label-content      = {解答},
+    label-punct        = {},
+    score-pre-content  = {},
+    score-post-content = 分,
+    score-style        = \color{red}
   }
 \keys_define:nn { exam-zh }
   { solution .meta:nn = { exam-zh / solution } {#1} }
 % 解答题环境
-\NewDocumentEnvironment { solution } { O{\l__examzh_solution_name_tl} +b }
+\NewDocumentEnvironment { solution } { O{ \l__examzh_solution_label_content_tl } +b }
   {
+    % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
+    \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
     \bool_if:NT \l__examzh_solution_show_bool
       {
         \__examzh_solution_print_answer:nn {#1} {#2}
       }
   }
   {}
-
 \cs_new:Npn \__examzh_solution_print_answer:nn #1#2
   {
     \par
@@ -376,7 +385,7 @@
     \group_begin:
       \hspace* { 2\ccwd }
       \bfseries #1 
-      \@addpunct { \l__examzh_solution_punct_tl }
+      \@addpunct { \l__examzh_solution_label_punct_tl }
     \group_end:
     \hspace \labelsep \ignorespaces
     #2
@@ -391,14 +400,24 @@
 
 \NewDocumentCommand { \score } { O{} m }
   {
-    \mode_if_math:TF
-      { 
-        \__examzh_math_cdotfill:n { #2 \text { ~ 分 } }
-      }
-      { 
-        \__examzh_cdotfill: #2 分 
-        \par \noindent \ignorespaces
-      }
+    \group_begin:
+      \mode_if_math:TF
+        { 
+          \__examzh_math_cdotfill:n 
+            { 
+              \l__examzh_score_style_tl
+              \l__examzh_score_pre_content_tl
+              #2
+              \l__examzh_score_post_content_tl 
+            }
+        }
+        { 
+          \__examzh_cdotfill:
+          \l__examzh_score_style_tl
+          \l__examzh_score_pre_content_tl #2 \l__examzh_score_post_content_tl 
+          \par \noindent \ignorespaces
+        }
+    \group_end:
   }
 % 仿照 latex.ltx, line 651 的 \dotfill
 \cs_new:Npn \__examzh_cdotfill:

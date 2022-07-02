@@ -48,7 +48,7 @@
 
 \subsection{命令和环境介绍}
 
-\subsection{正体的数学常数}
+\subsubsection{正体的数学常数}
 
 \begin{function}{\eu}
   正体的自然对数的底“e”。
@@ -226,6 +226,44 @@
 
 需要注意的是，如果 \tn{fillin} 的参数重含有不配对的中括号时会报错，如 |\fillin[$(−\infty, 1]$]|。这时需要使用大括号将内容保护起来：|\fillin[{$(−\infty, 1]$}]|。
 
+
+
+\subsubsection{解答题}
+
+\begin{function}[added = 2022-07-01]{solution 环境}
+  \begin{ccnusyntax}[emph={[2]solution}]
+    \begin{solution}(*\oarg{label-name}*)
+      ...
+    \end{solution}
+  \end{ccnusyntax}
+  解答题解答环境。\meta{label-name} 表示 \env{solution} 环境的开头标签的内容，默认为 |解答|。
+\end{function}
+
+\begin{latexexample}{\env{solution} 环境示例}
+  \begin{solution}
+    测试
+  \end{solution}
+  \begin{solution}[证明]
+    测试
+  \end{solution}
+\end{latexexample}
+
+\begin{function}[added = 2022-07-01]{\score}
+  \begin{ccnusyntax}[emph={[1]score}]
+    \score(*\marg{分数}*)
+  \end{ccnusyntax}
+  \env{solution} 环境中得分点的得分命令。若在行间公式使用，则需要编译两次产生虚线。
+\end{function}
+
+\begin{latexexample}{\tn{score} 命令示例}
+  \begin{solution}
+    函数的定义域为 $(0, +\infty)$,
+    又 \[f^{\prime}(x) = 1 - \ln x-1 = -\ln x, \score{2}\]
+    当 $x \in(0, 1)$ 时, $f^{\prime}(x) > 0$, 当 $x \in(1, +\infty)$ 时, $f^{\prime}(x) < 0$.
+
+    故 $f(x)$ 的递增区间为 $(0,1)$, \score{1} 递减区间为 $(1, +\infty)$. \score{1}
+  \end{solution}
+\end{latexexample}
 
 
 \subsection{参数设置}
@@ -883,3 +921,129 @@
     答案是 \fillin[type = paren][]
   \end{latexexample}
 \end{function}
+
+
+\subsubsection{解答题} \label{subsubsec:参数-解答题}
+
+\begin{function}[added = 2022-07-01]{solution}
+  \begin{ccnusyntax}[emph={[1]solution}]
+    solution = (*\marg{键值列表}*)
+    solution/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目，用于设置 \env{solution} 环境。具体内容见下，只能通过 \tn{examsetup} 进行处理。
+\end{function}
+
+
+\begin{function}[added = 2022-07-01]{solution/show-solution}
+  \begin{ccnusyntax}[emph={[1]show-solution}]
+    show-solution = (*\TTF*)
+  \end{ccnusyntax}
+  是否显示解答环境 \env{solution} 的内容。
+\end{function}
+
+\begin{function}[added = 2022-07-01]{solution/show-qed}
+  \begin{ccnusyntax}[emph={[1]show-qed}]
+    show-qed = (*\TTF*)
+  \end{ccnusyntax}
+  是否显示 \env{solution} 环境结束的结束符号。
+\end{function}
+
+\begin{function}[added = 2022-07-02]{solution/qedsymbol}
+  \begin{ccnusyntax}[emph={[1]qedsymbol}]
+    qedsymbol = (*\meta{symbol}*)
+  \end{ccnusyntax}
+  \env{solution} 环境结束的结束符号。默认为 |$\square$|。可以为文字等。
+\end{function}
+
+\begin{latexexample}{\opt{qedsymbol} 示例}
+  \begin{solution}
+    测试
+  \end{solution}
+  \examsetup{
+    solution = {
+      qedsymbol = \#
+    }
+  }
+  \begin{solution}
+    测试
+  \end{solution}
+\end{latexexample}
+
+\begin{function}[added = 2022-07-01,updated = 2022-07-02]{solution/label-content}
+  \begin{ccnusyntax}[emph={[1]label-content}]
+    label-content = (*\meta{content}*)
+  \end{ccnusyntax}
+  \env{solution} 环境开头的标签内容。默认为 |解答|。若用于 \tn{examsetup} 则作用于之后的所有 \env{solution} 环境。
+\end{function}
+
+\begin{function}[added = 2022-07-01,updated = 2022-07-02]{solution/label-punct}
+  \begin{ccnusyntax}[emph={[1]label-punct}]
+    label-punct = (*\meta{punct}*)
+  \end{ccnusyntax}
+  \env{solution} 环境开头的标签内容后的标点。默认为空。若用于 \tn{examsetup} 则作用于之后的所有 \env{solution} 环境。
+\end{function}
+
+\begin{function}[added = 2022-07-02]{solution/score-pre-content}
+  \begin{ccnusyntax}[emph={[1]score-pre-content}]
+    score-pre-content = (*\meta{content}*)
+  \end{ccnusyntax}
+  \tn{score} 命令的前置内容。默认为空。
+\end{function}
+
+\begin{function}[added = 2022-07-02]{solution/score-post-content}
+  \begin{ccnusyntax}[emph={[1]score-post-content}]
+    score-post-content = (*\meta{content}*)
+  \end{ccnusyntax}
+  \tn{score} 命令的后置内容。默认为 |分|。
+\end{function}
+
+\begin{latexexample}{\opt{score-pre-content} 和 \opt{score-post-content} 示例}
+  \examsetup{
+    solution = {
+      score-pre-content = 这个点可以有,
+      score-post-content = 分的分数
+    }
+  }
+  \begin{solution}
+    函数的定义域为 $(0, +\infty)$,
+    又 \[f^{\prime}(x) = 1 - \ln x-1 = -\ln x, \score{2}\]
+    当 $x \in(0, 1)$ 时, $f^{\prime}(x) > 0$, 当 $x \in(1, +\infty)$ 时, $f^{\prime}(x) < 0$,
+    故 $f(x)$ 的递增区间为 $(0,1)$, 递减区间为 $(1, +\infty)$.
+  \end{solution}
+\end{latexexample}
+
+将 \opt{score-pre-content} 和 \opt{score-post-content} 设置为空就可以产生批注效果：
+\begin{latexexample}{\opt{score-pre-content} 和 \opt{score-post-content} 为空产生批注效果}
+  \examsetup{
+    solution = {
+      score-pre-content = {},
+      score-post-content = {}
+    }
+  }
+  \begin{solution}
+    函数的定义域为 $(0, +\infty)$,
+    又 \[f^{\prime}(x) = 1 - \ln x-1 = -\ln x, \score{这是关键点}\]
+    当 $x \in(0, 1)$ 时, $f^{\prime}(x) > 0$, 当 $x \in(1, +\infty)$ 时, $f^{\prime}(x) < 0$,
+    故 $f(x)$ 的递增区间为 $(0,1)$, 递减区间为 $(1, +\infty)$.
+  \end{solution}
+\end{latexexample}
+
+\begin{function}[added = 2022-07-02]{solution/score-style}
+  \begin{ccnusyntax}[emph={[1]score-style}]
+    score-style = (*\meta{风格设置}*)
+  \end{ccnusyntax}
+  \tn{score} 命令的内容的风格设置，可以是颜色或字体字号命令等。默认为 |\color{red}|。
+\end{function}
+
+\examsetup{
+  solution = {
+    score-pre-content = {},
+    score-post-content = 分
+  }
+}
+\begin{latexexample}{\opt{score-style} 示例}
+  \examsetup{solution/score-style = {\sffamily \huge \color{blue}}}
+  \begin{solution}
+    测试 \score{2}
+  \end{solution}
+\end{latexexample}
