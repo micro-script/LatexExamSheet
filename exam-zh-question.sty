@@ -347,9 +347,10 @@
     qedsymbol     .tl_set:N = \l__examzh_solution_qedsymbol_tl,
     label-content  .tl_set:N   = \l__examzh_solution_label_content_tl,
     label-punct    .tl_set:N   = \l__examzh_solution_label_punct_tl,
+    score-showleader .bool_set:N = \l__examzh_score_show_leader_bool,
     score-pre-content .tl_set:N = \l__examzh_score_pre_content_tl,
     score-post-content .tl_set:N = \l__examzh_score_post_content_tl,
-    score-style .tl_set:N = \l__examzh_score_style_tl
+    score-style .tl_set:N = \l__examzh_score_style_tl,
   }
 \keys_set:nn { exam-zh / solution }
   {
@@ -358,6 +359,7 @@
     qedsymbol          = $\square$,
     label-content      = {解答},
     label-punct        = {},
+    score-showleader   = true,
     score-pre-content  = {},
     score-post-content = 分,
     score-style        = \color{red}
@@ -403,21 +405,51 @@
     \group_begin:
       \mode_if_math:TF
         { 
-          \__examzh_math_cdotfill:n 
+          \__examzh_score_math_version:n { #2 }
+        }
+        { 
+          \__examzh_score_text_version:n { #2 }
+        }
+    \group_end:
+  }
+\cs_new:Npn \__examzh_score_math_version:n #1
+  {
+    \bool_if:NTF \l__examzh_score_show_leader_bool
+      {
+        \__examzh_math_cdotfill:n 
+          { 
+            \l__examzh_score_style_tl
+            \l__examzh_score_pre_content_tl
+            #1
+            \l__examzh_score_post_content_tl 
+          }
+      }
+      {
+        \__examzh_math_nodotfill:n
+          {
             { 
               \l__examzh_score_style_tl
               \l__examzh_score_pre_content_tl
-              #2
+              #1
               \l__examzh_score_post_content_tl 
             }
-        }
-        { 
-          \__examzh_cdotfill:
-          \l__examzh_score_style_tl
-          \l__examzh_score_pre_content_tl #2 \l__examzh_score_post_content_tl 
-          \par \noindent \ignorespaces
-        }
-    \group_end:
+          }
+      }
+  }
+\cs_new:Npn \__examzh_score_text_version:n #1
+  {
+    \bool_if:NTF \l__examzh_score_show_leader_bool
+      {
+        \__examzh_cdotfill:
+        \l__examzh_score_style_tl
+        \l__examzh_score_pre_content_tl #1 \l__examzh_score_post_content_tl 
+      }
+      {
+        \hfill
+        \l__examzh_score_style_tl
+        \l__examzh_score_pre_content_tl #1 \l__examzh_score_post_content_tl
+      }
+    \par \noindent \ignorespaces
   }
 % 仿照 latex.ltx, line 651 的 \dotfill
 \cs_new:Npn \__examzh_cdotfill:
@@ -427,7 +459,24 @@
       \hbox_to_wd:nn { .44em } { \hss $\cdot$ \hss }
       \hfill \kern\z@
   }
-
+\cs_new_protected:Npn \__examzh_math_nodotfill:n #1
+  {
+    \stepcounter { zref@unique }
+    \hbox_overlap_right:n
+      {
+        \zsaveposx { \thezref@unique L }
+        \zref@ifrefundefined { \thezref@unique R }
+          { }
+          {
+            \skip_horizontal:n
+              {
+                  \zposx { \thezref@unique R } sp
+                - \zposx { \thezref@unique L } sp
+              }
+          }
+      }
+    \tag * { \zsaveposx { \thezref@unique R } #1 }
+  }
 \cs_new_protected:Npn \__examzh_math_cdotfill:n #1
   {
     \stepcounter { zref@unique }
