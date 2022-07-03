@@ -1028,9 +1028,9 @@
   \end{solution}
 \end{latexexample}
 
-\begin{function}[added = 2022-07-02]{solution/score-style}
-  \begin{ccnusyntax}[emph={[1]score-style}]
-    score-style = (*\meta{风格设置}*)
+\begin{function}[added = 2022-07-02, updated = 2022-07-03]{solution/score-format}
+  \begin{ccnusyntax}[emph={[1]score-format}]
+    score-format = (*\meta{风格设置}*)
   \end{ccnusyntax}
   \tn{score} 命令的内容的风格设置，可以是颜色或字体字号命令等。默认为 |\color{red}|。
 \end{function}
@@ -1041,8 +1041,8 @@
     score-post-content = 分
   }
 }
-\begin{latexexample}{\opt{score-style} 示例}
-  \examsetup{solution/score-style = {\sffamily \huge \color{blue}}}
+\begin{latexexample}{\opt{score-format} 示例}
+  \examsetup{solution/score-format = {\sffamily \huge \color{blue}}}
   \begin{solution}
     测试 \score{2}
   \end{solution}
