@@ -64,6 +64,78 @@
   $\eu \quad \iu$
 \end{latexexample}
 
+
+\subsubsection{抬头}
+
+\begin{function}[added = 2022-07-03]{\information}
+  \begin{ccnusyntax}[emph={[1]information}]
+    \information(*\oarg{分隔符}*)
+  \end{ccnusyntax}
+  水平的学生信息输入命令。\opt{分隔符} 默认为 |\quad|。使用示例：
+  \begin{latexcode}[gobble=4]
+    \information{
+      姓名\underline{\hspace{6em}},
+      座位号\underline{\hspace{15em}}
+    }
+  \end{latexcode}
+\end{function}
+
+\begin{function}[added = 2022-07-03]{\warning}
+  \begin{ccnusyntax}[emph={[1]warning}]
+    \warning(*\marg{警告}*)
+  \end{ccnusyntax}
+  警告命令。居中、黑体。使用示例：
+  \begin{latexcode}[gobble=4]
+    \warning{（在此卷上答题无效）}
+  \end{latexcode}
+\end{function}
+
+\begin{function}[updated = 2022-07-03]{\secret}
+  \begin{ccnusyntax}[emph={[1]secret}]
+    \secret(*\oarg{格式命令}*)
+  \end{ccnusyntax}
+  “绝密 $\bigstar$ 启用前”。格式命令默认为 |\bfseries|。
+\end{function}
+
+\begin{function}[updated = 2022-07-03]{\goodluck}
+  \begin{ccnusyntax}[emph={[1]goodluck}]
+    \goodluck(*\oarg{祝福语}*)
+  \end{ccnusyntax}
+  祝福语命令。祝福语默认为 |祝考试顺利|。
+\end{function}
+
+\begin{function}{notice 环境}
+  \begin{ccnusyntax}[emph={[2]notice}]
+    \begin{notice}(*\oarg{键值列表}*)
+      \item ...
+      \item ...
+    \end{notice}
+  \end{ccnusyntax}
+  注意事项环境。是 \env{enumerate} 环境的包装，\meta{键值列表} 传递给 \env{enumerate} 环境的可选参数。
+\end{function}
+
+\begin{function}{\title}
+  \begin{ccnusyntax}[emph={[1]title}]
+    \title(*\marg{标题}*)
+  \end{ccnusyntax}
+  标题。在 \tn{maketitle} 前使用。参数控制见~\ref{subsubsec:参数-抬头} 节。
+\end{function}
+
+\begin{function}{\subject}
+  \begin{ccnusyntax}[emph={[1]subject}]
+    \subject(*\marg{科目}*)
+  \end{ccnusyntax}
+  科目。在 \tn{maketitle} 前使用。可以为空或不写。参数控制见~\ref{subsubsec:参数-抬头} 节。
+\end{function}
+
+\begin{function}{\maketitle}
+  \begin{ccnusyntax}[emph={[1]maketitle}]
+    \maketitle
+  \end{ccnusyntax}
+  生成标题和科目。
+\end{function}
+
+
 \subsubsection{题干}
 
 \begin{function}{question 环境}
@@ -649,6 +721,44 @@
   \end{threeparttable}
 \end{table}
 
+
+\subsubsection{抬头} \label{subsubsec:参数-抬头}
+
+\begin{function}{title}
+  \begin{ccnusyntax}[emph={[1]title}]
+    title = (*\marg{键值列表}*)
+    title/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目，用于设置抬头。具体内容见下。
+\end{function}
+
+\begin{function}[added = 2022-07-03]{title/title-format}
+  \begin{ccnusyntax}[emph={[1]title-format}]
+    title-format = (*\meta{格式命令}*)
+  \end{ccnusyntax}
+  \tn{title} 的格式命令。默认为 |\Large|。
+\end{function}
+
+\begin{function}[added = 2022-07-03]{title/subject-format}
+  \begin{ccnusyntax}[emph={[1]subject-format}]
+    subject-format = (*\meta{格式命令}*)
+  \end{ccnusyntax}
+  \tn{subject} 的格式命令。默认为 |\sffamily \bfseries \huge|。
+\end{function}
+
+\begin{function}[added = 2022-07-03]{title/top-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep}]
+    top-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{title} 和 \tn{subject} 的整体上方间距。默认为 |0.5em plus 0.3em minus 0.2em|。
+\end{function}
+
+\begin{function}[added = 2022-07-03]{title/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]bottom-sep}]
+    bottom-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{title} 和 \tn{subject} 的整体下方间距。默认为 |0.5em plus 0.3em minus 0.2em|。
+\end{function}
 
 
 \subsubsection{题干} \label{subsubsec:参数-题干}

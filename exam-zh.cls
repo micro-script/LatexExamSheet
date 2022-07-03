@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-02} {v0.1.5} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-03} {v0.1.6} {LaTeX template for Chinese exam}
 \RequirePackage{ xtemplate }
 
 % 检查 LaTeX2e kernel 版本
