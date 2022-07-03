@@ -3,7 +3,7 @@
 % !TeX spellcheck = en_US
 
 
-\documentclass[zihao=-4]{exam-zh}
+\documentclass{exam-zh}
 % \documentclass[fontset = founder]{exam-zh}
 
 \examsetup{
@@ -12,7 +12,7 @@
     % foot-style  = separate,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
   },
   sealline = {
-    show        = true,
+    show        = false,
     % scope        = firstpage,
     % scope        = oddpage,
     scope        = everypage,
@@ -68,13 +68,20 @@
 % 行内公式统一按照行间的样式
 \everymath{\displaystyle}
 
+\title{2021 年普通高等学校招生全国统一考试}
+
+\subject{数学（理科）}
+
 
 \begin{document}
 
+\information{
+  姓名\underline{\hspace{6em}},
+  座位号\underline{\hspace{15em}}
+}
+\warning{（在此卷上答题无效）}
 
-\title{2021 年普通高等学校招生全国统一考试}
-
-\subject{数学}
+\secret
 
 \maketitle
 

@@ -350,7 +350,7 @@
     score-showleader .bool_set:N = \l__examzh_score_show_leader_bool,
     score-pre-content .tl_set:N = \l__examzh_score_pre_content_tl,
     score-post-content .tl_set:N = \l__examzh_score_post_content_tl,
-    score-style .tl_set:N = \l__examzh_score_style_tl,
+    score-format .tl_set:N = \l__examzh_score_format_tl,
   }
 \keys_set:nn { exam-zh / solution }
   {
@@ -362,7 +362,7 @@
     score-showleader   = true,
     score-pre-content  = {},
     score-post-content = 分,
-    score-style        = \color{red}
+    score-format       = \color{red}
   }
 \keys_define:nn { exam-zh }
   { solution .meta:nn = { exam-zh / solution } {#1} }
@@ -418,7 +418,7 @@
       {
         \__examzh_math_cdotfill:n 
           { 
-            \l__examzh_score_style_tl
+            \l__examzh_score_format_tl
             \l__examzh_score_pre_content_tl
             #1
             \l__examzh_score_post_content_tl 
@@ -428,7 +428,7 @@
         \__examzh_math_nodotfill:n
           {
             { 
-              \l__examzh_score_style_tl
+              \l__examzh_score_format_tl
               \l__examzh_score_pre_content_tl
               #1
               \l__examzh_score_post_content_tl 
@@ -441,12 +441,12 @@
     \bool_if:NTF \l__examzh_score_show_leader_bool
       {
         \__examzh_cdotfill:
-        \l__examzh_score_style_tl
+        \l__examzh_score_format_tl
         \l__examzh_score_pre_content_tl #1 \l__examzh_score_post_content_tl 
       }
       {
         \hfill
-        \l__examzh_score_style_tl
+        \l__examzh_score_format_tl
         \l__examzh_score_pre_content_tl #1 \l__examzh_score_post_content_tl
       }
     \par \noindent \ignorespaces

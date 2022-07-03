@@ -7,6 +7,7 @@
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
 \ProvidesExplClass {exam-zh} {2022-07-02} {v0.1.5} {LaTeX template for Chinese exam}
+\RequirePackage{ xtemplate }
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -197,28 +198,76 @@
 }
 
 
+% 横向的个人信息
+
+\clist_new:N \l__examzh_horizontal_information_clist
+
+\NewDocumentCommand \information { O{\quad} m }
+% #1 分隔符
+% #2 信息内容
+  {
+    \clist_set:Nn \l__examzh_horizontal_information_clist {#2}
+    \__examzh_print_horizontal_information:n {#1}
+  }
+\cs_new:Npn \__examzh_print_horizontal_information:n #1
+  {
+    \par \null \hfill
+    \clist_use:Nn \l__examzh_horizontal_information_clist {#1}
+    \hfill \null \par
+  }
+
+% 警告，如“在此卷上答题无效”
+\NewDocumentCommand \warning { O{\large \sffamily \bfseries} m }
+  {
+    \group_begin:
+      #1
+      \hfill #2 \hfill \null
+    \group_end:
+    \par
+  }
+
+
+% 标题处理
+\keys_define:nn { exam-zh / title }
+  {
+    title-format .tl_set:N = \l__examzh_title_format_tl,
+    subject-format .tl_set:N = \l__examzh_subject_format_tl,
+    top-sep .skip_set:N = \l__examzh_title_top_sep_skip,
+    bottom-sep .skip_set:N = \l__examzh_title_bottom_sep_skip,
+  }
+\keys_set:nn { exam-zh / title }
+  {
+    title-format   = \Large,
+    subject-format = \sffamily \bfseries \huge,
+    top-sep        = 0.5em plus 0.3em minus 0.2em,
+    bottom-sep     = 0.5em plus 0.3em minus 0.2em,
+  }
+\keys_define:nn { exam-zh }
+  { title .meta:nn = { exam-zh / title } {#1} }
 
 % 科目
 \tl_new:N \l__exam_zh_subject_tl
 \NewDocumentCommand \subject { m }
   { \tl_set:Nn \l__exam_zh_subject_tl {#1} }
 
-% 修改标题的格式
-\cs_set:Npn \@maketitle
+% 输出标题
+\RenewDocumentCommand \maketitle { }
   {
-    \newpage
-    % \null
-    % \vskip 2em
-    \secret \par
+    \par
+    \addvspace { \l__examzh_title_top_sep_skip }
     \begin { center }
       \let \footnote \thanks
-      { \Large \@title \par }
-      \vskip 1.5em
-      { \sffamily \bfseries \huge \l__exam_zh_subject_tl }
+      { \l__examzh_title_format_tl \@title \par }
+      \tl_if_blank:VF \l__exam_zh_subject_tl
+        {
+          \addvspace { 1em }
+          { \l__examzh_subject_format_tl \l__exam_zh_subject_tl }
+        }
     \end { center }
     \par
-    \vskip 0.5em
+    \addvspace { \l__examzh_title_bottom_sep_skip }
   }
+
 
 
 \prg_new_conditional:Npnn \examzh_if_defined:N #1 { T , F , TF }
@@ -230,12 +279,19 @@
     \fi:
   }
 
-\NewDocumentCommand \secret { }
+% 绝密 启用前
+\NewDocumentCommand \secret { O{\bfseries} }
   {
-    绝密 $\bigstar$ 启用前
+    \par \noindent
+    \group_begin:
+      #1
+      绝密 $\bigstar$ 启用前
+    \group_end:
+    \par
   }
+
 % 祝考试顺利
-\NewDocumentCommand \goodluck { }
+\NewDocumentCommand \goodluck { O{祝考试顺利} }
   {
     \group_begin:
       \centering
@@ -243,7 +299,7 @@
         { \lishu }
         { \bfseries }
       \Large
-      $\bigstar$ 祝考试顺利 $\bigstar$
+      $\bigstar$ #1 $\bigstar$
       \par
     \group_end:
   }
@@ -302,8 +358,6 @@
 
 
 % 密封线
-
-
 
 \keys_define:nn { exam-zh / sealline }
   {
@@ -889,7 +943,7 @@
         \fancyfoot [ C ]
           {
             \small
-            数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+            \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
           }
       }
       {
@@ -901,7 +955,7 @@
             \fancyfoot [ C ]
               {
                 \small
-                数学试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
               }
           }
           {
@@ -912,7 +966,7 @@
                   {
                     \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
                     \small
-                    数学试题第 
+                    \l__exam_zh_subject_tl 试题第 
                     % \thepage 
                     \int_eval:n { 2 * \c@page - 1 }
                     { } 页
@@ -929,7 +983,7 @@
                     % \int_gincr:N \c@page
                     \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
                     \small
-                    数学试题第 
+                    \l__exam_zh_subject_tl 试题第 
                     \int_eval:n { 2 * \c@page }
                     { } 
                     页
