@@ -1,5 +1,5 @@
 \NeedsTeXFormat{LaTeX2e}[2020/10/01]
-\ProvidesExplClass{ccnudoc}
+\ProvidesExplClass{xdyydoc}
   {2022-04-26}{0.1a}{Documentation class for CCNUthesis}
 \@namedef{ver@thumbpdf.sty}{9999/99/99}
 \LoadClass[a4paper, full]{l3doc}
@@ -823,12 +823,19 @@
   BoldFont       = *-Bold,
   ItalicFont     = *-Italic,
   BoldItalicFont = *-BoldItalic]
-\setmonofont{Iosevka Slab}[%
-  UprightFont    = * Light,
-  BoldFont       = * Semibold,
-  ItalicFont     = * Light Oblique,
-  BoldItalicFont = * Semibold Oblique,
-  Scale          = MatchLowercase]
+% \setmonofont{Iosevka Slab}[%
+%   UprightFont    = * Light,
+%   BoldFont       = * Semibold,
+%   ItalicFont     = * Light Oblique,
+%   BoldItalicFont = * Semibold Oblique,
+%   Scale          = MatchLowercase]
+\setmonofont{cmun}[%
+  Extension      = .otf,
+  UprightFont    = *btl,
+  BoldFont       = *tb,
+  ItalicFont     = *bto,
+  BoldItalicFont = *tx,
+  HyphenChar     = None]
 \setmathfont{LibertinusMath-Regular.otf}
 \setCJKmainfont{Source Han Serif SC}[%
   ItalicFont     = FZKai-Z03,
