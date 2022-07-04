@@ -38,4 +38,26 @@
 \ExplSyntaxOn
 \NewDocumentCommand \eu { } { \mathrm{ e } }
 \NewDocumentCommand \iu { } { \mathrm{ i } }
+\NewDocumentCommand { \scoringbox } { s }
+  {
+    \IfBooleanTF {#1}
+      { \__examzh_scoringbox_onecolumn: }
+      { \__examzh_scoringbox_twocolumn: }
+  }
+\cs_new_protected:Nn \__examzh_scoringbox_twocolumn:
+  {
+    \begin{tabular}{|c|c|}
+      \hline 
+      得分 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+      阅卷人 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+    \end{tabular}
+  }
+\cs_new_protected:Nn \__examzh_scoringbox_onecolumn:
+  {
+    \begin{tabular}{|c|}
+      \hline 
+      得分\rule[-0.7em]{0pt}{2em} \\\hline
+      \rule[-0.7em]{0pt}{2em} \\\hline
+    \end{tabular}
+  }
 \ExplSyntaxOff

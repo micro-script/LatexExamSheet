@@ -1066,6 +1066,180 @@
 
 % 页眉和页脚
 
+
+\keys_define:nn { exam-zh / page }
+  {
+    show-foot .bool_set:N = \l__examzh_show_foot_bool,
+    foot-content .tl_set:N = \l__examzh_foot_content_format_tl
+      % foo, bar: foo <page> bar
+      % foo, bar, baz: foo <page> bar <lastpage> baz
+  }
+\keys_set:nn { exam-zh / page }
+  {
+    show-foot    = true,
+    foot-content = {数学试题第;页（共;页）}
+  }
+
+\int_new:N \l__examzh_foot_content_count_semicolon_int
+\tl_new:N \l__examzh_foot_content_before_page_tl
+\tl_new:N \l__examzh_foot_content_after_page_tl
+\tl_new:N \l__examzh_foot_content_after_lastpage_tl
+\cs_generate_variant:Nn \regex_count:nnN { nxN }
+
+\cs_new:Npn \__examzh_foot_content_only_page_input:ww #1 ; #2 \q_stop
+  {
+    \tl_set:Nn \l__examzh_foot_content_before_page_tl {#1}
+    \tl_set:Nn \l__examzh_foot_content_after_page_tl {#2}
+  }
+\cs_new:Npn \__examzh_foot_content_only_page_input:n #1
+  {
+    \__examzh_foot_content_only_page_input:ww #1 \q_stop
+  }
+\cs_generate_variant:Nn \__examzh_foot_content_only_page_input:n { V }
+
+\cs_new:Npn \__examzh_foot_content_page_and_lastpage_input:www #1 ; #2 ; #3 \q_stop
+  {
+    \tl_set:Nn \l__examzh_foot_content_before_page_tl {#1}
+    \tl_set:Nn \l__examzh_foot_content_after_page_tl {#2}
+    \tl_set:Nn \l__examzh_foot_content_after_lastpage_tl {#3}
+  }
+\cs_new:Npn \__examzh_foot_content_page_and_lastpage_input:n #1
+  {
+    \__examzh_foot_content_page_and_lastpage_input:www #1 \q_stop
+  }
+\cs_generate_variant:Nn \__examzh_foot_content_page_and_lastpage_input:n { V }
+
+\cs_new:Npn \__examzh_foot_content_no_page_or_lastpage_output:
+  {
+    \l__examzh_foot_content_format_tl
+  }
+\cs_new:Npn \__examzh_foot_content_only_page_output:
+  {
+    \l__examzh_foot_content_before_page_tl \thepage { }
+    \l__examzh_foot_content_after_page_tl
+  }
+\cs_new:cpn { __examzh_foot_content_only_page_a3paper_left_output: }
+  {
+    \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page - 1 } { }
+    \l__examzh_foot_content_after_page_tl
+  }
+\cs_new:cpn { __examzh_foot_content_only_page_a3paper_right_output: }
+  {
+    \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page } { }
+    \l__examzh_foot_content_after_page_tl
+  }
+\cs_new:Npn \__examzh_foot_content_page_and_lastpage_output:
+  {
+    \l__examzh_foot_content_before_page_tl \thepage { }
+    \l__examzh_foot_content_after_page_tl  \pageref { LastPage }~
+    \l__examzh_foot_content_after_lastpage_tl
+  }
+\cs_new:cpn { __examzh_foot_content_page_and_lastpage_a3paper_left_output: }
+  {
+    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
+    \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page - 1 } { }
+    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }
+    \l__examzh_foot_content_after_lastpage_tl
+  }
+\cs_new:cpn { __examzh_foot_content_page_and_lastpage_a3paper_right_output: }
+  {
+    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
+    \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page } { }
+    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }
+    \l__examzh_foot_content_after_lastpage_tl
+  }
+\msg_new:nnn { exam-zh } { foot-semicolon-number-error }
+  {
+    The~number~of~semicolon~of~foot-line~must~be~1,~2~or~3!
+  }
+\cs_new:cpn { __examzh_foot_content_a4paper_output: }
+  {
+    % 检测输入有多少个 ;
+    \regex_count:nxN { ; } 
+      { \l__examzh_foot_content_format_tl }
+      \l__examzh_foot_content_count_semicolon_int
+    \int_case:nnF { \l__examzh_foot_content_count_semicolon_int }
+      {
+        {0} { \__examzh_foot_content_no_page_or_lastpage_output: }
+        {1}
+          { 
+            % 将输入“分解”
+            \__examzh_foot_content_only_page_input:V \l__examzh_foot_content_format_tl
+            % 然后输出
+            \__examzh_foot_content_only_page_output:
+          }
+        {2}
+          {
+            % 将输入“分解”
+            \__examzh_foot_content_page_and_lastpage_input:V \l__examzh_foot_content_format_tl
+            % 然后输出
+            \__examzh_foot_content_page_and_lastpage_output:
+          }
+      }
+      {
+        \msg_error:nn { exam-zh } { foot-semicolon-number-error }
+      }
+  }
+\cs_set_eq:cc
+  { __examzh_foot_content_a3paper_common_output: }
+  { __examzh_foot_content_a4paper_output: }
+\cs_new:cpn { __examzh_foot_content_a3paper_separate_left_output: }
+  {
+    % 检测输入有多少个 ;
+    \regex_count:nxN { ; } 
+      { \l__examzh_foot_content_format_tl }
+      \l__examzh_foot_content_count_semicolon_int
+    \int_case:nnF { \l__examzh_foot_content_count_semicolon_int }
+      {
+        {0} { \__examzh_foot_content_no_page_or_lastpage_output: }
+        {1}
+          { 
+            % 将输入“分解”
+            \__examzh_foot_content_only_page_input:V \l__examzh_foot_content_format_tl
+            % 然后输出
+            \use:c { __examzh_foot_content_only_page_a3paper_left_output: }
+          }
+        {2}
+          {
+            % 将输入“分解”
+            \__examzh_foot_content_page_and_lastpage_input:V \l__examzh_foot_content_format_tl
+            % 然后输出
+            \use:c { __examzh_foot_content_page_and_lastpage_a3paper_left_output: }
+          }
+      }
+      {
+        \msg_error:nn { exam-zh } { foot-semicolon-number-error }
+      }
+  }
+\cs_new:cpn { __examzh_foot_content_a3paper_separate_right_output: }
+  {
+    % 检测输入有多少个 ;
+    \regex_count:nxN { ; } 
+      { \l__examzh_foot_content_format_tl }
+      \l__examzh_foot_content_count_semicolon_int
+    \int_case:nnF { \l__examzh_foot_content_count_semicolon_int }
+      {
+        {0} { \__examzh_foot_content_no_page_or_lastpage_output: }
+        {1}
+          { 
+            % 将输入“分解”
+            \__examzh_foot_content_only_page_input:V \l__examzh_foot_content_format_tl
+            % 然后输出
+            \use:c { __examzh_foot_content_only_page_a3paper_right_output: }
+          }
+        {2}
+          {
+            % 将输入“分解”
+            \__examzh_foot_content_page_and_lastpage_input:V \l__examzh_foot_content_format_tl
+            % 然后输出
+            \use:c { __examzh_foot_content_page_and_lastpage_a3paper_right_output: }
+          }
+      }
+      {
+        \msg_error:nn { exam-zh } { foot-semicolon-number-error }
+      }
+  }
+
 \tl_set:Nn \headrulewidth { 0pt }
 \cs_set_eq:NN \@mkboth \use_none:n
 \cs_set_eq:NN \sectionmark \use_none:n
@@ -1083,57 +1257,69 @@
     \bool_if:cTF { g__examzh_page_size_a4paper_bool }
       {
         % a4paper
-        \fancyfoot [ C ]
+        \bool_if:NT \l__examzh_show_foot_bool
           {
-            \small
-            \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+            \fancyfoot [ C ]
+              {
+                \small
+                \use:c { __examzh_foot_content_a4paper_output: }
+                % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+              }
           }
       }
       {
         % a3paper
-        \bool_if:cTF 
-          { g__examzh_page_a3paper_foot_common_bool }
+        \bool_if:NT \l__examzh_show_foot_bool
           {
-            % 两页共用一个页脚
-            \fancyfoot [ C ]
+            \bool_if:cTF 
+              { g__examzh_page_a3paper_foot_common_bool }
               {
-                \small
-                \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-              }
-          }
-          {
-            % 每页一个页脚
-            \fancyfoot [ L ]
-              {
-                \__examzh_column_box:n
+                % 两页共用一个页脚
+                \fancyfoot [ C ]
                   {
-                    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
                     \small
-                    \l__exam_zh_subject_tl 试题第 
-                    % \thepage 
-                    \int_eval:n { 2 * \c@page - 1 }
-                    { } 页
-                    （共 
-                    % \pageref { LastPage } 
-                    \int_eval:n { 2 * \l__examzh_tmp_int }
-                    ~ 页）
+                    % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                    \use:c { __examzh_foot_content_a3paper_common_output: }
                   }
               }
-            \fancyfoot [ R ]
               {
-                \__examzh_column_box:n
+                % 每页一个页脚
+                \fancyfoot [ L ]
                   {
-                    % \int_gincr:N \c@page
-                    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
-                    \small
-                    \l__exam_zh_subject_tl 试题第 
-                    \int_eval:n { 2 * \c@page }
-                    { } 
-                    页
-                    （共 
-                    % \pageref { LastPage }
-                    \int_eval:n { 2 * \l__examzh_tmp_int }
-                    ~ 页）
+                    \__examzh_column_box:n
+                      {
+                        \small
+                        \use:c { __examzh_foot_content_a3paper_separate_left_output: }
+                        % \l__exam_zh_subject_tl 试题第 
+                        % % \thepage 
+                        % \int_eval:n { 2 * \c@page - 1 }
+                        % { } 页
+                        % （共 
+                        % % \pageref { LastPage } 
+                        % \int_eval:n { 2 * \l__examzh_tmp_int }
+                        % ~ 页）
+                        % \use:c { l__examzh_foot_content_a3paper_left_tl }
+                      }
+                  }
+                \fancyfoot [ R ]
+                  {
+                    \__examzh_column_box:n
+                      {
+                        \small
+                        \use:c { __examzh_foot_content_a3paper_separate_right_output: }
+                        % % \int_gincr:N \c@page
+                        % \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
+                        
+                        % \l__exam_zh_subject_tl 试题第 
+                        % \int_eval:n { 2 * \c@page }
+                        % { } 
+                        % 页
+                        % （共 
+                        % % \pageref { LastPage }
+                        % \int_eval:n { 2 * \l__examzh_tmp_int }
+                        % ~ 页）
+                        % % \use:c { l__examzh_foot_content_a3paper_right_tl }
+                      }
                   }
               }
           }
@@ -1225,3 +1411,100 @@
     \thispagestyle { empty }
     \clearpage
   }
+
+% 评分框 scoring box
+\NewDocumentCommand { \scoringbox } { s }
+  {
+    \IfBooleanTF {#1}
+      { \__examzh_scoringbox_onecolumn: }
+      { \__examzh_scoringbox_twocolumn: }
+  }
+\cs_new_protected:Nn \__examzh_scoringbox_twocolumn:
+  {
+    \begin{tabular}{|c|c|}
+      \hline 
+      得分 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+      阅卷人 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+    \end{tabular}
+  }
+\cs_new_protected:Nn \__examzh_scoringbox_onecolumn:
+  {
+    \begin{tabular}{|c|}
+      \hline 
+      得分\rule[-0.7em]{0pt}{2em} \\\hline
+      \rule[-0.7em]{0pt}{2em} \\\hline
+    \end{tabular}
+  }
+\cs_set_eq:NN \__exam_section:n \section
+\cs_new:Npn \__examzh_combine_section_with_twocolumn_scoringbox:
+  {
+    % \AtEndPreamble
+    %   {
+        \RenewDocumentCommand { \section } { m }
+          {
+            \par\addvspace{1.5em}\noindent
+            \begin{tabular}{lc}
+              \begin{minipage}{0.2\textwidth}
+                \begin{tabular}{|c|c|}
+                  \hline 
+                  得分 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+                  阅卷人 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+                \end{tabular}
+              \end{minipage} & 
+              \begin{minipage}{0.745\textwidth}
+                \__exam_section:n {##1}
+              \end{minipage}
+            \end{tabular}
+            \par
+            \addvspace{1em}
+          }
+      % }
+  }
+\cs_new:Npn \__examzh_combine_section_with_onecolumn_scoringbox:
+  {
+    % \AtEndPreamble
+    %   {
+        \RenewDocumentCommand { \section } { m }
+          {
+            \par\addvspace{1.5em}\noindent
+            \begin{tabular}{cc}
+              \begin{minipage}{3.5em}
+                \begin{tabular}{|c|}
+                  \hline 
+                  得分\rule[-0.7em]{0pt}{2em} \\\hline
+                  \rule[-0.7em]{0pt}{2em} \\\hline
+                \end{tabular}
+              \end{minipage} & 
+              \begin{minipage}{0.865\textwidth}
+                \__exam_section:n {##1}
+              \end{minipage}
+            \end{tabular}
+            \par
+            \addvspace{1em}
+          }
+      % }
+  }
+\cs_new:Npn \__examzh_restore_section:
+  {
+    \RenewDocumentCommand { \section } { m }
+      { \__exam_section:n {##1} }
+  }
+\keys_define:nn { exam-zh / scoringbox }
+  {
+    type .choice:,
+    type / onecolumn .code:n =
+      {
+        \__examzh_combine_section_with_onecolumn_scoringbox:
+      },
+    type / twocolumn .code:n =
+      {
+        \__examzh_combine_section_with_twocolumn_scoringbox:
+      },
+    type / none .code:n = { \__examzh_restore_section: },
+  }
+\keys_set:nn { exam-zh / scoringbox }
+  {
+    type = none
+  }
+\keys_define:nn { exam-zh }
+  { scoringbox .meta:nn = { exam-zh / scoringbox } {#1} }

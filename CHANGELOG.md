@@ -13,6 +13,7 @@
 
 - 增加 `\examsquare` 方格命令
 - 增加 `step`、`method`、`case` 环境
+- 增加页脚内容定制接口 `page/foot-content`
 
 ## [0.1.6] - 2022-07-03
 
