@@ -12,6 +12,7 @@
 ### Added
 
 - 增加 `\examsquare` 方格命令
+- 增加 `step`、`method`、`case` 环境
 
 ## [0.1.6] - 2022-07-03
 

@@ -188,6 +188,27 @@
 
 
 % 设置 enumitem 列表格式
+\keys_define:nn { exam-zh / list }
+  {
+    step-name .tl_set:N = \l__examzh_list_step_name_tl,
+    method-name .tl_set:N = \l__examzh_list_method_name_tl,
+    case-name .tl_set:N = \l__examzh_list_case_name_tl,
+    step-punct .tl_set:N = \l__examzh_list_step_punct_tl,
+    method-punct .tl_set:N = \l__examzh_list_method_punct_tl,
+    case-punct .tl_set:N = \l__examzh_list_case_punct_tl,
+  }
+\keys_set:nn { exam-zh / list }
+  {
+    step-name     = 步骤,
+    method-name   = 方法,
+    case-name     = 情形,
+    step-punct    = .,
+    method-punct  = ,
+    case-punct    = .,
+  }
+\keys_define:nn { exam-zh }
+  { list .meta:nn = { exam-zh / list } {#1} }
+
 \setlist{nosep}
 
 \setlist[enumerate, 2]{
@@ -196,6 +217,56 @@
   label = { （ \arabic * ） }
 }
 
+% 多种方法: method环境
+\newlist{method}{enumerate}{1}
+\setlist[method, 1]
+  {
+    label = {\bfseries \l__examzh_list_method_name_tl \zhnum*\l__examzh_list_method_punct_tl},
+    labelindent = !,
+    labelwidth  = 1.3cm,
+    labelsep*   = 0.5em,
+    leftmargin  = 1.4cm
+  }
+% 分类讨论: case环境
+\newlist{case}{enumerate}{2}
+\setlist[case, 1]
+  {
+    label = {\bfseries \l__examzh_list_case_name_tl \arabic*\l__examzh_list_case_punct_tl},
+    % labelindent=-3em ,labelwidth=1.3cm, labelsep*=1em, leftmargin=20pt
+    labelindent = !,
+    labelwidth  = 1.3cm,
+    labelsep*   = 0.5em,
+    leftmargin  = 1.7cm
+    % labelindent=\parindent, leftmargin=0pt, widest=0, itemindent=*
+  }
+\setlist[case, 2]
+  {
+    label = {\bfseries \l__examzh_list_case_name_tl \arabic{casei}.\arabic*\l__examzh_list_case_punct_tl},
+    % labelindent=-1em ,labelwidth=1.3cm, labelsep*=1em, leftmargin =20pt
+    labelindent = -0.5em,
+    labelwidth  = 1.3cm,
+    labelsep*   = 0.5em,
+    leftmargin  = 0cm
+  }
+% 分步: step环境
+\newlist{step}{enumerate}{2}
+\setlist[step, 1]
+  {
+    label = {\bfseries \l__examzh_list_step_name_tl \arabic*\l__examzh_list_step_punct_tl},
+    labelindent = !,
+    labelwidth  = 1.3cm,
+    labelsep*   = 0.5em,
+    leftmargin  = 1.7cm
+    % labelindent=\parindent, leftmargin = 0pt, widest = 0, itemindent = *
+  }
+\setlist[step, 2]
+  {
+    label       =  {\bfseries \l__examzh_list_step_name_tl \arabic{stepi}.\arabic*\l__examzh_list_step_punct_tl},
+    labelindent = -0.5em,
+    labelwidth  = 1.3cm,
+    labelsep*   = 0.5em, 
+    leftmargin  = 0cm
+  }
 
 % 横向的个人信息
 
@@ -428,6 +499,13 @@
         \dim_gset:Nn \g__examzh_sealline_odd_text_yshift_dim {#1}
         \dim_gset:Nn \g__examzh_sealline_even_text_yshift_dim {#1}
       },
+    odd-text-align .tl_set:N = \g__examzh_sealline_odd_text_align_tl,
+    even-text-align .tl_set:N = \g__examzh_sealline_even_text_align_tl,
+    text-align .code:n =
+      {
+        \tl_set:Nn \g__examzh_sealline_odd_text_align_tl {#1}
+        \tl_set:Nn \g__examzh_sealline_even_text_align_tl {#1}
+      },
     % 密封线上圆圈的参数
     % --控制显示--
     odd-circle-show .bool_set:N = \g__examzh_sealline_odd_circle_show_bool,
@@ -507,6 +585,7 @@
     text                 = 密封线内不得答题,
     text-xshift          = 11mm,
     text-yshift          = 30mm,
+    text-align           = fit~to~path,
     circle-show          = true,
     circle-start         = 0.07,
     circle-end           = 0.92,
@@ -881,7 +960,7 @@
           {
             text~along~path,
             reverse~path,
-            text~align = fit~to~path,
+            text~align = \g__examzh_sealline_odd_text_align_tl,
             text       = {\g__examzh_sealline_odd_text_tl}
           }
       ]
@@ -897,7 +976,7 @@
         decoration =
           {
             text~along~path,
-            text~align = fit~to~path,
+            text~align = \g__examzh_sealline_even_text_align_tl,
             text = { \g__examzh_sealline_even_text_tl }
           }
       ]

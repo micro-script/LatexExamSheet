@@ -405,6 +405,42 @@
 \end{latexexample}
 
 
+\subsubsection{几个列表环境}
+
+\begin{function}[added = 2022-07-04]{step 环境}
+  \begin{ccnusyntax}[emph={[2]step}]
+    \begin{step}
+      \item ...
+      \item ...
+    \end{step}
+  \end{ccnusyntax}
+  “步骤”列表环境。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{method 环境}
+  \begin{ccnusyntax}[emph={[2]method}]
+    \begin{method}
+      \item ...
+      \item ...
+    \end{method}
+  \end{ccnusyntax}
+  “方法”列表环境。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{case 环境}
+  \begin{ccnusyntax}[emph={[2]case}]
+    \begin{case}
+      \item ...
+      \item ...
+    \end{case}
+  \end{ccnusyntax}
+  “情形”列表环境。
+\end{function}
+
+上述三个列表环境的参数控制见~\ref{subsubsec:参数-列表环境}
+
+
+
 \subsubsection{草稿纸}
 
 \begin{function}[added = 2022-07-03]{\draftpaper}
@@ -652,6 +688,15 @@
     even-text-yshift = (*\meta{dimension}*)
   \end{ccnusyntax}
   沿着密封线的文字的垂直伸缩量。默认为 |30mm|。作用与 \opt{line-yshift} 类似，奇偶页效果相同。\meta{dimension} 为正值时，文字部分同时“往内缩 \meta{dimension} 长度”。如果设置成为 0mm，则文字部分的总长度为版心高度。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{sealline/text-align,sealline/odd-text-align,sealline/even-text-align}
+  \begin{ccnusyntax}[emph={[1]text-align,odd-text-align,even-text-align}]
+    text-align = (*<(fit to path)|left|center|right>*)
+    odd-text-align = (*<(fit to path)|left|center|right>*)
+    even-text-align = (*<(fit to path)|left|center|right>*)
+  \end{ccnusyntax}
+  沿着密封线的文字的对齐方式。\opt{fit to path} 表示沿着路径分散开（类似于 \tn{makebox} 的 \opt{s} 参数；\opt{left} 表示文字正常，整体在路径的左侧（以密封线为参考）；\opt{center} 表示文字正常，整体在路径的中间（以密封线为参考）；\opt{right} 表示文字正常，整体在路径的右侧（以密封线为参考）。
 \end{function}
 
 \begin{function}{sealline/circle-show,sealline/odd-circle-show,sealline/even-circle-show}
@@ -1326,6 +1371,35 @@
 \end{function}
 
 
+\subsubsection{几个列表环境} \label{subsubsec:参数-列表环境}
+
+\begin{function}[added = 2022-07-04]{list}
+  \begin{ccnusyntax}[emph={[1]list}]
+    list = (*\marg{键值列表}*)
+    list/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目。用于设置 \env{step}、\env{method}、\env{case} 环境。仅通过 \tn{examsetup} 进行统一处理。具体内容见下。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{list/step-name,list/method-name,list/case-name}
+  \begin{ccnusyntax}[emph={[1]step-name,method-name,case-name}]
+    step-name   = (*\meta{step 环境 label 名}*)
+    method-name = (*\meta{method 环境 label 名}*)
+    case-name   = (*\meta{case 环境 label 名}*)
+  \end{ccnusyntax}
+  分别设置 \env{step}、\env{method}、\env{case} 环境的 label 名，分别默认为 |步骤|、|方法|、|情形|。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{list/step-punct,list/method-punct,list/case-punct}
+  \begin{ccnusyntax}[emph={[1]step-punct,method-punct,case-punct}]
+    step-punct   = (*\meta{step 环境 label 后的标点}*)
+    method-punct = (*\meta{method 环境 label 后的标点}*)
+    case-punct   = (*\meta{case 环境 label 后的标点}*)
+  \end{ccnusyntax}
+  分别设置 \env{step}、\env{method}、\env{case} 环境的 label 后的标点，分别默认为 |.|、|{}|（无标点）、|.|。
+\end{function}
+
+
 \subsubsection{草稿纸} \label{subsubsec:参数-草稿纸}
 
 \begin{function}[added = 2022-07-03]{draft}
@@ -1333,7 +1407,7 @@
     draft = (*\marg{键值列表}*)
     draft/(*\meta{key}*) = (*\meta{value}*)
   \end{ccnusyntax}
-  该选项包含许多子项目。用于设置 \tn{draftpaper} 命令。下面所述的键值，如果不额外说明，则表示可以通过 \tn{examsetup} 进行统一处理，也可以用 于 \tn{draftpaper} 命令的 \meta{键值列表} 针对某一 \tn{draftpaper} 命令调整。具体内容见下
+  该选项包含许多子项目。用于设置 \tn{draftpaper} 命令。下面所述的键值，如果不额外说明，则表示可以通过 \tn{examsetup} 进行统一处理，也可以用 于 \tn{draftpaper} 命令的 \meta{键值列表} 针对某一 \tn{draftpaper} 命令调整。具体内容见下。
 \end{function}
 
 
