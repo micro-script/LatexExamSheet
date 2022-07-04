@@ -12,7 +12,7 @@
     % foot-style  = separate,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
   },
   sealline = {
-    show        = false,
+    show        = true,
     % scope        = firstpage,
     % scope        = oddpage,
     scope        = everypage,
@@ -30,10 +30,10 @@
     circle-diameter      = 3mm,
     circle-xshift        = 8mm,
     odd-info-content     = {
-      {\kaishu 姓名}：{\underline{\hspace*{8em}}},
-      {\kaishu 准考证号}：{\underline{\hspace*{8em}}},
-      {\kaishu 考场号}：{\underline{\hspace*{8em}}},
-      {\kaishu 座位号}：{\underline{\hspace*{8em}}},
+      {\kaishu 姓名} {\underline{\hspace*{8em}}},
+      {\kaishu 准考证号} {\examsquare{9}},
+      {\kaishu 考场号} {\examsquare{2}},
+      {\kaishu 座位号} {\examsquare{2}},
     },
     odd-info-seperator   = \hspace*{3em},
     odd-info-align       = center,
@@ -46,7 +46,7 @@
     answer-color = black,
     show-points  = auto,    % 显示题目分数
     show-paren   = true,    % 显示选择题括号
-    show-answer  = true,    % 显示答案
+    show-answer  = false,    % 显示答案
     top-sep      = .5em plus .5em minus .2em ,
     bottom-sep   = .5em plus .5em minus .2em ,
   },
@@ -75,11 +75,11 @@
 
 \begin{document}
 
-\information{
-  姓名\underline{\hspace{6em}},
-  座位号\underline{\hspace{15em}}
-}
-\warning{（在此卷上答题无效）}
+% \information{
+%   姓名\underline{\hspace{6em}},
+%   座位号\underline{\hspace{15em}}
+% }
+% \warning{（在此卷上答题无效）}
 
 \secret
 

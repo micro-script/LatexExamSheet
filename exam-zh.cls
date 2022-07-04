@@ -7,7 +7,6 @@
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
 \ProvidesExplClass {exam-zh} {2022-07-03} {v0.1.6} {LaTeX template for Chinese exam}
-\RequirePackage{ xtemplate }
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -659,7 +658,16 @@
       }
   }
 
-
+\keys_define:nn { exam-zh / page }
+  {
+    show-columnline .bool_set:N = \l__examzh_show_columnline_bool,
+    columnline-width .dim_set:N = \l__examzh_columnline_dim,
+  }
+\keys_set:nn { exam-zh / page }
+  {
+    show-columnline  = true,
+    columnline-width = 0.4pt
+  }
 
 \AtEndPreamble
   {
@@ -689,6 +697,8 @@
       }
       {
         % a3paper
+        \bool_if:NT \l__examzh_show_columnline_bool
+          { \dim_set:Nn \columnseprule { \l__examzh_columnline_dim } }
         \bool_if:NTF \g__examzh_sealline_show_bool
           {
             % 有密封线
@@ -921,6 +931,60 @@
       ([xshift = -\g__examzh_sealline_odd_info_xshift_dim, yshift = \g__examzh_sealline_odd_info_yshift_dim]current~page~text~area.south~west);
   }
 
+% 信息的方格
+\keys_define:nn { exam-zh / square }
+  {
+    square-x .dim_set:N = \l__examzh_information_square_x_dim,
+    square-y .dim_set:N = \l__examzh_information_square_y_dim,
+    square-baseline .dim_set:N = \l__examzh_information_square_baseline_dim,
+    square-linewidth .dim_set:N = \l__examzh_information_square_linewidth_dim,
+    square-xshift .dim_set:N = \l__examzh_information_square_xshift_dim
+  }
+\keys_set:nn { exam-zh / square }
+  {
+    square-x         = 1.4em,
+    square-y         = 1.2em,
+    square-baseline  = 3pt,
+    square-linewidth = 0.4pt,
+  }
+\keys_define:nn { exam-zh }
+  { square .meta:nn = { exam-zh / square } {#1} }
+\cs_new:Npn \__examzh_information_square_single:
+  {
+    \begin{tikzpicture}[baseline = \l__examzh_information_square_baseline_dim]
+      \draw[line~width = \l__examzh_information_square_linewidth_dim] (0,0) rectangle 
+        ( \l__examzh_information_square_x_dim , \l__examzh_information_square_y_dim);
+    \end{tikzpicture}
+  }
+\cs_new:Npn \__examzh_information_square_multiple:n #1
+  {
+    \dim_compare:nNnT { \l__examzh_information_square_xshift_dim } = { 0pt }
+      {
+        \dim_set_eq:NN 
+          \l__examzh_information_square_xshift_dim
+          \l__examzh_information_square_linewidth_dim
+      }
+    \int_compare:nNnTF { #1 } = { 1 }
+      { \__examzh_information_square_single: }
+      {
+        \__examzh_information_square_single:
+        \prg_replicate:nn { #1 - 1 }
+          {
+            \hspace*{ -\l__examzh_information_square_xshift_dim }
+            \__examzh_information_square_single:
+          }
+      }
+  }
+
+\NewDocumentCommand { \examsquare } { O{ } m }
+  {
+    \group_begin:
+      \keys_set:nn { exam-zh / square } { #1 }
+      \__examzh_information_square_multiple:n { #2 }
+    \group_end:
+  }
+
+
 % 页眉和页脚
 
 \tl_set:Nn \headrulewidth { 0pt }
@@ -997,3 +1061,88 @@
       }
   }
 \AtEndPreamble { \pagestyle { plain } }
+
+
+
+% 草稿纸
+
+% “草稿纸”三个字的尺寸
+\dim_new:N \l__examzh_draft_watermark_size_dim
+% 控制是否自动添加草稿纸
+\bool_new:N \l__examzh_draft_show_auto_bool
+
+\keys_define:nn { exam-zh / draft }
+  {
+    watermark-size .code:n = 
+      {
+        % 之所以这样设置而不是 .dim_set:N 是因为 a4 和 a3 的切换不是文档选项
+        % 而是通过 \examsetup 更改的。所以要设置默认值必须用 \AtEndPreamble
+        % 来检测 g__examzh_page_size_a4paper_bool 的值才行，但这样的话就会
+        % 把 watermark-size 的值覆盖，所以得实现“watermark-size” 的设置要盖掉 \AtEndPreamble
+        % 设置的默认值，才可以达到用户输入产生效果
+        \AtEndPreamble
+          {
+            \dim_set:Nn \l__examzh_draft_watermark_size_dim {#1}
+          }
+      },
+    show-watermark .bool_set:N = \l__examzh_draft_show_watermark_bool,
+    show-draft .choice:,
+    show-draft / auto .code:n = 
+      { \bool_set_true:N \l__examzh_draft_show_auto_bool },    
+    show-draft / manual .code:n = 
+      { \bool_set_false:N \l__examzh_draft_show_auto_bool },
+  }
+\keys_set:nn { exam-zh / draft }
+  {
+    show-watermark = true,
+    show-draft     = manual,
+  }
+% “草稿纸”尺寸默认值
+\AtEndPreamble
+  {
+    \bool_if:cTF { g__examzh_page_size_a4paper_bool }
+      {
+        \keys_set:nn { exam-zh / draft }
+          { watermark-size = 100pt }
+      }
+      {
+        \keys_set:nn { exam-zh / draft }
+          { watermark-size = 180pt }
+      }
+  }
+\AtEndDocument
+  {
+    \bool_if:NT \l__examzh_draft_show_auto_bool
+      { \draftpaper \draftpaper }
+  }
+\NewDocumentCommand { \draftpaper } { O{} }
+  {
+    \group_begin:
+      \keys_set:nn { exam-zh / draft } {#1}
+      \bool_if:NTF \l__examzh_draft_show_watermark_bool
+        { \__examzh_draft_with_watermark: }
+        { \__examzh_draft_without_watermark: }
+    \group_end:
+  }
+\cs_new:Npn \__examzh_draft_with_watermark:
+  {
+    \clearpage
+    \null
+    \thispagestyle { empty }
+    \begin{tikzpicture}
+        [
+          remember~picture,
+          overlay,
+          font = \sffamily\fontsize{ \l__examzh_draft_watermark_size_dim }{180pt}\selectfont
+        ]
+      \node[text = lightgray!40] at (current~page.center) {草\quad 稿\quad 纸};
+    \end{tikzpicture}
+    \clearpage
+  }
+\cs_new:Npn \__examzh_draft_without_watermark:
+  {
+    \clearpage
+    \null
+    \thispagestyle { empty }
+    \clearpage
+  }

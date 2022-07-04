@@ -299,6 +299,73 @@
 需要注意的是，如果 \tn{fillin} 的参数重含有不配对的中括号时会报错，如 |\fillin[$(−\infty, 1]$]|。这时需要使用大括号将内容保护起来：|\fillin[{$(−\infty, 1]$}]|。
 
 
+\subsubsection{判断题}
+
+作为 \tn{paren} 和 \tn{fillin} 命令的应用可以实现判断题效果：
+\begingroup
+\examsetup{
+  question/index=0
+}
+\begin{latexexample}{\tn{paren} 和 \tn{fillin} 命令的应用：判断题}
+  \examsetup{
+    question = {
+      show-answer = true,
+      show-paren = true
+    },
+    fillin/type = paren
+  }
+  \newcommand{\true}{$\surd$}
+  \newcommand{\false}{$\times$}
+
+  \begin{question}
+    $1 + 1 = 2$ \paren[对]
+  \end{question}
+
+  \begin{question}
+    $1 + 1 = 3$ \fillin[错]
+  \end{question}
+
+  \begin{question}
+    $1 + 1 = 2$ \paren[\true]
+  \end{question}
+
+  \begin{question}
+    $1 + 1 = 3$ \fillin[\false]
+  \end{question}
+\end{latexexample}
+\endgroup
+
+由于使用“对错”还是“叉勾”因人而异，所以本模版没有固定，但结合上面的例子为用户提供一种“自定义”思路（基于 \tn{fillin} 为例）：
+\ExplSyntaxOn
+\cs_undefine:N \true
+\cs_undefine:N \false
+\ExplSyntaxOff
+\examsetup{
+  question/index = 0
+}
+\begingroup
+\begin{latexexample}{填空题的自定义示例}
+\examsetup{
+  question = {
+    show-answer = true,
+    show-paren = true
+  },
+  fillin/type = paren
+}
+
+\newcommand{\true}{\fillin[$\surd$]}
+\newcommand{\false}{\fillin[$\times$]}
+
+\begin{question}
+  $1 + 1 = 2$ \true
+\end{question}
+
+\begin{question}
+  $1 + 1 = 3$ \false
+\end{question}
+\end{latexexample}
+\endgroup
+
 
 \subsubsection{解答题}
 
@@ -336,6 +403,29 @@
     故 $f(x)$ 的递增区间为 $(0,1)$, \score{1} 递减区间为 $(1, +\infty)$. \score{1}
   \end{solution}
 \end{latexexample}
+
+
+\subsubsection{草稿纸}
+
+\begin{function}[added = 2022-07-03]{\draftpaper}
+  \begin{ccnusyntax}[emph={[1]draftpaper}]
+    \draftpaper(*\oarg{参数列表}*)
+  \end{ccnusyntax}
+  草稿纸命令。使用一次产生一页的草稿纸。参数列表见~\ref{subsubsec:参数-草稿纸}
+\end{function}
+
+
+\subsubsection{方格}
+
+在密封线或者 \tn{information} 命令所输出的个人信息中，可能会需要输出方格（如 2021 年数学高考原卷），于是开发了下面的 \tn{examsquare} 命令。
+
+\begin{function}[added = 2022-07-04]{\examsquare}
+  \begin{ccnusyntax}[emph={[1]examsquare}]
+    \examsquare(*\oarg{参数列表}\marg{方格个数}*)
+  \end{ccnusyntax}
+  方格命令。参数列表见~\ref{subsubsec:参数-方格}
+\end{function}
+
 
 
 \subsection{参数设置}
@@ -418,9 +508,23 @@
   \kvopt{page/size}{a3paper} 时页脚的类型。\opt{common} 表示两页 A4 纸（即一页 A3 纸）共用一个页脚；\opt{separate} 表示两页 A4 纸各自有一个页脚。
 \end{function}
 
+\begin{function}[added = 2022-07-04]{page/show-columnline}
+  \begin{ccnusyntax}[emph={[1]show-columnline}]
+    show-columnline = (*\TTF*)
+  \end{ccnusyntax}
+  \kvopt{page/size}{a3paper} 时是否显示两页 A4 之间的中间竖线。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{page/columnline-width}
+  \begin{ccnusyntax}[emph={[1]columnline-width}]
+    columnline-width = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \kvopt{page/show-columnline}{true} 时竖线的宽度。默认为 |0.4pt|。
+\end{function}
 
 
-\subsubsection{密封线}
+
+\subsubsection{密封线} \label{subsubsec:参数-密封线}
 
 \begin{function}{sealline}
   \begin{ccnusyntax}[emph={[1]sealline}]
@@ -647,6 +751,53 @@
   奇数页密封线旁的学生信息的垂直偏移量。默认值为 |0mm|，此时若 \kvopt{odd-info-align}{left} 则 \cmd{odd-info-content} 的左侧与版心底部对齐。
 \end{function}
 
+
+
+\subsubsection{方格} \label{subsubsec:参数-方格}
+
+\begin{function}{square}
+  \begin{ccnusyntax}[emph={[1]square}]
+    square = (*\marg{键值列表}*)
+    square/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目，用于设置方格。具体内容见下。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{square/square-x}
+  \begin{ccnusyntax}[emph={[1]square-x}]
+    square-x = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{examsquare} 命令单位方形的长。默认为 |1.4em|。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{square/square-y}
+  \begin{ccnusyntax}[emph={[1]square-y}]
+    square-y = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{examsquare} 命令单位方形的宽。默认为 |1.2em|。
+\end{function}
+
+
+\begin{function}[added = 2022-07-04]{square/square-baseline}
+  \begin{ccnusyntax}[emph={[1]square-baseline}]
+    square-baseline = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{examsquare} 命令的基线偏移。默认为 |3pt|。一般长宽有较大的改动的情况才会改此参数。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{square/square-linewidth}
+  \begin{ccnusyntax}[emph={[1]square-linewidth}]
+    square-linewidth = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{examsquare} 命令单位方形的线宽。默认为 |0.4pt|。
+\end{function}
+
+\begin{function}[added = 2022-07-04]{square/square-xshift}
+  \begin{ccnusyntax}[emph={[1]square-xshift}]
+    square-xshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{examsquare} 命令必选参数大于 1 时，后面的方格相对于前面的水平偏移。默认和 \opt{square-linewidth} 的值相同，一般不需要自己修改。
+\end{function}
 
 
 \subsubsection{字体}
@@ -1033,6 +1184,15 @@
 \end{function}
 
 
+\begin{function}[added = 2022-07-03]{fillin/show-blacktriangle}
+  \begin{ccnusyntax}[emph={[1]show-blacktriangle}]
+    show-blacktriangle = (*\TTF*)
+  \end{ccnusyntax}
+  填空命令 \tn{fillin} 在 \kvopt{show-blacktriangle}{true} 和 \kvopt{question/show-answer}{false} 的情况下会显示黑色三角形（即使已经输入了答案 |\fillin[foo]|）。
+\end{function}
+
+
+
 \subsubsection{解答题} \label{subsubsec:参数-解答题}
 
 \begin{function}[added = 2022-07-01]{solution}
@@ -1163,4 +1323,43 @@
     score-showleader = (*\TTF*)
   \end{ccnusyntax}
   \tn{score} 命令的引导线显示与否。
+\end{function}
+
+
+\subsubsection{草稿纸} \label{subsubsec:参数-草稿纸}
+
+\begin{function}[added = 2022-07-03]{draft}
+  \begin{ccnusyntax}[emph={[1]draft}]
+    draft = (*\marg{键值列表}*)
+    draft/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目。用于设置 \tn{draftpaper} 命令。下面所述的键值，如果不额外说明，则表示可以通过 \tn{examsetup} 进行统一处理，也可以用 于 \tn{draftpaper} 命令的 \meta{键值列表} 针对某一 \tn{draftpaper} 命令调整。具体内容见下
+\end{function}
+
+
+\begin{function}[added = 2022-07-03]{draft/watermark-size}
+  \begin{ccnusyntax}[emph={[1]watermark-size}]
+    watermark-size = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{draftpaper} 命令的“草稿纸”水印的尺寸。A4 尺寸下默认为 |100pt|，A3 尺寸下默认为 |180pt|。
+\end{function}
+
+\begin{function}[added = 2022-07-03]{draft/show-watermark}
+  \begin{ccnusyntax}[emph={[1]show-watermark}]
+    show-watermark = (*\TTF*)
+  \end{ccnusyntax}
+  是否显示\tn{draftpaper} 命令的“草稿纸”水印。若为 \opt{true}，最多需要编译两次即可得到水印。
+\end{function}
+
+
+\begin{function}[added = 2022-07-03]{draft/show-draft}
+  \begin{ccnusyntax}[emph={[1]show-draft}]
+    show-draft = (*<auto|(manual)>*)
+  \end{ccnusyntax}
+  是否在文档最后自动添加两页的草稿纸。此键值只用于导言区的 \tn{examsetup} 命令。\opt{auto} 表示自动在末尾添加两页草稿纸，\opt{manual} 表示不在末尾添加草稿纸，如用户不需要草稿纸，或者是需要不止两页草稿纸的话，则需要改成 \opt{manual}，后者需求则需要用户自己手动在文档末尾添加所需要的 \tn{draftpaper} 命令即可。注意，密封线的作用范围包括了草稿纸。根据经验看，试卷的草稿纸一般也有相应的密封线，所以暂时没有单独去掉草稿纸的密封线范围。但是可以实现一种效果：正文密封线正常，草稿纸页完全空白：
+  \begin{enumerate}
+    \item 先在导言区使用 \tn{examsetup} 用~\ref{subsubsec:参数-密封线} 节的 |sealline| 相应接口正常编译所需要的密封线
+    \item 在导言区加入 \kvopt{draft/show-draft}{auto}，编译 \emph{一次}，即可的到空白的草稿纸（编译两次就是正常按照 |draft| 相关参数和密封线一起编译所得到的草稿纸）
+    \item 若需要不止两张或者只需要一张空白页，则把上一步的“在导言区加入 \kvopt{draft/show-draft}{auto}” 改为在正文中添加相应数量的 \tn{draftpaper} 命令，并编译 \emph{一次} 即可。
+  \end{enumerate}
 \end{function}
