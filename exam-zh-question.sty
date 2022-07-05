@@ -43,6 +43,8 @@
 \bool_new:N \l__examzh_question_show_paren_bool
 % 是否显示答案
 \bool_new:N \l__examzh_question_show_answer_bool
+\bool_new:N \l__examzh_question_show_fillin_answer_bool
+\bool_new:N \l__examzh_question_show_paren_answer_bool
 % 上下的间距
 \skip_new:N \l__examzh_question_top_sep_skip
 \skip_new:N \l__examzh_question_bottom_sep_skip
@@ -79,7 +81,18 @@
     % 是否显示选择题的括号
     show-paren          .bool_set:N = \l__examzh_question_show_paren_bool ,
     % 是否显示答案
-    show-answer         .bool_set:N = \l__examzh_question_show_answer_bool ,
+    % show-answer         .bool_set:N = \l__examzh_question_show_answer_bool ,
+    show-answer         .choice: ,
+    show-answer / true .code:n = 
+      {
+        \bool_set_true:N \l__examzh_question_show_fillin_answer_bool
+        \bool_set_true:N \l__examzh_question_show_paren_answer_bool
+      },
+    show-answer / false .code:n = 
+      {
+        \bool_set_false:N \l__examzh_question_show_fillin_answer_bool
+        \bool_set_false:N \l__examzh_question_show_paren_answer_bool
+      },
     % 上方间距
     top-sep             .skip_set:N = \l__examzh_question_top_sep_skip ,
     % 下方间距
@@ -201,10 +214,20 @@
 
 
 % 选择题括号
+\keys_define:nn { exam-zh / paren }
+  {
+    show-answer .bool_set:N = \l__examzh_question_show_paren_answer_bool
+  }
+\keys_set:nn { exam-zh / paren }
+  {
+    show-answer = false
+  }
+\keys_define:nn { exam-zh }
+  { paren .meta:nn = { exam-zh / paren } {#1} }
 \NewDocumentCommand \paren { O { } }
   {
     % 如果开了 show answer 就默认 show paren 
-    \bool_if:NT \l__examzh_question_show_answer_bool
+    \bool_if:NT \l__examzh_question_show_paren_answer_bool
       { \bool_set_true:N \l__examzh_question_show_paren_bool }
     \bool_if:NT \l__examzh_question_show_paren_bool
       {
@@ -222,7 +245,7 @@
             （
             \hbox_to_wd:nn { 3em }
               {
-                \bool_if:NT \l__examzh_question_show_answer_bool
+                \bool_if:NT \l__examzh_question_show_paren_answer_bool
                   { \hfill \__examzh_question_print_answer:n {#1} \hfill }
               }
             ） \kern -.4em
@@ -255,12 +278,14 @@
       {
         \bool_set_false:N \l__examzh_fillin_line_bool
       },
-    show-blacktriangle .bool_set:N = \l__examzh_fillin_show_blacktriangle_bool
+    show-blacktriangle .bool_set:N = \l__examzh_fillin_show_blacktriangle_bool,
+    show-answer .bool_set:N = \l__examzh_question_show_fillin_answer_bool
   }
 \keys_set:nn { exam-zh / fillin }
   {
     type               = line,
     show-blacktriangle = true,
+    show-answer        = false,
   }
 
 \keys_define:nn { exam-zh }
@@ -281,7 +306,7 @@
             % {
               \bool_lazy_and:nnTF
                 {
-                  !\bool_if_p:N \l__examzh_question_show_answer_bool
+                  !\bool_if_p:N \l__examzh_question_show_fillin_answer_bool
                 }
                 {
                   \bool_if_p:N \l__examzh_fillin_show_blacktriangle_bool
@@ -303,7 +328,7 @@
             % {
               \bool_lazy_and:nnTF
                 {
-                  !\bool_if_p:N \l__examzh_question_show_answer_bool
+                  !\bool_if_p:N \l__examzh_question_show_fillin_answer_bool
                 }
                 {
                   \bool_if_p:N \l__examzh_fillin_show_blacktriangle_bool
@@ -340,7 +365,7 @@
     % lazy 版本是指需要判断时才去获取当前用于判断的 bool 值 
     % 而不是类似于“提前展开”，和项子越在 LaTeX3 的 b站视频里讲到的 lazy evaluation 想法相同
     \bool_lazy_and:nnTF
-      { \bool_if_p:N \l__examzh_question_show_answer_bool }
+      { \bool_if_p:N \l__examzh_question_show_fillin_answer_bool }
       { \bool_not_p:n { \tl_if_empty_p:n {#1} } }
       {
         \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }

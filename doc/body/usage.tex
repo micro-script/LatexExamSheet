@@ -993,11 +993,11 @@
 \end{function}
 
 
-\begin{function}{question/show-answer}
+\begin{function}[updated = 2022-07-05]{question/show-answer}
   \begin{ccnusyntax}[emph={[1]show-answer}]
     show-answer = (*\TFF*)
   \end{ccnusyntax}
-  控制 \tn{paren} 和 \tn{fillin} 中答案的显示与否。
+  统一控制 \tn{paren} 和 \tn{fillin} 中答案的显示与否。
 \end{function}
 
 
@@ -1230,6 +1230,23 @@
 
 
 
+\begin{function}{paren}
+  \begin{ccnusyntax}[emph={[1]paren}]
+    paren = (*\marg{键值列表}*)
+    paren/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含一个子项目，用于设置 \tn{paren} 命令。具体内容见下。
+\end{function}
+
+\begin{function}[added = 2022-07-05]{paren/show-answer}
+  \begin{ccnusyntax}[emph={[1]show-answer}]
+    show-answer = (*\TFF*)
+  \end{ccnusyntax}
+  控制 \tn{paren} 答案的显示与否。注意和 \opt{question/show-answer} 的先后顺序可能会影响结果。
+\end{function}
+
+
+
 \subsubsection{填空题} \label{subsubsec:参数-填空题}
 
 
@@ -1261,6 +1278,13 @@
   填空命令 \tn{fillin} 在 \kvopt{show-blacktriangle}{true} 和 \kvopt{question/show-answer}{false} 的情况下会显示黑色三角形（即使已经输入了答案 |\fillin[foo]|）。
 \end{function}
 
+
+\begin{function}[added = 2022-07-05]{fillin/show-answer}
+  \begin{ccnusyntax}[emph={[1]show-answer}]
+    show-answer = (*\TFF*)
+  \end{ccnusyntax}
+  控制 \tn{fillin} 答案的显示与否。注意和 \opt{question/show-answer} 的先后顺序可能会影响结果。
+\end{function}
 
 
 \subsubsection{解答题} \label{subsubsec:参数-解答题}

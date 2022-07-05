@@ -47,7 +47,7 @@
     answer-color = black,
     show-points  = auto,    % 显示题目分数
     show-paren   = true,    % 显示选择题括号
-    show-answer  = false,    % 显示答案
+    show-answer  = true,    % 统一控制 \paren 和 \fillin 的答案显示
     top-sep      = .5em plus .5em minus .2em ,
     bottom-sep   = .5em plus .5em minus .2em ,
   },
@@ -57,8 +57,10 @@
     label-sep   = 0.5em,  % 标签与选项之间的距离
     max-columns = 4,      % 最大列数
   },
+  paren/show-answer = false,
   fillin = {
-    type = line
+    type        = line,
+    show-answer = true
   },
   scoringbox/type = twocolumn
 }
@@ -110,7 +112,7 @@
 
 % 1.
 \begin{question}[points = 2]
-  设集合 $A = \{x \mid -1 < x < 4\}$，$B = \{2, 3, 4, 5\}$，则 $A \cap B = $ \paren
+  设集合 $A = \{x \mid -1 < x < 4\}$，$B = \{2, 3, 4, 5\}$，则 $A \cap B = $ \paren[B]
 
   \begin{choices}
     \item $\{2\}$
