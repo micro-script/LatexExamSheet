@@ -9,6 +9,10 @@
 
 ## [0.1.6] - 2022-07-05
 
+### Added
+
+- `\fillin` 命令增加一个 `circle` 类型（#I5FMPP）
+
 ### Changed
 
 - 将 `\paren` 和 `\fillin` 的答案控制单独分离

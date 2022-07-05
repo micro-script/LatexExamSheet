@@ -1258,16 +1258,15 @@
   该选项暂时包含一个子项目，用于设置填空命令 \tn{fillin} 的类型。具体内容见下。
 \end{function}
 
-\begin{function}{fillin/type}
+\begin{function}[updated = 2022-07-05]{fillin/type}
   \begin{ccnusyntax}[emph={[1]type}]
-    type = (*<(line)|paren>*)
+    type = (*<(line)|paren|circle>*)
   \end{ccnusyntax}
-  填空命令 \tn{fillin} 的类型。\opt{line} 表示下划线，\opt{paren} 表示括号。
-  \begin{latexexample}{\tn{fillin} 的两个类型以及参数使用方式}
-    答案是 \fillin \par
-    答案是 \fillin[answer] \par
-    答案是 \fillin[type = paren][]
-  \end{latexexample}
+  填空命令 \tn{fillin} 的类型。\opt{line} 表示下划线；\opt{paren} 表示括号；\opt{circle} 表示外包一个圆，当内容变多时，圆会“拉伸开变成椭圆”。
+  \begin{latexexample}{\tn{fillin} 的三个类型以及参数使用方式}
+    答案是 \fillin \fillin[]
+    \fillin[type = paren][]
+    \fillin[type = circle][]\end{latexexample}
 \end{function}
 
 

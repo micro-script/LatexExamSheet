@@ -17,6 +17,12 @@
 \RequirePackage { zref-savepos }
 \RequirePackage { ulem }
 
+\ExplSyntaxOff
+\usetikzlibrary{shapes.misc}
+\ExplSyntaxOn
+
+
+
 \NewDocumentCommand \questionsetup { m }
   { \keys_set:nn { exam-zh / question } { #1 } }
 \NewDocumentCommand \fillinsetup { m }
@@ -265,18 +271,13 @@
 
 
 % fillin 的下划线样式控制
-\bool_new:N \l__examzh_fillin_line_bool
+\str_new:N \l__examzh_fillin_type_str
 
 \keys_define:nn { exam-zh / fillin }
   {
-    type .choice:,
-    type / line .code:n = 
+    type .code:n = 
       {
-        \bool_set_true:N \l__examzh_fillin_line_bool
-      },
-    type / paren .code:n = 
-      {
-        \bool_set_false:N \l__examzh_fillin_line_bool
+        \str_set:Nn \l__examzh_fillin_type_str {#1}
       },
     show-blacktriangle .bool_set:N = \l__examzh_fillin_show_blacktriangle_bool,
     show-answer .bool_set:N = \l__examzh_question_show_fillin_answer_bool
@@ -354,9 +355,7 @@
     \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
     \dim_set:Nn \l__examzh_question_answer_depth_dim
       { \box_dp:N \l_tmpa_box }
-    \bool_if:NTF \l__examzh_fillin_line_bool
-      { \__examzh_fillin_uline_T: }
-      { \__examzh_fillin_paren_T: }
+    \__examzh_fillin_output_T:
   }
 \cs_new:Npn \__examzh_fillin:n #1
   {
@@ -371,14 +370,41 @@
         \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
         \dim_set:Nn \l__examzh_question_answer_depth_dim
           { \box_dp:N \l_tmpa_box }
-        \bool_if:NTF \l__examzh_fillin_line_bool
-          { \__examzh_fillin_uline_T: }
-          { \__examzh_fillin_paren_T: }
+        \__examzh_fillin_output_T:
       }
       { 
-        \bool_if:NTF \l__examzh_fillin_line_bool
-          { \__examzh_fillin_uline_F: }
-          { \__examzh_fillin_paren_F: }
+        \__examzh_fillin_output_F:
+      }
+  }
+\msg_new:nnn { exam-zh } { no-fillin-type }
+  {
+    There~is~no~type~of~\fillin~named~#1!\\
+    Please~read~the~manual~for~more~details.
+  }
+\cs_new:Npn \__examzh_fillin_output_T:
+  {
+    \str_case:VnF \l__examzh_fillin_type_str
+      {
+        { line } { \__examzh_fillin_uline_T: }
+        { paren } { \__examzh_fillin_paren_T: }
+        { circle } { \__examzh_fillin_circle_T: }
+      }
+      {
+        \msg_error:nnx { exam-zh } { no-fillin-type }
+          { \l__examzh_fillin_type_str }
+      }
+  }
+\cs_new:Npn \__examzh_fillin_output_F:
+  {
+    \str_case:VnF \l__examzh_fillin_type_str
+      {
+        { line } { \__examzh_fillin_uline_F: }
+        { paren } { \__examzh_fillin_paren_F: }
+        { circle } { \__examzh_fillin_circle_F: }
+      }
+      {
+        \msg_error:nnx { exam-zh } { no-fillin-type }
+          { \l__examzh_fillin_type_str }
       }
   }
 \cs_new:Npn \__examzh_fillin_uline_T:
@@ -418,6 +444,31 @@
 \cs_new:Npn \__examzh_fillin_paren_F:
   {
     ( \hspace* { 3em plus 1em minus 1em } )
+  }
+
+\tikzset
+  {
+    fillin-circle/.style = 
+      {
+        rounded~rectangle~west~arc = convex,
+        draw, rounded~rectangle
+      }
+  }
+\cs_new:Npn \__examzh_fillin_circle_T:
+  {
+    \tikz[baseline=-3pt]
+      {
+        \node [fillin-circle] at (0,0) 
+          { \box_use_drop:N \l_tmpa_box };
+      }
+  }
+\cs_new:Npn \__examzh_fillin_circle_F:
+  {
+    \tikz[baseline=-3pt]
+      {
+        \node [fillin-circle] at (0,0) 
+          { \phantom{t} };
+      }
   }
 \dim_new:N \l__examzh_blacktriangle_length_dim
 \dim_set:Nn \l__examzh_blacktriangle_length_dim { .7em }
