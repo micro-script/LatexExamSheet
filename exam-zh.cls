@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-05} {v0.1.6} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-06} {v0.1.7} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -1508,3 +1508,26 @@
   }
 \keys_define:nn { exam-zh }
   { scoringbox .meta:nn = { exam-zh / scoringbox } {#1} }
+
+
+% 处理一些符号
+
+% vector
+\int_new:N \l__examzh_vec_input_count_int
+
+\RenewDocumentCommand { \vector } { m }
+  { \__examzh_vec:n {#1} }
+\cs_new:Npn \__examzh_vec:n #1
+  {
+    % 先检测 #1 有多少个字符
+    \__examzh_vec_detect_number_of_input_str:n {#1}
+    % 只有 1 个的：加粗，多于两个的加箭头
+    \int_compare:nNnTF { \l__examzh_vec_input_count_int } = {1}
+      { \symbfit {#1} }
+      { \overrightarrow {#1} }
+  }
+\cs_new:Npn \__examzh_vec_detect_number_of_input_str:n #1
+  {
+    \int_set:Nn \l__examzh_vec_input_count_int
+      { \str_count:n { #1 } }
+  }

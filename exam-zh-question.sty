@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-07-05} {v0.1.6}
+\ProvidesExplPackage {exam-zh-question} {2022-07-06} {v0.1.7}
   {exam-zh question module}
 
 \RequirePackage { amsthm }
@@ -280,13 +280,15 @@
         \str_set:Nn \l__examzh_fillin_type_str {#1}
       },
     show-blacktriangle .bool_set:N = \l__examzh_fillin_show_blacktriangle_bool,
-    show-answer .bool_set:N = \l__examzh_question_show_fillin_answer_bool
+    show-answer .bool_set:N = \l__examzh_question_show_fillin_answer_bool,
+    width .skip_set:N = \l__examzh_fillin_F_width_skip
   }
 \keys_set:nn { exam-zh / fillin }
   {
     type               = line,
     show-blacktriangle = true,
     show-answer        = false,
+    width              = 3em plus 1em minus 1em
   }
 
 \keys_define:nn { exam-zh }
@@ -439,11 +441,11 @@
   }
 \cs_new:Npn \__examzh_fillin_uline_F:
   {
-    \uline { \hspace* { 3em plus 1em minus 1em } } 
+    \uline { \hspace* { \l__examzh_fillin_F_width_skip } } 
   }
 \cs_new:Npn \__examzh_fillin_paren_F:
   {
-    ( \hspace* { 3em plus 1em minus 1em } )
+    ( \hspace* { \l__examzh_fillin_F_width_skip} )
   }
 
 \tikzset
