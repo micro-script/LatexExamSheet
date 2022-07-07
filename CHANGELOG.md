@@ -9,6 +9,10 @@
 
 ## [0.1.7] - 2022-07-07
 
+### Added
+
+- 增加 `exam-zh-symbols.sty` 模块绘制部分中国化的数学符号
+
 ### Changed
 
 - 修改 `\complement` 的效果
