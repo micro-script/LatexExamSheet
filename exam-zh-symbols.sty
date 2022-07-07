@@ -79,26 +79,50 @@
 
 % 平行 \parallel
 \bool_new:N \l__examzh_symbols_parallel_slant_bool
+\bool_new:N \l__examzh_symbols_nparallel_slant_bool
 
 \keys_define:nn { exam-zh / symbols }
   {
     parallel-angle .fp_set:N = \l__examzh_symbols_parallel_angle_fp,
     parallel-twoline-distance .dim_set:N = \l__examzh_symbols_parallel_twoline_distance_dim,
     parallel-length .dim_set:N = \l__examzh_symbols_parallel_length_dim,
+    parallel-baseline .dim_set:N = \l__examzh_symbols_parallel_baseline_dim,
+    nparallel-slant-angle .fp_set:N = \l__examzh_symbols_nparallel_slant_angle_fp,
+    nparallel-slant-length .dim_set:N = \l__examzh_symbols_nparallel_slant_length_dim,
     parallel-type .choice:,
     parallel-type / slant.code:n =
       { \bool_set_true:N \l__examzh_symbols_parallel_slant_bool },
     parallel-type / perpendicular .code:n =
       { \bool_set_false:N \l__examzh_symbols_parallel_slant_bool },
+    nparallel-type .choice:,
+    nparallel-type / slant.code:n =
+      { \bool_set_true:N \l__examzh_symbols_nparallel_slant_bool },
+    nparallel-type / perpendicular .code:n =
+      { \bool_set_false:N \l__examzh_symbols_nparallel_slant_bool },
   }
 \keys_set:nn { exam-zh / symbols }
-  { parallel-type = slant }
+  {
+    parallel-type = slant,
+    nparallel-type = slant,
+  }
 
 \cs_new:Npn \__examzh_symbols_parallel:
   {
-    \begin{tikzpicture}[baseline=0.5pt]
+    \begin{tikzpicture}[baseline=\l__examzh_symbols_parallel_baseline_dim]
       \draw[line~cap = round] (0, 0) --++ (\fp_use:N \l__examzh_symbols_parallel_angle_fp \c_colon_str \l__examzh_symbols_parallel_length_dim)
       (\l__examzh_symbols_parallel_twoline_distance_dim, 0) --++ (\fp_use:N \l__examzh_symbols_parallel_angle_fp \c_colon_str \l__examzh_symbols_parallel_length_dim);
+    \end{tikzpicture}
+  }
+\cs_new:Npn \__examzh_symbols_nparallel:
+  {
+    \begin{tikzpicture}[line~cap = round, baseline=\l__examzh_symbols_parallel_baseline_dim]
+      \draw
+        (0, 0) --++ (\fp_use:N \l__examzh_symbols_parallel_angle_fp \c_colon_str \l__examzh_symbols_parallel_length_dim)
+        (\l__examzh_symbols_parallel_twoline_distance_dim, 0) --++ (\fp_use:N \l__examzh_symbols_parallel_angle_fp \c_colon_str \l__examzh_symbols_parallel_length_dim);
+      % n 线
+      \draw
+        (\l__examzh_symbols_parallel_twoline_distance_dim / 2, 0)++(\fp_use:N \l__examzh_symbols_parallel_angle_fp \c_colon_str \l__examzh_symbols_parallel_length_dim / 2) --++ (\fp_use:N \l__examzh_symbols_nparallel_slant_angle_fp \c_colon_str \l__examzh_symbols_nparallel_slant_length_dim / 2)
+        (\l__examzh_symbols_parallel_twoline_distance_dim / 2, 0)++(\fp_use:N \l__examzh_symbols_parallel_angle_fp \c_colon_str \l__examzh_symbols_parallel_length_dim / 2) --++ (\fp_eval:n { \l__examzh_symbols_nparallel_slant_angle_fp + 180 } \c_colon_str \l__examzh_symbols_nparallel_slant_length_dim / 2);
     \end{tikzpicture}
   }
 
@@ -109,26 +133,67 @@
     \RenewDocumentCommand { \parallel } { }
       {
         \group_begin:
-          \keys_set:nn { exam-zh / symbols } 
+          \bool_if:NTF \l__examzh_symbols_parallel_slant_bool
             {
-              parallel-angle = 60,
-              parallel-twoline-distance = 0.28em,
-              parallel-length = 0.98em,
+              \keys_set:nn { exam-zh / symbols } 
+                {
+                  parallel-angle = 60,
+                  parallel-twoline-distance = 0.28em,
+                  parallel-length = 0.98em,
+                  parallel-baseline = 0.5pt
+                }
             }
-            \bool_if:NTF \l__examzh_symbols_parallel_slant_bool
-              {
-                \mathrel 
-                  { 
-                    \__examzh_symbols_symbol_four_size:n 
-                      { \__examzh_symbols_parallel: } 
-                  }
-              }
-              { \__examzh_symbols_old_parallel: }
+            {
+              % 竖直
+              \keys_set:nn { exam-zh / symbols } 
+                {
+                  parallel-angle = 90,
+                  parallel-twoline-distance = 0.2em,
+                  parallel-length = 0.93em,
+                  parallel-baseline = 1pt
+                }
+            }
+          \mathrel 
+            { 
+              \__examzh_symbols_symbol_four_size:n 
+                { \__examzh_symbols_parallel: } 
+            }
         \group_end:
       }
     \RenewDocumentCommand { \nparallel } { }
       {
-        \tikz[baseline = {([yshift = 5pt]current~bounding~box.south)}]{ \node { $\__examzh_symbols_old_nparallel:$ }; }
+        \group_begin:
+          
+          \bool_if:NTF \l__examzh_symbols_nparallel_slant_bool
+            {
+              \keys_set:nn { exam-zh / symbols }
+                {
+                  parallel-angle = 60,
+                  parallel-twoline-distance = 0.28em,
+                  parallel-length = 0.98em,
+                  parallel-baseline = 0.5pt,
+                  nparallel-slant-angle = 120,
+                  nparallel-slant-length = 0.65em
+                }
+            }
+            {
+              \keys_set:nn { exam-zh / symbols }
+                {
+                  parallel-angle = 90,
+                  parallel-twoline-distance = 0.2em,
+                  parallel-length = 0.93em,
+                  parallel-baseline = 1pt,
+                  nparallel-slant-angle = 50,
+                  nparallel-slant-length = 0.6em
+                }
+              % \tikz[baseline = {([yshift = 5pt]current~bounding~box.south)}]{ \node { $\__examzh_symbols_old_nparallel:$ }; }
+            }
+          \mathrel 
+            { 
+              \__examzh_symbols_symbol_four_size:n 
+                { \__examzh_symbols_nparallel: } 
+            }
+        \group_end:
       }
   }
 
