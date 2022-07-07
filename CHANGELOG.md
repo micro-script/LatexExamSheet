@@ -9,6 +9,10 @@
 
 ## [0.1.7] - 2022-07-07
 
+### Changed
+
+- 修改 `\complement` 的效果
+
 ### Fixed
 
 - 修复 `a3paper` 的分数框问题（#I5FZWW）

@@ -402,6 +402,12 @@
         StylisticSet = 1,
         range        = { scr , bfscr } ,
       ]
+    \examzh_font_set_stix_names:
+    \setmathfont { \g__examzh_font_font_name_stix_math_tl }
+      [
+        Extension    = .otf,
+        range        = { \complement } ,
+      ]
     \setmathrm { NewCM10 }
       [
         Extension      = .otf,
@@ -435,6 +441,12 @@
     % \examzh_font_load_unimath:
     % \examzh_font_set_unimath_style:
     \setmathfont { latinmodern-math } [ Extension = .otf ]
+    \examzh_font_set_stix_names:
+    \setmathfont { \g__examzh_font_font_name_stix_math_tl }
+      [
+        Extension    = .otf,
+        range        = { \complement } ,
+      ]
     \setmathrm { lmroman10 }
       [
         Extension      = .otf,
@@ -520,6 +532,12 @@
       Extension    = .otf,
       StylisticSet = \l__examzh_font_stylistic_set_tl,
     ]
+  \examzh_font_set_stix_names:
+  \setmathfont { \g__examzh_font_font_name_stix_math_tl }
+    [
+      Extension    = .otf,
+      range        = { \complement } ,
+    ]
 }
 
 
@@ -528,6 +546,12 @@
   % \examzh_font_load_unimath:
   % \examzh_font_set_unimath_style:
   \setmathfont { Cambria~ Math }
+  \examzh_font_set_stix_names:
+  \setmathfont { \g__examzh_font_font_name_stix_math_tl }
+    [
+      Extension    = .otf,
+      range        = { \complement } ,
+    ]
 }
 
 
