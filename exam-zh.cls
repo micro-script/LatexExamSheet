@@ -84,6 +84,7 @@
 \RequirePackage { exam-zh-font }
 \RequirePackage { exam-zh-question }
 \RequirePackage { exam-zh-choices }
+\RequirePackage { exam-zh-symbols }
 
 
 
@@ -1444,14 +1445,14 @@
           {
             \par\addvspace{1.5em}\noindent
             \begin{tabular}{lc}
-              \begin{minipage}{0.2\textwidth}
+              \begin{minipage}{0.2\columnwidth}
                 \begin{tabular}{|c|c|}
                   \hline 
                   得分 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
                   阅卷人 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
                 \end{tabular}
               \end{minipage} & 
-              \begin{minipage}{0.745\textwidth}
+              \begin{minipage}{0.745\columnwidth}
                 \__exam_section:n {##1}
               \end{minipage}
             \end{tabular}
@@ -1475,7 +1476,7 @@
                   \rule[-0.7em]{0pt}{2em} \\\hline
                 \end{tabular}
               \end{minipage} & 
-              \begin{minipage}{0.865\textwidth}
+              \begin{minipage}{0.865\columnwidth}
                 \__exam_section:n {##1}
               \end{minipage}
             \end{tabular}
@@ -1508,26 +1509,3 @@
   }
 \keys_define:nn { exam-zh }
   { scoringbox .meta:nn = { exam-zh / scoringbox } {#1} }
-
-
-% 处理一些符号
-
-% vector
-\int_new:N \l__examzh_vec_input_count_int
-
-\RenewDocumentCommand { \vector } { m }
-  { \__examzh_vec:n {#1} }
-\cs_new:Npn \__examzh_vec:n #1
-  {
-    % 先检测 #1 有多少个字符
-    \__examzh_vec_detect_number_of_input_str:n {#1}
-    % 只有 1 个的：加粗，多于两个的加箭头
-    \int_compare:nNnTF { \l__examzh_vec_input_count_int } = {1}
-      { \symbfit {#1} }
-      { \overrightarrow {#1} }
-  }
-\cs_new:Npn \__examzh_vec_detect_number_of_input_str:n #1
-  {
-    \int_set:Nn \l__examzh_vec_input_count_int
-      { \str_count:n { #1 } }
-  }
