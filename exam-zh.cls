@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-06} {v0.1.7} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-08} {v0.1.7} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -470,8 +470,16 @@
         \dim_set:Nn \g__examzh_sealline_even_line_yshift_dim {#1}
       },
     % 密封线的线类型
-    odd-line-type .str_set:N = \g__examzh_sealline_odd_type_str,
-    even-line-type .str_set:N = \g__examzh_sealline_even_type_str,
+    % odd-line-type .str_set:N = \g__examzh_sealline_odd_type_str,
+    % even-line-type .str_set:N = \g__examzh_sealline_even_type_str,
+    odd-line-type .code:n =
+      {
+        \str_set:Nn \g__examzh_sealline_odd_type_str {#1}
+      },
+    even-line-type .code:n =
+      {
+        \str_set:Nn \g__examzh_sealline_even_type_str {#1}
+      },
     line-type .code:n = 
       {
         \str_gset:Nn \g__examzh_sealline_odd_type_str {#1}
