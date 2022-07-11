@@ -9,6 +9,13 @@
 
 ## [0.1.7] - 2022-07-08
 
+### Added
+
+- 将文类改为 `ctexbook`，并修改 `\chapter` 样式（#I5G2QM）
+- 增加 `show-chapter` 键值控制 `\chapter` 的显示
+
+## [0.1.7] - 2022-07-08
+
 ### Fixed
 
 - 去掉 `.str_set:N` 使得模版兼容  TeXLive 2021 （#I5G7X2）

@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-08} {v0.1.7} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-11} {v0.1.7} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -33,8 +33,8 @@
 % 加载文档类和宏包
 
 % 处理文档类选项
-\PassOptionsToClass { UTF8 , scheme = chinese } { ctexart }
-\DeclareOption* { \PassOptionsToClass { \CurrentOption } { ctexart } }
+\PassOptionsToClass { UTF8 , scheme = chinese, openany } { ctexbook }
+\DeclareOption* { \PassOptionsToClass { \CurrentOption } { ctexbook } }
 \ProcessOptions*
 
 \RequirePackage { filehook }
@@ -50,14 +50,14 @@
       }
   }
 
-% 载入 \cls{ctexart} 文档类。
-\LoadClass { ctexart }
+% 载入 \cls{ctexbook} 文档类。
+\LoadClass { ctexbook }
 
 % 要求 ctex v2.4.9 2017-04-01 或更高的版本。
 \msg_new:nnn { exam-zh } { require-package-version }
   { The~ package~ "#1"~ is~ required. }
 
-\@ifclasslater { ctexart } { 2017/04/01 }
+\@ifclasslater { ctexbook } { 2017/04/01 }
   { }
   {
     \msg_fatal:nnn { exam-zh } { require-package-version }
@@ -86,6 +86,17 @@
 \RequirePackage { exam-zh-choices }
 \RequirePackage { exam-zh-symbols }
 
+\AtEndPreamble
+  {
+    \RequirePackage { hyperref }
+    \hypersetup
+      {
+        bookmarksnumbered = true,
+        psdextra          = true,
+        unicode           = true,
+        hidelinks
+      }
+  }
 
 
 % 对冲突的宏包报错。
@@ -114,6 +125,106 @@
 
 \examzh_package_conflict:nn { enumitem } { paralist }
 
+
+
+\keys_set:nn { ctex }
+  {
+    % 修改目录层级
+    tocdepth = 0,
+    % 修改 \chapter 样式
+    % TODO:missing number 的原因
+    % chapter = 
+    %   {
+    %     numbering   = false,
+    %     beforeskip  = 0pt,
+    %     afterskip   = 4ex minus 1ex
+    %   }
+  }
+
+
+% % \chapter 的补丁
+% \pretocmd { \chapter }
+%   {
+%     \keys_set:nn { exam-zh / question }
+%       { index = 0 }
+%     \int_set:Nn \c@section { 0 }
+%   }
+%   {}{\fail}
+
+
+% 处理目录
+\patchcmd { \tableofcontents }
+  { \@starttoc{toc} }
+  {
+    \thispagestyle { empty } 
+    \pagestyle { empty }
+    \@starttoc{toc} 
+  }
+  {}{\fail}
+\cs_set_eq:NN \t@bleofcontents \tableofcontents
+\RenewDocumentCommand { \tableofcontents } { }
+  {
+    \newpage
+    \group_begin:
+      \bool_set_true:N \g__examzh_page_show_chapter_bool
+      \keys_set:nn { ctex }
+        {
+          chapter = 
+            {
+              beforeskip  = 0pt,
+              afterskip   = 2ex minus 1ex
+            }
+        }
+      \t@bleofcontents
+    \group_end:
+    \newpage
+    % 将页码计数器重设置为 1
+    \int_set:Nn \c@page { 1 }
+  }
+
+\keys_define:nn { exam-zh / page }
+  {
+    show-chapter .bool_gset:N = \g__examzh_page_show_chapter_bool
+  }
+\keys_set:nn { exam-zh / page }
+  {
+    show-chapter = true
+  }
+\cs_set_eq:NN \__examzh_chapter:nn \chapter
+\cs_new:Npn \__examzh_chapter_star:n #1
+  {
+    \__examzh_chapter:nn * {#1}
+  }
+\RenewDocumentCommand{ \chapter }{ s o m }
+  {
+    \keys_set:nn { exam-zh / question }
+      { index = 0 }
+    \int_set:Nn \c@section { 0 }
+    \bool_if:NTF \g__examzh_page_show_chapter_bool
+      {
+        \IfBooleanTF {#1}
+          { \__examzh_chapter_star:n {#3} }
+          {
+            \IfNoValueTF {#2}
+              { \__examzh_chapter:nn {#3} }
+              { \__examzh_chapter:nn [#2] {#3} }
+          }
+      }
+      {
+        % 只录入目录
+        \addcontentsline { toc } { chapter } {#3}
+        \clearpage
+      }
+  }
+\keys_set:nn { ctex }
+  {
+    chapter = 
+      {
+        numbering   = false,
+        beforeskip  = 0pt,
+        afterskip   = 4ex minus 1ex
+      }
+  }
 
 
 % 纸张和页面布局
@@ -1086,7 +1197,7 @@
 \keys_set:nn { exam-zh / page }
   {
     show-foot    = true,
-    foot-content = {数学试题第;页（共;页）}
+    foot-content = {数学试题第;页（共~;页）}
   }
 
 \int_new:N \l__examzh_foot_content_count_semicolon_int
@@ -1147,14 +1258,14 @@
   {
     \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
     \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page - 1 } { }
-    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }
+    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }~
     \l__examzh_foot_content_after_lastpage_tl
   }
 \cs_new:cpn { __examzh_foot_content_page_and_lastpage_a3paper_right_output: }
   {
     \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
     \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page } { }
-    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }
+    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }~
     \l__examzh_foot_content_after_lastpage_tl
   }
 \msg_new:nnn { exam-zh } { foot-semicolon-number-error }
