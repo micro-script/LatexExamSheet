@@ -62,8 +62,6 @@
 
 \keys_define:nn { exam-zh / question }
   {
-    % 答案颜色
-    answer-color        .tl_set:N = \l__examzh_question_answer_color_tl ,
     % 手动调整 question 环境的计数器
     index               .int_gset:N = \g__examzh_question_index_int ,
     % 分数
@@ -84,8 +82,6 @@
       } ,
     % 分数是否单独成段
     points-separate-par .bool_set:N = \l__examzh_question_points_separate_par_bool ,
-    % 是否显示选择题的括号
-    show-paren          .bool_set:N = \l__examzh_question_show_paren_bool ,
     % 是否显示答案
     % show-answer         .bool_set:N = \l__examzh_question_show_answer_bool ,
     show-answer         .choice: ,
@@ -107,11 +103,9 @@
 
 \keys_set:nn { exam-zh / question }
   {
-    answer-color        = black ,
     points              = 0 ,
     show-points         = auto ,
     points-separate-par = false ,
-    show-paren          = false ,
     show-answer         = false ,
     top-sep             = .5em plus .5em minus .2em ,
     bottom-sep          = .5em plus .5em minus .2em 
@@ -220,13 +214,30 @@
 
 
 % 选择题括号
+% 控制括号是否右对齐
+\bool_new:N \l__examzh_paren_type_hfill_bool
 \keys_define:nn { exam-zh / paren }
   {
-    show-answer .bool_set:N = \l__examzh_question_show_paren_answer_bool
+    show-answer .bool_set:N = \l__examzh_question_show_paren_answer_bool,
+    text-color        .tl_set:N = \l__examzh_paren_text_color_tl ,
+    % 是否显示选择题的括号
+    show-paren          .bool_set:N = \l__examzh_question_show_paren_bool ,
+    type .choice:,
+    type / hfill .code:n =
+      {
+        \bool_set_true:N \l__examzh_paren_type_hfill_bool
+      },
+    type / none .code:n =
+      {
+        \bool_set_false:N \l__examzh_paren_type_hfill_bool
+      },
   }
 \keys_set:nn { exam-zh / paren }
   {
-    show-answer = false
+    show-answer = false,
+    text-color  = black,
+    show-paren  = false,
+    type        = hfill
   }
 \keys_define:nn { exam-zh }
   { paren .meta:nn = { exam-zh / paren } {#1} }
@@ -244,30 +255,41 @@
           % 所以中间用了两个 \hfill
           % 至于 \nobreak 和 \allowbreak 大概是为了能够同时处理「括号不换行」和「括号换行」两种情况
           % 这里参考 source2e 的 \@dottedtocline（目录的格式）
-        \nobreak \hfill \allowbreak
-        \null \nobreak \hfill \nobreak
+        % 控制是否 hfill 到行尾
+        \bool_if:NT \l__examzh_paren_type_hfill_bool
+          {
+            \nobreak \hfill \allowbreak
+            \null \nobreak \hfill \nobreak
+          }
         \hbox:n
           {
             （
             \hbox_to_wd:nn { 3em }
               {
                 \bool_if:NT \l__examzh_question_show_paren_answer_bool
-                  { \hfill \__examzh_question_print_answer:n {#1} \hfill }
+                  { \hfill \__examzh_paren_print_answer:n {#1} \hfill }
               }
             ） \kern -.4em
           }
       }
   }
 % “打印出”答案内容 因为 show 被用作“显示与否”的含义了，所以此处用 print
-\cs_new:Npn \__examzh_question_print_answer:n #1
+\cs_new:Npn \__examzh_fillin_print_answer:n #1
   {
     \group_begin:
-      \tl_if_eq:NnF \l__examzh_question_answer_color_tl { black }
-        { \exp_args:NV \color \l__examzh_question_answer_color_tl }
+      \tl_if_eq:NnF \l__examzh_fillin_text_color_tl { black }
+        { \exp_args:NV \color \l__examzh_fillin_text_color_tl }
       #1
     \group_end:
   }
-
+\cs_new:Npn \__examzh_paren_print_answer:n #1
+  {
+    \group_begin:
+      \tl_if_eq:NnF \l__examzh_paren_text_color_tl { black }
+        { \exp_args:NV \color \l__examzh_paren_text_color_tl }
+      #1
+    \group_end:
+  }
 
 
 % fillin 的下划线样式控制
@@ -281,14 +303,18 @@
       },
     show-blacktriangle .bool_set:N = \l__examzh_fillin_show_blacktriangle_bool,
     show-answer .bool_set:N = \l__examzh_question_show_fillin_answer_bool,
-    width .skip_set:N = \l__examzh_fillin_F_width_skip
+    width .skip_set:N = \l__examzh_fillin_F_width_skip,
+    color .tl_set:N = \l__examzh_fillin_color_tl,
+    text-color .tl_set:N = \l__examzh_fillin_text_color_tl,
   }
 \keys_set:nn { exam-zh / fillin }
   {
     type               = line,
     show-blacktriangle = true,
     show-answer        = false,
-    width              = 3em plus 1em minus 1em
+    width              = 3em plus 1em minus 1em,
+    color              = black,
+    text-color         = black,
   }
 
 \keys_define:nn { exam-zh }
@@ -354,7 +380,7 @@
     \dim_set:Nn \ULdepth { 0.3em }
     % lazy 版本是指需要判断时才去获取当前用于判断的 bool 值 
     % 而不是类似于“提前展开”，和项子越在 LaTeX3 的 b站视频里讲到的 lazy evaluation 想法相同
-    \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
+    \hbox_set:Nn \l_tmpa_box { \__examzh_fillin_print_answer:n {#1} }
     \dim_set:Nn \l__examzh_question_answer_depth_dim
       { \box_dp:N \l_tmpa_box }
     \__examzh_fillin_output_T:
@@ -369,7 +395,7 @@
       { \bool_if_p:N \l__examzh_question_show_fillin_answer_bool }
       { \bool_not_p:n { \tl_if_empty_p:n {#1} } }
       {
-        \hbox_set:Nn \l_tmpa_box { \__examzh_question_print_answer:n {#1} }
+        \hbox_set:Nn \l_tmpa_box { \__examzh_fillin_print_answer:n {#1} }
         \dim_set:Nn \l__examzh_question_answer_depth_dim
           { \box_dp:N \l_tmpa_box }
         \__examzh_fillin_output_T:
@@ -391,6 +417,7 @@
         { paren } { \__examzh_fillin_paren_T: }
         { circle } { \__examzh_fillin_circle_T: }
         { blank } { \__examzh_fillin_blank_T: }
+        { rectangle } { \__examzh_fillin_rectangle_T: }
       }
       {
         \msg_error:nnx { exam-zh } { no-fillin-type }
@@ -405,6 +432,7 @@
         { paren } { \__examzh_fillin_paren_F: }
         { circle } { \__examzh_fillin_circle_F: }
         { blank } { \__examzh_fillin_blank_F: }
+        { rectangle } { \__examzh_fillin_rectangle_F: }
       }
       {
         \msg_error:nnx { exam-zh } { no-fillin-type }
@@ -469,7 +497,8 @@
     fillin-circle/.style = 
       {
         rounded~rectangle~west~arc = convex,
-        draw, rounded~rectangle
+        draw, rounded~rectangle,
+        color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl
       }
   }
 \cs_new:Npn \__examzh_fillin_circle_T:
@@ -490,6 +519,24 @@
         \node [fillin-circle] at (0,0) 
           { \phantom{t} };
       }
+    \hspace* { 1em plus .5em minus .5em }
+  }
+\cs_new:Npn \__examzh_fillin_rectangle_T:
+  {
+    \hspace* { .5em minus .5em }
+    \begin{tikzpicture}[baseline = -3pt]
+      \node[draw, color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl] 
+        { \box_use_drop:N \l_tmpa_box };
+    \end{tikzpicture}
+    \hspace* { .5em minus .5em }
+  }
+\cs_new:Npn \__examzh_fillin_rectangle_F:
+  {
+    \hspace* { 1em plus .5em minus .5em }
+    \begin{tikzpicture}[baseline = -3pt]
+      \node[draw, color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl] 
+        { \phantom{a} };
+    \end{tikzpicture}
     \hspace* { 1em plus .5em minus .5em }
   }
 
@@ -515,6 +562,7 @@
     score-pre-content .tl_set:N = \l__examzh_score_pre_content_tl,
     score-post-content .tl_set:N = \l__examzh_score_post_content_tl,
     score-format .tl_set:N = \l__examzh_score_format_tl,
+    text-color .tl_set:N = \l__examzh_solution_text_color_tl
   }
 \keys_set:nn { exam-zh / solution }
   {
@@ -526,7 +574,8 @@
     score-showleader   = true,
     score-pre-content  = {},
     score-post-content = 分,
-    score-format       = \color{red}
+    score-format       = \color{red},
+    text-color         = black
   }
 \keys_define:nn { exam-zh }
   { solution .meta:nn = { exam-zh / solution } {#1} }
@@ -554,7 +603,7 @@
       \@addpunct { \l__examzh_solution_label_punct_tl }
     \group_end:
     \hspace \labelsep \ignorespaces
-    #2
+    \color { \l__examzh_solution_text_color_tl } #2
     \bool_if:NT \l__examzh_solution_show_qed_bool
       { \popQED }
     \endtrivlist 

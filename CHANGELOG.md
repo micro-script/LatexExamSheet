@@ -13,10 +13,14 @@
 ### Added
 
 - 增加 `\fillin` 的 `type/blank` 值
+- 增加 `\fillin` 的颜色控制
+- 增加 `\paren` 的 `type` 键值
+- 增加 `solution` 环境的 `text-color` 键值
 
 ### Changed
 
 - 修改所有页面（目录除外）为统一的页眉页脚
+- 将 `answer-color` 拆成 `\fillin` 和 `\paren` 的颜色分别控制
 
 
 ## [0.1.8] - 2022-07-14

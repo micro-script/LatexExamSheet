@@ -65,7 +65,7 @@
 \end{latexexample}
 
 
-\subsubsection{抬头}
+\subsubsection{抬头}   \label{subsubsec:抬头}
 
 \begin{function}[added = 2022-07-03]{\information}
   \begin{ccnusyntax}[emph={[1]information}]
@@ -156,7 +156,7 @@
   解答题题干环境。
 \end{function}
 
-\cls{question} 和 \cls{problem} 环境的区别仅在于若 \kvopt{show-paren}{true} （下面会介绍这个键值），则 \cls{question} 的题干会紧接在分数后而  \cls{problem} 的题干会在分数后新起一段后开始。
+\cls{question} 和 \cls{problem} 环境的区别仅在于若 \kvopt{show-points}{true} （下面会介绍这个键值），则 \cls{question} 的题干会紧接在分数后而  \cls{problem} 的题干会在分数后新起一段后开始。
 
 \ExplSyntaxOn
 \keys_set:nn { exam-zh / question }
@@ -182,7 +182,10 @@
   {
     show-points = auto,
     index = 0,
-    show-paren
+  }
+\keys_set:nn { exam-zh / paren }
+  {
+    show-paren = true
   }
 \ExplSyntaxOff
 \begin{function}{\paren}
@@ -195,7 +198,7 @@
 
 \begin{latexexample}{\tn{paren} 的换行效果}
   % \examsetup{
-  %   question/show-paren = true
+  %   paren/show-paren = true
   % }
   \begin{question}
     短题干选项 \paren
@@ -308,11 +311,9 @@
 }
 \begin{latexexample}{\tn{paren} 和 \tn{fillin} 命令的应用：判断题}
   \examsetup{
-    question = {
-      show-answer = true,
-      show-paren = true
-    },
-    fillin/type = paren
+    question/show-answer = true,
+    fillin/type = paren,
+    paren/show-paren = true
   }
   \newcommand{\true}{$\surd$}
   \newcommand{\false}{$\times$}
@@ -346,11 +347,9 @@
 \begingroup
 \begin{latexexample}{填空题的自定义示例}
 \examsetup{
-  question = {
-    show-answer = true,
-    show-paren = true
-  },
-  fillin/type = paren
+  question/show-answer = true,
+  fillin/type = paren,
+  paren/show-paren = true
 }
 
 \newcommand{\true}{\fillin[$\surd$]}
@@ -475,6 +474,21 @@
 \begin{latexexample}{评分框示例}
   \scoringbox \quad \scoringbox*
 \end{latexexample}
+
+
+\subsubsection{试卷合集}
+
+\cls{exam-zh} 不仅可以排版单份的试卷，也可以通过 \tn{chapter} 排版多份试卷，构成试卷合集。一般排版多份试卷会用到下面的命令：
+
+\begin{function}{\tableofcontents}
+  目录
+\end{function}
+
+\begin{function}{\chapter}
+  用于排一份的试卷标题。并可以用 \opt{page/show-chapter} 键值控制显示与否。
+\end{function}
+
+其余的见~\ref{subsubsec:抬头} 节。
 
 
 \subsection{参数设置}
@@ -1008,39 +1022,6 @@
 \end{function}
 
 
-\begin{function}{question/answer-color}
-  \begin{ccnusyntax}[emph={[1]answer-color}]
-    answer-color = (*\meta{color}*)
-  \end{ccnusyntax}
-  设置 \tn{paren} 和 \tn{fillin} 中答案的颜色。
-\end{function}
-
-\examsetup{
-  question/index=0
-}
-\begin{latexexample}{\cmd{question/answer-color} 的效果}
-  \begin{question}
-    题干 \paren[A]
-  \end{question}
-  \begin{question}
-    答案是 \fillin[答案]
-  \end{question}
-
-  \examsetup{
-    question = {
-      show-answer  = true,
-      answer-color = red
-    }
-  }
-
-  \begin{question}
-    题干 \paren[A]
-  \end{question}
-  \begin{question}
-    答案是 \fillin[答案]
-  \end{question}
-\end{latexexample}
-
 
 \begin{function}{question/points}
   \begin{ccnusyntax}[emph={[1]points}]
@@ -1066,12 +1047,6 @@
   \env{question} 和 \env{problem} 环境中的分数是否单独成段。\env{question} 环境默认为 \opt{false}，\env{problem} 环境默认为 \opt{true}。
 \end{function}
 
-\begin{function}{question/show-paren}
-  \begin{ccnusyntax}[emph={[1]show-paren}]
-    show-paren = (*\TFF*)
-  \end{ccnusyntax}
-  是否显示 \tn{paren} 命令的括号。
-\end{function}
 
 \begin{function}{question/top-sep,question/bottom-sep}
   \begin{ccnusyntax}[emph={[1]top-sep,bottom-sep}]
@@ -1252,6 +1227,63 @@
   控制 \tn{paren} 答案的显示与否。注意和 \opt{question/show-answer} 的先后顺序可能会影响结果。
 \end{function}
 
+\begin{function}[added = 2022-07-15]{paren/show-paren}
+  \begin{ccnusyntax}[emph={[1]show-paren}]
+    show-paren = (*\TFF*)
+  \end{ccnusyntax}
+  是否显示 \tn{paren} 命令的括号。
+\end{function}
+
+\begin{function}[added = 2022-07-15]{paren/text-color}
+  \begin{ccnusyntax}[emph={[1]text-color}]
+    text-color = (*\meta{color}*)
+  \end{ccnusyntax}
+  设置 \tn{paren} 中答案的颜色。
+\end{function}
+
+\begin{function}[added = 2022-07-15]{paren/type}
+  \begin{ccnusyntax}[emph={[1]text-color}]
+    type = (*<(hfill)|none>*)
+  \end{ccnusyntax}
+  \tn{paren} 产生的括号是否自动排到行尾。\opt{hfill} 表示自动根据行的长度排到行尾；\opt{none} 表示括号紧跟前面内容。
+\end{function}
+
+\examsetup{
+  question/index=0
+}
+
+\begin{latexexample}{\opt{paren/type} 效果展示}
+  \examsetup{
+    paren = {
+      show-paren = true
+    }
+  }
+  \begin{question}
+    一共有 \paren 个苹果？
+    \begin{choices}
+      \item 1
+      \item 2
+      \item 3
+      \item 4
+    \end{choices}
+  \end{question}
+
+  \examsetup{
+    paren = {
+      type = none
+    }
+  }
+
+  \begin{question}
+    一共有 \paren 个苹果？
+    \begin{choices}
+      \item 1
+      \item 2
+      \item 3
+      \item 4
+    \end{choices}
+  \end{question}
+\end{latexexample}
 
 
 \subsubsection{填空题} \label{subsubsec:参数-填空题}
@@ -1267,14 +1299,15 @@
 
 \begin{function}[updated = 2022-07-15]{fillin/type}
   \begin{ccnusyntax}[emph={[1]type}]
-    type = (*<(line)|paren|circle|blank>*)
+    type = (*<(line)|paren|circle|rectangle|blank>*)
   \end{ccnusyntax}
-  填空命令 \tn{fillin} 的类型。\opt{line} 表示下划线；\opt{paren} 表示括号；\opt{circle} 表示外包一个圆，当内容变多时，圆会“拉伸开变成椭圆”；\opt{blank} 表示没有任何的“装饰”。
-  \begin{latexexample}{\tn{fillin} 的三个类型以及参数使用方式}
-    答案是 \fillin \fillin[]
-    \fillin[type = paren][]
-    \fillin[type = circle][]
-    \fillin[type = blank][]\end{latexexample}
+  填空命令 \tn{fillin} 的类型。\opt{line} 表示下划线；\opt{paren} 表示括号；\opt{rectangle} 表示外包一个矩形；\opt{circle} 表示外包一个圆，当内容变多时，圆会“拉伸开变成椭圆”；\opt{blank} 表示没有任何的“装饰”。
+\begin{latexexample}{\tn{fillin} 的三个类型以及参数使用方式}
+  答案是 \fillin \fillin[]
+  \fillin[type = paren][]
+  \fillin[type = circle][]
+  \fillin[type = blank][]
+\end{latexexample}
 \end{function}
 
 
@@ -1297,7 +1330,22 @@
   \begin{ccnusyntax}[emph={[1]width}]
     width = (*<skip>*)
   \end{ccnusyntax}
-  控制 \tn{fillin} 不显示答案时的长度，可以为弹性长度，默认为 |3em plus 1em minus 1em|。
+  控制 \kvopt{fillin/type}{line/paren/blank} 下 \tn{fillin} 不显示答案时的长度，可以为弹性长度，默认为 |3em plus 1em minus 1em|。
+\end{function}
+
+\begin{function}[added = 2022-07-15]{fillin/text-color}
+  \begin{ccnusyntax}[emph={[1]text-color}]
+    text-color = (*\meta{color}*)
+  \end{ccnusyntax}
+  设置 \kvopt{fillin/type}{circle/rectangle} 类型的 \tn{fillin} 的边框颜色。
+\end{function}
+
+
+\begin{function}[added = 2022-07-15]{fillin/text-color}
+  \begin{ccnusyntax}[emph={[1]text-color}]
+    text-color = (*\meta{color}*)
+  \end{ccnusyntax}
+  设置 \tn{fillin} 中答案的颜色。
 \end{function}
 
 
@@ -1431,6 +1479,13 @@
     score-showleader = (*\TTF*)
   \end{ccnusyntax}
   \tn{score} 命令的引导线显示与否。
+\end{function}
+
+\begin{function}[added = 2022-07-15]{solution/text-color}
+  \begin{ccnusyntax}[emph={[1]text-color}]
+    text-color = (*\meta{color}*)
+  \end{ccnusyntax}
+  \env{solution} 环境内容的颜色。默认为 |black|。
 \end{function}
 
 

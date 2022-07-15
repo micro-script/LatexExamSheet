@@ -15,16 +15,20 @@
   threeparttable,
   unicode-math,
   xcolor,
+  ninecolors,
   xcolor-material,
   xunicode,
   zref-base,
   tikz,
   tikzpagenodes,
   tcolorbox,
-  accsupp       % PDF accessibility support
+  accsupp,       % PDF accessibility support
+  MnSymbol,
+  lstautogobble
 }
-% \tcbuselibrary{listings}
-\tcbuselibrary{hooks, minted, skins, xparse, breakable}
+\tcbuselibrary{listings}
+\tcbuselibrary{hooks, skins, xparse, breakable}
+% \tcbuselibrary{hooks, minted, skins, xparse, breakable}
 \definecolor{main}{HTML}{5989cf}    % setting main color to be used
 \definecolor{sub}{HTML}{cde4ff}     % setting sub color to be used
 \def\macro@code{%
@@ -1023,16 +1027,45 @@
   \lstset{style=style@latex, breaklines = true, #1}}{}
 \lstnewenvironment{ccnusyntax}[1][]{%
   \lstset{style=style@syntax, #1}\vspace{-1.8ex}}{}
-% \newtcblisting{latexexample}[2][]{%
-%   colback    = sub, 
-%   colframe   = main, 
-%   boxrule    = 0pt, 
-%   toprule    = 3pt, % top rule weight
-%   bottomrule = 3pt, % bottom rule weight
-%   fonttitle  = \bfseries,
-%   title      = {#2}, 
-%   #1
-% }
+\lstdefinelanguage{mylatex}{
+  language={[LaTeX]TeX},
+  texcsstyle  =*\color{azure4}\bfseries,
+  keywordstyle=\color{green5}\bfseries,
+  morekeywords={document},
+  autogobble  = true,
+  morecomment = [l][\color{gray6}\itshape]{\%},
+}
+
+\newtcblisting{latexexample}[2][]{%
+  % breakable,
+  skin         = bicolor,
+  colbacklower = white,
+  fonttitle    = \ttfamily,
+  boxrule      = 1pt, 
+  toprule      = 1pt, % top rule weight
+  bottomrule   = 1pt, % bottom rule weight
+  left         = 2mm,
+  title        = {#2}, 
+  #1,
+  listing options = {
+    language = mylatex,
+    % style = tcblatex,
+    numbers = left,
+    % numberfirstline=true,
+    stepnumber=1,
+    numbersep =0pt,
+    numberstyle=\tiny\color{red!75!black},
+    basicstyle  = \small\ttfamily,
+    breaklines,
+    % breakatwhitespace,
+    prebreak    = {\mbox{$ \rhookswarrow $}},
+    postbreak   = {\mbox{$ \lhookrightarrow $\quad}},
+    breakindent = 10pt,
+    autogobble  = true,
+  }
+}
+
+
 
 % make line numbers unable to be selected
 % ref: https://liam.page/2013/11/04/LaTeX-listings-copy/
@@ -1069,15 +1102,15 @@
     skin=bicolor,
     colbacklower=white,
     fonttitle=\sffamily,
-    minted options app={
-      % line numbers
-      linenos,
-      numberfirstline=true,
-      stepnumber=1,
-      numbersep=5pt,
-      % break point
-      breakbefore=\\,
-    }
+    % minted options app={
+    %   % line numbers
+    %   linenos,
+    %   numberfirstline=true,
+    %   stepnumber=1,
+    %   numbersep=5pt,
+    %   % break point
+    %   breakbefore=\\,
+    % }
   },
   example title/.style 2 args={
     title=Example\ifblank{#1}{}{ #1}\ifblank{#2}{}{: #2}
@@ -1085,20 +1118,20 @@
 }
 
 
-% new env: example
-% #1 - <kv list>, tcb-listing options
-% #2 - <token list>, title
-\NewTCBListing[auto counter]{latexexample}{ O{} m }{
-  example options,
-  example title={\thetcbcounter}{#2},
-  #1
-}
+% % new env: example
+% % #1 - <kv list>, tcb-listing options
+% % #2 - <token list>, title
+% \NewTCBListing[auto counter]{latexexample}{ O{} m }{
+%   example options,
+%   example title={\thetcbcounter}{#2},
+%   #1
+% }
 
-% new env: example*
-% like example, except that it is un-numbered
-\NewTCBListing{latexexample*}{ O{} m }{
-  example options,
-  example title={}{#2},
-  #1
-}
-%%
+% % new env: example*
+% % like example, except that it is un-numbered
+% \NewTCBListing{latexexample*}{ O{} m }{
+%   example options,
+%   example title={}{#2},
+%   #1
+% }
+% %%
