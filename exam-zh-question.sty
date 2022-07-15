@@ -390,6 +390,7 @@
         { line } { \__examzh_fillin_uline_T: }
         { paren } { \__examzh_fillin_paren_T: }
         { circle } { \__examzh_fillin_circle_T: }
+        { blank } { \__examzh_fillin_blank_T: }
       }
       {
         \msg_error:nnx { exam-zh } { no-fillin-type }
@@ -403,6 +404,7 @@
         { line } { \__examzh_fillin_uline_F: }
         { paren } { \__examzh_fillin_paren_F: }
         { circle } { \__examzh_fillin_circle_F: }
+        { blank } { \__examzh_fillin_blank_F: }
       }
       {
         \msg_error:nnx { exam-zh } { no-fillin-type }
@@ -424,7 +426,10 @@
         \hspace* { 1em plus .5em minus .5em }
       }
   }
-
+\cs_new:Npn \__examzh_fillin_uline_F:
+  {
+    \uline { \hspace* { \l__examzh_fillin_F_width_skip } } 
+  }
 \cs_new:Npn \__examzh_fillin_paren_T:
   {
     (
@@ -439,15 +444,26 @@
       \hspace* { 1em plus .5em minus .5em }
     )
   }
-\cs_new:Npn \__examzh_fillin_uline_F:
-  {
-    \uline { \hspace* { \l__examzh_fillin_F_width_skip } } 
-  }
 \cs_new:Npn \__examzh_fillin_paren_F:
   {
     ( \hspace* { \l__examzh_fillin_F_width_skip} )
   }
-
+\cs_new:Npn \__examzh_fillin_blank_T:
+  {
+    \hspace* { 1em plus .5em minus .5em }
+    \dim_compare:nNnTF { \l__examzh_question_answer_depth_dim } > { 0.2em }
+      {
+        \dim_sub:Nn \l__examzh_question_answer_depth_dim { 0.2em }
+        \raisebox { \l__examzh_question_answer_depth_dim }
+          { \box_use_drop:N \l_tmpa_box }
+      }
+      { \box_use_drop:N \l_tmpa_box }
+    \hspace* { 1em plus .5em minus .5em }
+  }
+\cs_new:Npn \__examzh_fillin_blank_F:
+  {
+    \hspace* { \l__examzh_fillin_F_width_skip}
+  }
 \tikzset
   {
     fillin-circle/.style = 
@@ -458,20 +474,26 @@
   }
 \cs_new:Npn \__examzh_fillin_circle_T:
   {
+    \hspace* { .5em minus .5em }
     \tikz[baseline=-3pt]
       {
         \node [fillin-circle] at (0,0) 
           { \box_use_drop:N \l_tmpa_box };
       }
+    \hspace* { .5em minus .5em }
   }
 \cs_new:Npn \__examzh_fillin_circle_F:
   {
+    \hspace* { 1em plus .5em minus .5em }
     \tikz[baseline=-3pt]
       {
         \node [fillin-circle] at (0,0) 
           { \phantom{t} };
       }
+    \hspace* { 1em plus .5em minus .5em }
   }
+
+
 \dim_new:N \l__examzh_blacktriangle_length_dim
 \dim_set:Nn \l__examzh_blacktriangle_length_dim { .7em }
 \cs_new:Npn \__examzh_fillin_blacktriangle:
