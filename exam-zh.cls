@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-15} {v0.1.8} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-15} {v0.1.9} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -250,6 +250,7 @@
   {
     show-chapter = true
   }
+
 \cs_set_eq:NN \__examzh_chapter:nn \chapter
 \cs_new:Npn \__examzh_chapter_star:n #1
   {
@@ -269,6 +270,7 @@
               { \__examzh_chapter:nn {#3} }
               { \__examzh_chapter:nn [#2] {#3} }
           }
+        \pagestyle { plain }
       }
       {
         \IfBooleanF {#1}
@@ -277,6 +279,7 @@
             % 只录入目录
             \phantomsection
             \addcontentsline { toc } { chapter } {#3}
+            \pagestyle { plain }
           }
         \clearpage
       }
