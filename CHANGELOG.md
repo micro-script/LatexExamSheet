@@ -7,6 +7,20 @@
 
 ## [Unreleased]
 
+## [0.1.8] - 2022-07-14
+
+### Fixed
+
+- 修复了 `a3paper` 和 `foot-style=separate` 的目录页码问题
+
+
+## [0.1.8] - 2022-07-13
+
+### Fixed
+
+- 修复 `missing number` 问题
+- 修复“目录”二字重复问题
+
 ## [0.1.7] - 2022-07-08
 
 ### Added

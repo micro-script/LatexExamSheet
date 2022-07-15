@@ -131,25 +131,14 @@
   {
     % 修改目录层级
     tocdepth = 0,
-    % 修改 \chapter 样式
-    % TODO:missing number 的原因
-    % chapter = 
-    %   {
-    %     numbering   = false,
-    %     beforeskip  = 0pt,
-    %     afterskip   = 4ex minus 1ex
-    %   }
+    chapter = 
+      {
+        numbering   = false,
+        beforeskip  = -4ex,
+        afterskip   = 4ex minus 1ex
+      }
   }
 
-
-% % \chapter 的补丁
-% \pretocmd { \chapter }
-%   {
-%     \keys_set:nn { exam-zh / question }
-%       { index = 0 }
-%     \int_set:Nn \c@section { 0 }
-%   }
-%   {}{\fail}
 
 
 % 处理目录
@@ -166,12 +155,13 @@
   {
     \newpage
     \group_begin:
+      \cs_set_eq:NN \onecolumn \twocolumn
       \bool_set_true:N \g__examzh_page_show_chapter_bool
       \keys_set:nn { ctex }
         {
           chapter = 
             {
-              beforeskip  = 0pt,
+              beforeskip  = 1pt,
               afterskip   = 2ex minus 1ex
             }
         }
@@ -182,6 +172,76 @@
     \int_set:Nn \c@page { 1 }
   }
 
+\AtEndPreamble
+  {
+    % A3 情况 separate 的目录页码需要改为 2* -1
+    \bool_lazy_and:nnT
+      {
+        ! \bool_if_p:c { g__examzh_page_size_a4paper_bool }
+      }
+      {
+        ! \bool_if_p:c { g__examzh_page_a3paper_foot_common_bool }
+      }
+      {
+        \cs_set_eq:Nc \addcontentsline { __examzh_addcontentsline_a3paper_separate:nnn }
+      }
+  }
+% https://tex.stackexchange.com/questions/650823/why-my-patch-to-addcontentsline-is-broken-in-atendpreamble-and-bool-ifnt
+% 改自 hyperref.sty
+\cs_set:cpn { __examzh_addcontentsline_a3paper_separate:nnn } #1#2#3
+  {
+    \begingroup
+      \let\label\@gobble
+      \ifx\@currentHref\@empty
+        \Hy@Warning{
+          No destination for bookmark of \string\addcontentsline,%
+          \MessageBreak destination is added%
+        }
+        \phantomsection
+      \fi
+      \expandafter\ifx\csname toclevel@#2\endcsname\relax
+        \begingroup
+          \def\Hy@tempa{#1}
+          \ifx\Hy@tempa\Hy@bookmarkstype
+            \Hy@WarningNoLine{
+              bookmark level for unknown #2 defaults to 0%
+            }
+          \else
+            \Hy@Info{bookmark level for unknown #2 defaults to 0}%
+          \fi
+        \endgroup
+        \expandafter\gdef\csname toclevel@#2\endcsname{0}%
+      \fi
+      \edef\Hy@toclevel{\csname toclevel@#2\endcsname}%
+      \Hy@writebookmark{\csname the#2\endcsname}%
+        {#3}
+        {\@currentHref}
+        {\Hy@toclevel}
+        {#1}
+      \ifHy@verbose
+        \begingroup
+          \def\Hy@tempa{#3}
+          \@onelevel@sanitize\Hy@tempa
+          \let\temp@online\on@line
+          \let\on@line\@empty
+          \Hy@Info{
+            bookmark\temp@online:\MessageBreak
+            thecounter {\csname the#2\endcsname}\MessageBreak
+            text {\Hy@tempa}\MessageBreak
+            reference {\@currentHref}\MessageBreak
+            toclevel {\Hy@toclevel}\MessageBreak
+            type {#1}
+          }
+        \endgroup
+      \fi
+      \addtocontents{#1}{
+        \protect\contentsline{#2}{#3}
+          % {\thepage}
+          { \int_eval:n { 2 * \c@page - 1 } }
+          {\@currentHref}\protected@file@percent
+      }
+    \endgroup
+  }
 \keys_define:nn { exam-zh / page }
   {
     show-chapter .bool_gset:N = \g__examzh_page_show_chapter_bool
@@ -211,21 +271,16 @@
           }
       }
       {
-        % 只录入目录
-        \addcontentsline { toc } { chapter } {#3}
+        \IfBooleanF {#1}
+          {
+            \newpage
+            % 只录入目录
+            \phantomsection
+            \addcontentsline { toc } { chapter } {#3}
+          }
         \clearpage
       }
   }
-\keys_set:nn { ctex }
-  {
-    chapter = 
-      {
-        numbering   = false,
-        beforeskip  = 0pt,
-        afterskip   = 4ex minus 1ex
-      }
-  }
-
 
 % 纸张和页面布局
 
@@ -1256,17 +1311,24 @@
   }
 \cs_new:cpn { __examzh_foot_content_page_and_lastpage_a3paper_left_output: }
   {
-    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
+    \__examzh_foot_lastpage_tmp_set:
     \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page - 1 } { }
     \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }~
     \l__examzh_foot_content_after_lastpage_tl
   }
 \cs_new:cpn { __examzh_foot_content_page_and_lastpage_a3paper_right_output: }
   {
-    \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
+    \__examzh_foot_lastpage_tmp_set:
     \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page } { }
     \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }~
     \l__examzh_foot_content_after_lastpage_tl
+  }
+\cs_new_nopar:Npn \__examzh_relax: { \relax }
+\cs_new:Npn \__examzh_foot_lastpage_tmp_set:
+  {
+    \cs_if_eq:NNTF \lastpage@lastpage \__examzh_relax:
+      { \int_set:Nn \l__examzh_tmp_int { 0 } }
+      { \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage } }
   }
 \msg_new:nnn { exam-zh } { foot-semicolon-number-error }
   {
@@ -1361,7 +1423,7 @@
   }
 
 \tl_set:Nn \headrulewidth { 0pt }
-\cs_set_eq:NN \@mkboth \use_none:n
+% \cs_set_eq:NN \@mkboth \use_none:n
 \cs_set_eq:NN \sectionmark \use_none:n
 \cs_set_eq:NN \subsectionmark \use_none:n
 
@@ -1445,7 +1507,7 @@
           }
       }
   }
-\AtEndPreamble { \pagestyle { plain } }
+% \AtEndPreamble { \pagestyle { plain } }
 
 
 
