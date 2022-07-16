@@ -16,6 +16,7 @@
 ### Changed
 
 - 去掉 `\fillin[type=paren]` 的基线调整
+- 去掉 `\fillin[type=blank]` 的基线调整
 ### Fixed
 
 - 修复 `solution` 环境的列表嵌套的空格问题
