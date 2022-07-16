@@ -155,6 +155,14 @@
   {
     \newpage
     \group_begin:
+      % \str_case:VnT \g__examzh_sealline_scope_str
+      %   {
+      %     { everypage } {}
+      %     { oddpage } {}
+      %   }
+      %   {
+      %     \RemoveFromHook { shipout / background }
+      %   }
       \cs_set_eq:NN \onecolumn \twocolumn
       \bool_set_true:N \g__examzh_page_show_chapter_bool
       \keys_set:nn { ctex }
@@ -828,16 +836,34 @@
 % 只在第一页出现
 \cs_new:Npn \__examzh_sealline_scope_firstpage:
   {
-    \AddToHook { shipout / firstpage }
+    \AddToHook { shipout / firstpage } [ sealline ]
       {
         \put (0cm, 0cm)
           { \__examzh_sealline_odd: }
       }
   }
+% 只在第一页和最后一页出现
+\cs_new:Npn \__examzh_sealline_scope_firstpage_and_lastpage:
+  {
+    \AddToHook { shipout / firstpage } [ sealline ]
+      {
+        \put (0cm, 0cm)
+          { \__examzh_sealline_odd: }
+      }
+    \AddToHook { shipout / lastpage } [ sealline ]
+      {
+        \put (0cm, 0cm)
+          {
+            \int_if_odd:nTF { \c@page }
+              { \__examzh_sealline_odd: }
+              { \__examzh_sealline_even: }
+          }
+      }
+  }
 % 只在奇数页出现
 \cs_new:Npn \__examzh_sealline_scope_oddpage:
   {
-    \AddToHook { shipout / background }
+    \AddToHook { shipout / background } [ sealline ]
       {
         \put (0cm, 0cm)
           {
@@ -849,7 +875,7 @@
 % 每页都有，奇偶不同
 \cs_new:Npn \__examzh_sealline_scope_everypage:
   {
-    \AddToHook { shipout / background }
+    \AddToHook { shipout / background } [ sealline ]
       {
         \put (0cm, 0cm)
           {
@@ -870,6 +896,7 @@
             { firstpage } { \__examzh_sealline_scope_firstpage: }
             { oddpage   } { \__examzh_sealline_scope_oddpage:   }
             { everypage } { \__examzh_sealline_scope_everypage: }
+            { first-and-last } { \__examzh_sealline_scope_firstpage_and_lastpage: }
           }
       }
   }
@@ -1510,7 +1537,7 @@
           }
       }
   }
-% \AtEndPreamble { \pagestyle { plain } }
+\AtBeginDocument { \pagestyle { plain } }
 
 
 
