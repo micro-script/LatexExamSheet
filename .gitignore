@@ -316,3 +316,5 @@ doc.zip
 test/
 
 doc/test.hd
+
+*.pdf
