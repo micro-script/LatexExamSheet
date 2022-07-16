@@ -9,6 +9,10 @@
 
 ## [0.1.9] - 2022-07-16
 
+### Added
+
+- 密封线增加 `first-and-last` 类型
+
 ### Changed
 
 - 去掉 `\fillin[type=paren]` 的基线调整
