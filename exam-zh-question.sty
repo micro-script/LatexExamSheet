@@ -594,20 +594,23 @@
   {
     \par
     \pushQED { \qed }
-    \normalfont \topsep6 \p@ \@plus6 \p@ \relax
-    \trivlist
-    \item \relax
+    % \normalfont \topsep6 \p@ \@plus6 \p@ \relax
+    % \trivlist
+    % \item \relax
     \group_begin:
-      \hspace* { 2\ccwd }
+      % \hspace* { 2\ccwd }
       \bfseries #1 
       \@addpunct { \l__examzh_solution_label_punct_tl }
     \group_end:
-    \hspace \labelsep \ignorespaces
-    \color { \l__examzh_solution_text_color_tl } #2
+    \hspace{0.5em} 
+    % \ignorespaces
+    \group_begin:
+      \color { \l__examzh_solution_text_color_tl } #2
+    \group_end:
     \bool_if:NT \l__examzh_solution_show_qed_bool
       { \popQED }
-    \endtrivlist 
-    \@endpefalse
+    % \endtrivlist 
+    % \@endpefalse
   }
 
 % https://github.com/CTeX-org/forum/issues/256#issuecomment-1172319787
