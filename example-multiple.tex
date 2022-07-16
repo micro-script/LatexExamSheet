@@ -7,7 +7,7 @@
 
 \examsetup{
   page = {
-    size       = a3paper,         % 页面尺寸：a3paper|a4paper
+    size       = a4paper,         % 页面尺寸：a3paper|a4paper
     % foot-style  = separate,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
     show-chapter  = true,   % 是否显示 \chapter 的内容（但是目录始终都有）
   },
@@ -15,7 +15,8 @@
     show        = false,
     % scope        = firstpage,
     % scope        = oddpage,
-    scope        = everypage,
+    % scope        = everypage,
+    scope        = first-and-last,
     line-thickness       = 1pt,
     line-xshift          = 8mm,
     line-yshift          = 0mm,
@@ -45,7 +46,6 @@
   math-font = newcm,
   question = {
     show-points  = auto,    % 显示题目分数
-    show-paren   = true,    % 显示选择题括号
     show-answer  = true,    % 统一控制 \paren 和 \fillin 的答案显示
     top-sep      = .5em plus .5em minus .2em ,
     bottom-sep   = .5em plus .5em minus .2em ,
