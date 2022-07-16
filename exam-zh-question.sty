@@ -462,13 +462,7 @@
   {
     (
       \hspace* { 1em plus .5em minus .5em }
-      \dim_compare:nNnTF { \l__examzh_question_answer_depth_dim } > { 0.2em }
-        {
-          \dim_sub:Nn \l__examzh_question_answer_depth_dim { 0.2em }
-          \raisebox { \l__examzh_question_answer_depth_dim }
-            { \box_use_drop:N \l_tmpa_box }
-        }
-        { \box_use_drop:N \l_tmpa_box }
+      \box_use_drop:N \l_tmpa_box
       \hspace* { 1em plus .5em minus .5em }
     )
   }
@@ -566,7 +560,7 @@
   }
 \keys_set:nn { exam-zh / solution }
   {
-    show-solution      = true,
+    show-solution      = false,
     show-qed           = true,
     qedsymbol          = $\square$,
     label-content      = {解答},
