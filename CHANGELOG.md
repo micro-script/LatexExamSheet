@@ -7,6 +7,12 @@
 
 ## [Unreleased]
 
+## [0.1.9] - 2022-07-17
+
+### Added
+
+- 增加手册“符号”的部分
+
 ## [0.1.9] - 2022-07-16
 
 ### Added
@@ -17,6 +23,9 @@
 
 - 去掉 `\fillin[type=paren]` 的基线调整
 - 去掉 `\fillin[type=blank]` 的基线调整
+- 将 `example.tex` 改为 `example-single.tex` 和 `example-multiple.tex` 分别作为单份和多份试卷排版示例
+
+
 ### Fixed
 
 - 修复 `solution` 环境的列表嵌套的空格问题

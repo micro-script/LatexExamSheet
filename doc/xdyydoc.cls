@@ -841,6 +841,12 @@
   BoldItalicFont = *tx,
   HyphenChar     = None]
 \setmathfont{LibertinusMath-Regular.otf}
+\setmathfont {NewCMMath-Book}
+  [
+    Extension    = .otf,
+    StylisticSet = 1,
+    range        = { \subsetneqq, \supsetneqq } ,
+  ]
 \setCJKmainfont{Source Han Serif SC}[%
   ItalicFont     = FZKai-Z03,
   CharacterWidth = Full]

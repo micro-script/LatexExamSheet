@@ -65,6 +65,131 @@
 \end{latexexample}
 
 
+\subsubsection{优化的命令环境}
+
+\cls{exam-zh} 对一些命令环境进行了优化，方便用户使用。
+
+\begin{function}{\vec}
+  \begin{ccnusyntax}[emph={[1]vec}]
+    \vec(*\marg{content}*)
+  \end{ccnusyntax}
+  向量命令。当只有一个字符的时候默认加粗斜体，两个及两个以上字符则加箭头。
+\end{function}
+
+\begin{latexexample}{\tn{vec} 示例}
+  $\vec{a} \quad \vec{AB}$
+\end{latexexample}
+
+
+\subsubsection{中国化数学符号}
+
+中国的初高中教材中一些数学符号和 \LaTeX{} 默认的或者是 \pkg{amsmath} 等宏包提供的符号有差异，于是 \cls{exam-zh} 用 \TikZ 重新绘制了部分符号。
+
+\begin{function}{\parallelogram}
+  平行四边形。$\parallelogram$
+\end{function}
+
+\begin{function}{\parallel,\nparallel}
+  平行和不平行。$\parallel \, \nparallel$
+\end{function}
+
+\begin{function}{\paralleleq}
+  平行且相等。$\paralleleq$
+  \examsetup{symbols/paralleleq-type = perpendicular}
+  \, $\paralleleq$。由~\ref{subsubsec:参数-中国化数学符号} 节的键值可以控制倾斜和垂直两个不同类型。
+\end{function}
+
+\begin{function}{\subset,\subset*}
+  包含于（无横线）。|*| 表示不重定义。|\subset|: $\subset$, |\subset*|: $\subset*$
+\end{function}
+
+\begin{function}{\nsubset,\nsubset*}
+  不包含于（无横线）。|*| 表示不重定义。|\nsubset|: $\nsubset$, |\nsubset*|: $\nsubset*$
+\end{function}
+
+\begin{function}{\subseteq,\subseteq*}
+  包含于（有横线）。|*| 表示不重定义。|\subseteq|: $\subseteq$, |\subseteq*|: $\subseteq*$
+\end{function}
+
+\begin{function}{\nsubseteq,\nsubseteq*}
+  不包含于（有横线）。|*| 表示不重定义。|\nsubseteq|: $\nsubseteq$, |\nsubseteq*|: $\nsubseteq*$
+\end{function}
+
+\begin{function}{\subsetneqq,\subsetneqq*}
+  真子集。|*| 表示不重定义。|\subsetneqq|: $\subsetneqq$, |\subsetneqq*|: $\subsetneqq*$
+\end{function}
+
+\begin{function}{\nsubsetneqq}
+  真子集的否定。|\nsubsetneqq|: $\nsubsetneqq$
+\end{function}
+
+\begin{function}{\supset,\supset*}
+  反向包含于（无横线）。|*| 表示不重定义。|\supset|: $\supset$, |\supset*|: $\supset*$
+\end{function}
+
+\begin{function}{\nsupset,\nsupset*}
+  反向不包含于（无横线）。|*| 表示不重定义。|\nsupset|: $\nsupset$, |\nsupset*|: $\nsupset*$
+\end{function}
+
+\begin{function}{\supseteq,\supseteq*}
+  反向包含于（有横线）。|*| 表示不重定义。|\supseteq|: $\supseteq$, |\supseteq*|: $\supseteq*$
+\end{function}
+
+\begin{function}{\nsupseteq,\nsupseteq*}
+  反向不包含于（有横线）。|*| 表示不重定义。|\nsupseteq|: $\nsupseteq$, |\nsupseteq*|: $\nsupseteq*$
+\end{function}
+
+\begin{function}{\supsetneqq,\supsetneqq*}
+  反向真子集。|*| 表示不重定义。|\supsetneqq|: $\supsetneqq$, |\supsetneqq*|: $\supsetneqq*$
+\end{function}
+
+\begin{function}{\nsupsetneqq}
+  反向真子集的否定。|\nsupsetneqq|: $\nsupsetneqq$
+\end{function}
+
+\begin{function}{\cap,\cap*}
+  交集。|*| 表示不重定义。|\cap|: $\cap$, |\cap*|: $\cap*$。
+\end{function}
+
+\begin{function}{\cup,\cup*}
+  并集。|*| 表示不重定义。|\cup|: $\cup$, |\cup*|: $\cup*$。
+\end{function}
+
+
+\begin{function}{\sim,\sim*}
+  相似。|*| 表示不重定义。|\sim|: $\sim$, |\sim*|: $\sim*$。
+\end{function}
+
+
+\begin{function}{\nsim}
+  不相似。|\nsim|: $\nsim$
+\end{function}
+
+\begin{function}{\cong,\cong*}
+  全等。|*| 表示不重定义。|\cong|: $\cong$, |\cong*|: $\cong*$。
+\end{function}
+
+
+\begin{function}{\ncong}
+  不全等。|\ncong|: $\ncong$
+\end{function}
+
+% \begin{function}{}
+  
+% \end{function}
+
+% \begin{function}{}
+  
+% \end{function}
+
+% \begin{function}{}
+%   \begin{ccnusyntax}[emph={[1]}]
+    
+%   \end{ccnusyntax}
+% \end{function}
+
+
+
 \subsubsection{抬头}   \label{subsubsec:抬头}
 
 \begin{function}[added = 2022-07-03]{\information}
@@ -545,6 +670,24 @@
 
 
 注意 “|/|” 的前后均不可以出现空白字符。
+
+\subsubsection{中国化数学符号}  \label{subsubsec:参数-中国化数学符号}
+
+
+\begin{function}{symbols}
+  \begin{ccnusyntax}[emph={[1]symbols}]
+    symbols = (*\marg{键值列表}*)
+    symbols/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目，用于设置中国化符号。具体内容见下。
+\end{function}
+
+\begin{function}{symbols/paralleleq-type}
+  \begin{ccnusyntax}[emph={[1]paralleleq-type}]
+    paralleleq-type = (*<(slant)|perpendicular>*)
+  \end{ccnusyntax}
+  \tn{paralleleq} 命令的效果。\opt{slant} 表示上方的线是倾斜的；\opt{perpendicular} 表示上方的线是垂直的。
+\end{function}
 
 
 \subsubsection{页面设置}

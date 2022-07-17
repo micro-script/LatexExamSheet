@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-symbols} {2022-07-15} {v0.1.8}
+\ProvidesExplPackage {exam-zh-symbols} {2022-07-17} {v0.1.9}
   {exam-zh symbols module}
 
 \RequirePackage { tikz }
@@ -219,7 +219,7 @@
       { \bool_set_false:N \l__examzh_symbols_paralleleq_slant_bool },
   }
 
-\keys_set:nn { exam-zh /symbols }
+\keys_set:nn { exam-zh / symbols }
   { paralleleq-type = slant }
 
 \cs_new:Npn \__examzh_symbols_paralleleq:
@@ -236,7 +236,7 @@
     \end{tikzpicture}
   }
 
-\NewDocumentCommand { \paralleleq } { s }
+\NewDocumentCommand { \paralleleq } { }
   {
     \group_begin:
       \keys_set:nn { exam-zh / symbols }
