@@ -7,7 +7,6 @@
 \NeedsTeXFormat{LaTeX2e}
 
 \RequirePackage{expl3}
-\RequirePackage{xparse}
 
 \ProvidesExplPackage {exam-zh-symbols} {2022-07-17} {v0.1.9}
   {exam-zh symbols module}
@@ -18,6 +17,123 @@
   { symbols .meta:nn = { exam-zh / symbols } {#1} }
 
 
+% 分数 \frac \dfrac
+\int_new:N \l__examzh_symbols_frac_numerator_str_int       % frac 分子字符数
+\int_new:N \l__examzh_symbols_frac_denominator_str_int     % frac 分母字符数
+\int_new:N \l__examzh_symbols_dfrac_numerator_str_int       % frac 分子字符数
+\int_new:N \l__examzh_symbols_dfrac_denominator_str_int     % frac 分母字符数
+
+\keys_define:nn { exam-zh / symbols }
+  {
+    % 是否重定义 \frac
+    change-frac-style .bool_set:N = \l__examzh_symbols_change_frac_style_bool,
+    % 是否重定义 \dfrac
+    change-dfrac-style .bool_set:N = \l__examzh_symbols_change_dfrac_style_bool,
+    % \frac 分子分母增加的额外距离
+    frac-add .muskip_set:N = \l__examzh_symbols_frac_add_distance_muskip,
+    % \dfrac 分子分母增加的额外距离
+    dfrac-add .muskip_set:N = \l__examzh_symbols_dfrac_add_distance_muskip,
+  }
+\keys_set:nn { exam-zh / symbols }
+  {
+    change-frac-style = true,
+    change-dfrac-style = true,
+    frac-add = 5mu,
+    dfrac-add = 5mu,
+  }
+\NewCommandCopy { \examzhfrac } { \frac }
+\NewCommandCopy { \examzhdfrac } { \dfrac }
+\RenewDocumentCommand { \frac } { m m }
+  {
+    \group_begin:
+      \bool_if:NTF \l__examzh_symbols_change_frac_style_bool
+        {
+          % 计算分子分母的字符数
+          \__examzh_symbols_frac_calc_str_num:nn {#1} {#2}
+          % 根据字符数选择将额外的距离加在哪
+          \__examzh_symbols_frac_add_distance:NNNNnn
+            \examzhfrac
+            \l__examzh_symbols_frac_numerator_str_int
+            \l__examzh_symbols_frac_denominator_str_int
+            \l__examzh_symbols_frac_add_distance_muskip
+            {#1}{#2}
+        }
+        { \examzhfrac {#1} {#2} }
+    \group_end:
+  }
+\RenewDocumentCommand { \dfrac } { m m }
+  {
+    \group_begin:
+      \bool_if:NTF \l__examzh_symbols_change_dfrac_style_bool
+        {
+          % 计算分子分母的字符数
+          \__examzh_symbols_frac_calc_str_num:nn {#1} {#2}
+          % 根据字符数选择将额外的距离加在哪
+          \__examzh_symbols_frac_add_distance:NNNNnn
+            \examzhdfrac
+            \l__examzh_symbols_frac_numerator_str_int
+            \l__examzh_symbols_frac_denominator_str_int
+            \l__examzh_symbols_dfrac_add_distance_muskip
+            {#1}{#2}
+        }
+        { \examzhdfrac {#1} {#2} }
+    \group_end:
+  }
+\cs_new:Npn \__examzh_symbols_frac_calc_str_num:nn #1#2
+  {
+    \int_set:Nn \l__examzh_symbols_frac_numerator_str_int
+      { \str_count:n {#1} }
+    \int_set:Nn \l__examzh_symbols_frac_denominator_str_int
+      { \str_count:n {#2} }
+  }
+% \__examzh_symbols_frac_add_distance:NNNNnn
+  % <\oldfrac><numerator str num><denominator str num><add muskip><numerator><denominator>
+\cs_new:Npn \__examzh_symbols_frac_add_distance:NNNNnn #1#2#3#4#5#6
+  {
+    \int_compare:nNnTF {#2} = {1}
+      {
+        \int_compare:nNnTF {#3} = {1}
+          {
+            % 分子字符数=1，分母字符数=1
+            #1
+              {
+                \mskip #4
+                #5
+                \mskip #4
+              } {#6}
+          }
+          {
+            % 分子字符数=1，分母字符数>1
+            #1 {#5}
+              {
+                \mskip #4
+                #6
+                \mskip #4
+              }
+          }
+      }
+      {
+        \int_compare:nNnTF {#3} = {1}
+          {
+            % 分子字符数>1，分母字符数=1
+            #1 
+              {
+                \mskip #4
+                #5
+                \mskip #4
+              } {#6}
+          }
+          {
+            % 分子字符数>1，分母字符数>1
+            #1
+              {
+                \mskip #4
+                #5
+                \mskip #4
+              } {#6}
+          }
+      }
+  }
 
 % 向量 vec
 \int_new:N \l__examzh_symbols_vec_input_count_int

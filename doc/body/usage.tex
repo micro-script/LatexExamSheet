@@ -702,6 +702,22 @@
   \tn{paralleleq} 命令的效果。\opt{slant} 表示上方的线是倾斜的；\opt{perpendicular} 表示上方的线是垂直的。
 \end{function}
 
+\begin{function}[added = 2022-07-17]{symbols/change-frac-style,symbols/change-dfrac-style}
+  \begin{ccnusyntax}[emph={[1]change-frac-style,change-dfrac-style}]
+    change-frac-style = (*<\TTF>*)
+    change-dfrac-style = (*<\TTF>*)
+  \end{ccnusyntax}
+  是否重定义 \tn{frac} 命令和 \tn{dfrac} 命令。重定义后的 \tn{frac} 或 \tn{dfrac} 的分子分母两边会有额外间距。
+\end{function}
+
+\begin{function}[added = 2022-07-17]{symbols/frac-add,symbols/dfrac-add}
+  \begin{ccnusyntax}[emph={[1]frac-add,dfrac-add}]
+    frac-add = (*\meta{muskip}*)
+    dfrac-add = (*\meta{muskip}*)
+  \end{ccnusyntax}
+  分别为 \kvopt{symbols/change-frac-style}{true} 和 \kvopt{symbols/change-dfrac-style}{true} 时，\tn{frac} 和 \tn{dfrac} 分子分母左右两边增加的额外间距，左右相同，默认为 |5mu|。
+\end{function}
+
 
 \subsubsection{页面设置}
 
