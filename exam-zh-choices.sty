@@ -100,6 +100,7 @@
   {
     % 用 \item 分割选项
     \seq_set_split:Nnn \l__examzh_choices_seq { \item } {#2}
+    % 把第一个空项去掉
     \seq_if_empty:NF \l__examzh_choices_seq
       { \seq_pop_left:NN \l__examzh_choices_seq \l_tmpa_tl }
     % 收集正确的选项
@@ -144,7 +145,7 @@
           {
             \seq_put_right:Nn \l__examzh_choices_correct_choices_label_seq 
               { \__examzh_choices_correct_choices_label_transfrom:n {##1} }
-            % 将去掉 * 号后的内容保存进 \l_tmpa_seq
+            % 将去掉 * 号后的内容保存进 \l_tmpa_tl
             \tl_set:Nx \l_tmpa_tl { \tl_tail:n {##2} }
             % 去掉 * 和内容之间的空格
             \tl_trim_spaces:N \l_tmpa_tl
