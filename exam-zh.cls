@@ -85,6 +85,7 @@
 \RequirePackage { exam-zh-question }
 \RequirePackage { exam-zh-choices }
 \RequirePackage { exam-zh-symbols }
+\RequirePackage { exam-zh-chinese }
 
 \AtEndPreamble
   {
