@@ -845,7 +845,7 @@
   [
     Extension    = .otf,
     StylisticSet = 1,
-    range        = { \subsetneqq, \supsetneqq } ,
+    range        = { \subsetneqq, \supsetneqq, \checkmark} ,
   ]
 \setCJKmainfont{Source Han Serif SC}[%
   ItalicFont     = FZKai-Z03,
