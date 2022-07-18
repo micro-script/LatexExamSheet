@@ -1775,59 +1775,59 @@
 
 \subsubsection{语文模块相关}  \label{subsubsec:参数-语文}
 
-\begin{function}[added = 2022-07-19]{chinese}
+\begin{function}[added = 2022-07-19]{select}
   \begin{ccnusyntax}[emph={[1]chinese}]
-    chinese = (*\marg{键值列表}*)
-    chinese/(*\meta{key}*) = (*\meta{value}*)
+    select = (*\marg{键值列表}*)
+    select/(*\meta{key}*) = (*\meta{value}*)
   \end{ccnusyntax}
-  该选项包含一个子项目。用于设置语文模块相关命令环境。
+  该选项包含一个子项目。用于设置 \env{select} 环境。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/select-mark-symbol}
-  \begin{ccnusyntax}[emph={[1]select-mark-symbol}]
-    select-mark-symbol = (*\meta{symbol}*)
+\begin{function}[added = 2022-07-19]{chinese/mark-symbol}
+  \begin{ccnusyntax}[emph={[1]mark-symbol}]
+    mark-symbol = (*\meta{symbol}*)
   \end{ccnusyntax}
   \env{select} 环境的标记符号。默认为 |$\checkmark$|。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/select-mark-position}
-  \begin{ccnusyntax}[emph={[1]select-mark-position}]
-    select-mark-position = (*top|bottom|left|(right)>*)
+\begin{function}[added = 2022-07-19]{chinese/mark-position}
+  \begin{ccnusyntax}[emph={[1]mark-position}]
+    mark-position = (*top|bottom|left|(right)>*)
   \end{ccnusyntax}
-  \env{select} 环境的标记符号相对于内容的位置。\opt{right} 表示 \opt{select-mark-symbol} 在内容的右侧，其余的含义同理。
+  \env{select} 环境的标记符号相对于内容的位置。\opt{right} 表示 \opt{mark-symbol} 在内容的右侧，其余的含义同理。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/select-mark-xshift}
-  \begin{ccnusyntax}[emph={[1]select-mark-xshift}]
-    select-mark-xshift = (*\meta{dimension}*)
+\begin{function}[added = 2022-07-19]{chinese/mark-xshift}
+  \begin{ccnusyntax}[emph={[1]mark-xshift}]
+    mark-xshift = (*\meta{dimension}*)
   \end{ccnusyntax}
   \env{select} 环境的标记符号的水平偏移量。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/select-mark-yshift}
-  \begin{ccnusyntax}[emph={[1]select-mark-yshift}]
-    select-mark-yshift = (*\meta{dimension}*)
+\begin{function}[added = 2022-07-19]{chinese/mark-yshift}
+  \begin{ccnusyntax}[emph={[1]mark-yshift}]
+    mark-yshift = (*\meta{dimension}*)
   \end{ccnusyntax}
   \env{select} 环境的标记符号的垂直偏移量。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/select-seperator}
-  \begin{ccnusyntax}[emph={[1]select-seperator}]
-    select-seperator = (*\meta{symbol}*)
+\begin{function}[added = 2022-07-19]{chinese/seperator}
+  \begin{ccnusyntax}[emph={[1]seperator}]
+    seperator = (*\meta{symbol}*)
   \end{ccnusyntax}
   \env{select} 环境内容的间隔符。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/select-pre-content}
-  \begin{ccnusyntax}[emph={[1]select-pre-content}]
-    select-pre-content = (*\meta{content}*)
+\begin{function}[added = 2022-07-19]{chinese/pre-content}
+  \begin{ccnusyntax}[emph={[1]pre-content}]
+    pre-content = (*\meta{content}*)
   \end{ccnusyntax}
   \env{select} 环境的内容 \emph{前} 的内容。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/select-post-content}
-  \begin{ccnusyntax}[emph={[1]select-post-content}]
-    select-post-content = (*\meta{content}*)
+\begin{function}[added = 2022-07-19]{chinese/post-content}
+  \begin{ccnusyntax}[emph={[1]post-content}]
+    post-content = (*\meta{content}*)
   \end{ccnusyntax}
   \env{select} 环境的内容 \emph{后} 的内容。
 \end{function}
@@ -1835,7 +1835,7 @@
 
 \begin{latexexample}{\env{select}相关键值的综合使用}
   折
-  \begin{select}[select-pre-content = {[}, select-post-content = {\}}, select-mark-symbol = {\tiny $\triangle$}, select-seperator = {, },select-mark-position = bottom]
+  \begin{select}[pre-content = {[}, post-content = {\}}, mark-symbol = {\tiny $\triangle$}, seperator = {, },mark-position = bottom]
     \item \pinyin{zhe1}
     \item \pinyin{zhe2}
     \item \pinyin{zhe3}
