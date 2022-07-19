@@ -13,6 +13,8 @@
 3. 通过用户接口可以方便更改密封线样式；
 4. 在 Windows, macOS 和 Linux 跨平台编译。
 
+使用前请仔细阅读 [发行版](https://gitee.com/zepinglee/exam-zh/releases) 的用户手册 `exam-zh.pdf`。
+
 ## 示例
 
 ```latex
