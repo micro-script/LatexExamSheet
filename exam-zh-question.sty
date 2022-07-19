@@ -13,7 +13,9 @@
   {exam-zh question module}
 
 \RequirePackage { amsthm }
-\RequirePackage { tikz }
+\@ifpackageloaded { tcolorbox }
+  { \tcbuselibrary { breakable } }
+  { \RequirePackage [ most ] { tcolorbox } }
 \RequirePackage { zref-savepos }
 \RequirePackage { ulem }
 
@@ -539,6 +541,7 @@
       }
   }
 
+\str_new:N \l__examzh_solution_blank_type_str
 \keys_define:nn { exam-zh / solution }
   {
     show-solution .bool_set:N = \l__examzh_solution_show_bool,
@@ -551,7 +554,11 @@
     score-post-content .tl_set:N = \l__examzh_score_post_content_tl,
     score-format .tl_set:N = \l__examzh_score_format_tl,
     text-color .tl_set:N = \l__examzh_solution_text_color_tl,
-    show-blank .bool_set:N = \l__examzh_solution_show_blank_bool,
+    blank-type .choices:nn =
+      { none, manual, hide }
+      {
+        \str_set:Nx \l__examzh_solution_blank_type_str { \l_keys_choice_tl }
+      },
     blank-vsep .skip_set:N = \l__examzh_solution_blank_vsep_skip,
     top-sep    .skip_set:N = \l__examzh_solution_top_sep_skip,
     bottom-sep .skip_set:N = \l__examzh_solution_bottom_sep_skip,
@@ -568,8 +575,8 @@
     score-post-content = 分,
     score-format       = \color{red},
     text-color         = black,
-    show-blank         = false,
-    blank-vsep         = 8ex plus .5ex minus .5ex,
+    blank-type         = none,
+    blank-vsep         = 12ex plus 1ex minus 1ex,
     top-sep            = .5em plus .5em minus .2em,
     bottom-sep         = .5em plus .5em minus .2em 
   }
@@ -587,15 +594,32 @@
         \__examzh_solution_print_answer:n {#2}
       }
       {
-        \bool_if:NT \l__examzh_solution_show_blank_bool
+        \str_case:VnF \l__examzh_solution_blank_type_str
           {
-            \addvspace { \l__examzh_solution_blank_vsep_skip }
+            { none } { }
+            { manual } { \addvspace { \l__examzh_solution_blank_vsep_skip } }
+            { hide } { \__examzh_solution_simply_hide_solution:n {#2} }
           }
+          {}
       }
     \par
     \addvspace { \l__examzh_solution_bottom_sep_skip }
   }
   {}
+\cs_new:Npn \__examzh_solution_simply_hide_solution:n #1
+  {
+    \begin{tcolorbox}
+      [
+        invisible,
+        frame hidden,
+        breakable,
+        opacityback  = 0,
+        opacityframe = 0,
+        size         = minimal
+      ]
+      #1
+    \end{tcolorbox}
+  }
 \cs_new:Npn \__examzh_solution_print_answer:n #1
   {
     \par

@@ -12,7 +12,7 @@
 ### Added
 
 - 增加手册 `choices` 环境方形和圆形 label 的示例
-- 增加 `solution` 不显示解答时的垂直空白 `show-blank` 和 `blank-sep` 键值
+- 增加 `solution` 不显示解答时的垂直空白 `blank-type` 和 `blank-sep` 键值
 - 增加 `solution` 的 `top-sep` 和 `bottom-sep` 键值
 
 ### Changed
