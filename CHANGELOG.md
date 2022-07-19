@@ -13,6 +13,7 @@
 
 - 新增 `exam-zh-chinese.sty` 模块
 - 新增 `select` 环境
+- 新增 `lineto` 连线环境
 
 ## [0.1.10] - 2022-07-17
 

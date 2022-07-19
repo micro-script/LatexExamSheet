@@ -629,7 +629,7 @@
 其余的见~\ref{subsubsec:抬头} 节。
 
 
-\subsubsection{语文模块相关命令环境}
+\subsubsection{其它题型相关命令环境}
 
 本节主要介绍 \file{exam-zh-chinese.sty} 模块中的命令环境的使用。要注意的是，此模块中大部分命令环境设计灵感和原因一般来自于语文学科，但是具体使用起来一般不限制于语文学科。
 
@@ -642,7 +642,7 @@
       ...
     \end{select}
   \end{ccnusyntax}
-  选择环境。\meta{键值列表} 见~\ref{subsubsec:参数-语文}。
+  选择标记环境。\meta{键值列表} 见~\ref{subsubsec:参数-选择标记题型} 节。
 \end{function}
 
 \begin{latexexample}{\env{select} 环境的基本使用}
@@ -653,6 +653,34 @@
   \end{select}
   本
 \end{latexexample}
+
+
+\begin{function}[added = 2022-07-19]{lineto 环境,\linelistset,\lineconnect}
+  \begin{ccnusyntax}[emph={[2]lineto,linelistset,lineconnect}]
+    \begin{lineto}(*\oarg{键值列表}*)
+      \linelistset(*\oarg{键值列表}\marg{list}*)
+      \linelistset(*\oarg{键值列表}\marg{list}*)
+      ...
+      \lineconnect(*\oarg{键值列表}\marg{list}*)
+      \lineconnect(*\oarg{键值列表}\marg{list}*)
+      ...
+    \end{lineto}
+  \end{ccnusyntax}
+  \env{liento} 环境为连线环境，一个 \tn{linelistset} 命令设置一组内容，\tn{lineconnect} 连线。（\meta{list} 之间是西文逗号）
+  \begin{itemize}
+    \item \env{lineto} 环境： \meta{键值列表} 接口为 \env{tikzpicture} 环境的可选参数接口；
+    \item \tn{linelistset} 命令： \meta{键值列表} 见~\ref{subsubsec:参数-连线题型} 节；
+    \item \tn{lineconnect} 命令： \meta{键值列表} 接口为 \TikZ 的 \tn{draw} 命令的可选参数接口；\meta{list} 的格式为 |<name1>-<item num1>, <name2>-<item num2>, ...|，比如 |i-1, ii-3, iii-2| 等等（|<name>| 的含义见~\ref{subsubsec:参数-连线题型} 的 \opt{linto/name}），连接顺序为（以 |\lineconnect{i-1,ii-2,iii-3,iv-4}|为例）：
+      \begin{itemize}
+        \item |i-1| 项的右侧与 |ii-2| 的左侧相连；
+        \item |ii-2| 项的右侧与 |iii-3| 的左侧相连；
+        \item |iii-3| 项的右侧与 |iv-4| 的左侧相连。
+      \end{itemize}
+    若 \tn{lineconnect} 的 \meta{list} 的内容变多也是同理。
+  \end{itemize}
+\end{function}
+
+示例见~\ref{subsubsec:参数-连线题型}。
 
 
 \subsection{参数设置}
@@ -1773,7 +1801,7 @@
 \end{function}
 
 
-\subsubsection{语文模块相关}  \label{subsubsec:参数-语文}
+\subsubsection{选择标记题型}  \label{subsubsec:参数-选择标记题型}
 
 \begin{function}[added = 2022-07-19]{select}
   \begin{ccnusyntax}[emph={[1]chinese}]
@@ -1846,4 +1874,57 @@
     \item \pinyin{she4}
   \end{select}
   本
+\end{latexexample}
+
+
+
+\subsubsection{连线题型}  \label{subsubsec:参数-连线题型}
+
+\begin{function}[updated = 2022-07-19]{lineto}
+  \begin{ccnusyntax}[emph={[1]chinese}]
+    lineto = (*\marg{键值列表}*)
+    lineto/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含一个子项目。用于设置 \env{lineto} 环境。
+\end{function}
+
+\begin{function}{lineto/xsep}
+  \begin{ccnusyntax}[emph={[1]xsep}]
+    xsep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  设置 \env{lineto} 环境两列之间的距离。默认为 |0.25\linewidth|。只在 \tn{examsetup} 中设置。
+\end{function}
+
+\begin{function}{lineto/ysep}
+  \begin{ccnusyntax}[emph={[1]ysep}]
+    ysep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  设置 \env{lineto} 环境两行之间的距离。默认为 |1cm|。只在 \tn{examsetup} 中设置。
+\end{function}
+
+\begin{function}{lineto/name}
+  \begin{ccnusyntax}[emph={[1]name}]
+    name = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{lineto} 环境中 \tn{linelistset} 命令设置的一组的名称。只在 \tn{lineconnect} 的 \oarg{键值列表} 中设置。默认为小写罗马数字，即第一次使用 \tn{lineconnect} 则该组数据的名称为 |i-*|，第二次使用的该组数据名称为 |ii-*|，其中 |*| 为该项在 \tn{linelistset} 的必选参数的列表的第几项（阿拉伯数字），比如 |i-1|，|ii-3|。
+\end{function}
+
+
+\begin{latexexample}{\opt{lineto/name} 的效果及 \env{lineto} 环境使用示例}
+  \begin{lineto}
+    \linelistset{apple, banana, key}
+    \linelistset{香蕉, 钥匙, 苹果}
+    \lineconnect{i-1,ii-3}
+    \lineconnect{i-2,ii-1}
+    \lineconnect{i-3,ii-2}
+  \end{lineto}
+  
+  \begin{lineto}
+    \linelistset[name = a]{apple, banana, key}
+    \linelistset[name = b]{香蕉, 钥匙, 苹果}
+    \linelistset[name = c]{黄色, 红色,银色}
+    \lineconnect{a-1,b-3,c-2}
+    \lineconnect{a-2,b-1,c-1}
+    \lineconnect{a-3,b-2,c-3}
+  \end{lineto}
 \end{latexexample}
