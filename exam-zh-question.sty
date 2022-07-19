@@ -585,7 +585,8 @@
 % 解答题环境
 \NewDocumentEnvironment { solution } { O{ } +b }
   {
-    \addvspace { \l__examzh_solution_top_sep_skip }
+    % \addvspace { \l__examzh_solution_top_sep_skip }
+    \vspace { \l__examzh_solution_top_sep_skip }
     \keys_set:nn { exam-zh / solution } {#1}
     % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
     \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
@@ -603,7 +604,9 @@
           {}
       }
     \par
-    \addvspace { \l__examzh_solution_bottom_sep_skip }
+    % \mode_leave_vertical:
+    % \addvspace { \l__examzh_solution_bottom_sep_skip }
+    \vspace { \l__examzh_solution_bottom_sep_skip }
   }
   {}
 \cs_new:Npn \__examzh_solution_simply_hide_solution:n #1
@@ -611,7 +614,7 @@
     \begin{tcolorbox}
       [
         invisible,
-        frame hidden,
+        frame~hidden,
         breakable,
         opacityback  = 0,
         opacityframe = 0,

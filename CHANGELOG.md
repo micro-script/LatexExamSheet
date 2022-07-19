@@ -20,6 +20,11 @@
 - 更改 `solution` 环境接口
 - 修改 `change-frac-style`, `change-dfrac-style` 默认值为 `false`
 
+
+### Fixed
+
+- 修复 `missing \item` 问题（#I5HUUV）
+
 ## [0.1.10] - 2022-07-19
 
 ### Added
