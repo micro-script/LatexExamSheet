@@ -1377,6 +1377,25 @@
 
 如果想要隐藏或去掉 label 的话，可以使用 |label = {}|，但一般这个需求可能使用表格或其它方法会更好。
 
+如果是问卷，那么可能会有 label 是正方形或圆形的需求：
+\begin{latexexample}{label 为正方形}
+  \begin{choices}[label = $\square$]
+    \item 第一项
+    \item 第二项
+    \item 第三项
+    \item 第四项
+  \end{choices}
+\end{latexexample}
+
+\begin{latexexample}{label 为圆形}
+  \begin{choices}[label = \textbigcircle]
+    \item 第一项
+    \item 第二项
+    \item 第三项
+    \item 第四项
+  \end{choices}
+\end{latexexample}
+
 
 \begin{function}{choices/label-pos}
   \begin{ccnusyntax}[emph={[1]label-pos}]
