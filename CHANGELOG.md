@@ -18,6 +18,7 @@
 ### Changed
 
 - 更改 `solution` 环境接口
+- 修改 `change-frac-style`, `change-dfrac-style` 默认值为 `false`
 
 ## [0.1.10] - 2022-07-19
 

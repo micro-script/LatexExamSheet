@@ -506,20 +506,28 @@
 
 \subsubsection{解答题}
 
-\begin{function}[added = 2022-07-01]{solution 环境}
+\begin{function}[added = 2022-07-01, updated = 2022-07-19]{solution 环境}
   \begin{ccnusyntax}[emph={[2]solution}]
-    \begin{solution}(*\oarg{label-name}*)
+    \begin{solution}(*\oarg{键值列表}*)
       ...
     \end{solution}
   \end{ccnusyntax}
-  解答题解答环境。\meta{label-name} 表示 \env{solution} 环境的开头标签的内容，默认为 |解答|。
+  解答题解答环境。\meta{键值列表} 见~\ref{subsubsec:参数-解答题} 节。
 \end{function}
+
+
+下面所有和 \env{solution} 有关的示例都默认加载了
+\begin{latexcode}
+  \examsetup{solution/show-solution = true}
+\end{latexcode}
+
+\examsetup{
+  solution/show-solution=true
+}
+
 
 \begin{latexexample}{\env{solution} 环境示例}
   \begin{solution}
-    测试
-  \end{solution}
-  \begin{solution}[证明]
     测试
   \end{solution}
 \end{latexexample}
@@ -758,8 +766,8 @@
 
 \begin{function}[added = 2022-07-17]{symbols/change-frac-style,symbols/change-dfrac-style}
   \begin{ccnusyntax}[emph={[1]change-frac-style,change-dfrac-style}]
-    change-frac-style = (*<\TTF>*)
-    change-dfrac-style = (*<\TTF>*)
+    change-frac-style = (*<\TFF>*)
+    change-dfrac-style = (*<\TFF>*)
   \end{ccnusyntax}
   是否重定义 \tn{frac} 命令和 \tn{dfrac} 命令。重定义后的 \tn{frac} 或 \tn{dfrac} 的分子分母两边会有额外间距。
 \end{function}
@@ -1686,10 +1694,7 @@
 将 \opt{score-pre-content} 和 \opt{score-post-content} 设置为空就可以产生批注效果：
 \begin{latexexample}{\opt{score-pre-content} 和 \opt{score-post-content} 为空产生批注效果}
   \examsetup{
-    solution = {
-      score-pre-content = {},
-      score-post-content = {}
-    }
+    solution = {score-pre-content = {}, score-post-content = {}}
   }
   \begin{solution}
     函数的定义域为 $(0, +\infty)$,
@@ -1713,7 +1718,11 @@
   }
 }
 \begin{latexexample}{\opt{score-format} 示例}
-  \examsetup{solution/score-format = {\sffamily \huge \color{blue}}}
+  \examsetup{
+    solution = {
+      score-format = {\sffamily \huge \color{blue}}
+    }
+  }
   \begin{solution}
     测试 \score{2}
   \end{solution}
@@ -1731,6 +1740,39 @@
     text-color = (*\meta{color}*)
   \end{ccnusyntax}
   \env{solution} 环境内容的颜色。默认为 |black|。
+\end{function}
+
+\begin{function}[added = 2022-07-19]{solution/top-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep}]
+    top-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{solution} 环境上方间距。默认为 |.5em plus .5em minus .2em|。
+\end{function}
+
+\begin{function}[added = 2022-07-19]{solution/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]bottom-sep}]
+    bottom-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{solution} 环境下方间距。默认为 |.5em plus .5em minus .2em|。
+\end{function}
+
+\begin{function}[added = 2022-07-19]{solution/blank-type}
+  \begin{ccnusyntax}[emph={[1]blank-type}]
+    blank-type = (*<(none)|manual|hide>*)
+  \end{ccnusyntax}
+  \kvopt{solution/show-solution}{false} 的时候是否增加一段垂直空白。比如可以留白给学生答题。
+  \begin{itemize}
+    \item \opt{none}: 不增加；
+    \item \opt{manual}: 增加，增加的高度由 \opt{solution/blank-vsep} 控制；
+    \item \opt{hide}: 增加，增加的高度和 \env{solution} 的内容几乎相同（因为使用了 \env{tcolorbox} 环境达到 \opt{hide} 效果，环境前后间距会造成干扰，但可忽略）；
+  \end{itemize}
+\end{function}
+
+\begin{function}[added = 2022-07-19]{solution/blank-vsep}
+  \begin{ccnusyntax}[emph={[1]blank-vsep}]
+    blank-vsep = (*\meta{skip}*)
+  \end{ccnusyntax}
+  \kvopt{solution/blank-type}{manual} 的时候增加的垂直空白长度，可以是弹性长度。默认为 |12ex plus 1ex minus 1ex|。
 \end{function}
 
 
@@ -1761,6 +1803,7 @@
   \end{ccnusyntax}
   分别设置 \env{step}、\env{method}、\env{case} 环境的 label 后的标点，分别默认为 |.|、|{}|（无标点）、|.|。
 \end{function}
+
 
 
 \subsubsection{草稿纸} \label{subsubsec:参数-草稿纸}
@@ -1836,6 +1879,14 @@
   \end{ccnusyntax}
   \env{select} 环境的标记符号。默认为 |$\checkmark$|。
 \end{function}
+
+\begin{latexexample}{\opt{mark-symbol} 使用示例}
+  \begin{select}[mark-symbol = {\color{red}{$\times$}}]
+    \item 正确
+    \item* 错误
+    \item* 错误
+  \end{select}
+\end{latexexample}
 
 \begin{function}[added = 2022-07-19]{chinese/mark-position}
   \begin{ccnusyntax}[emph={[1]mark-position}]
