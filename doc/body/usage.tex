@@ -377,11 +377,11 @@
 
 \begin{function}{\AddChoicesCounter}
   \begin{ccnusyntax}[emph={[2]\AddChoicesCounter}]
-    \AddChoicesCounter(*\marg{LaTeX command}*)(*\marg{internal command}*)(*\marg{widest label}*)
+    \AddChoicesCounter(*\marg{LaTeX command}*)(*\marg{internal command}*)
   \end{ccnusyntax}
   如果用户需要使用其它形式的数字作为 \env{choices} 环境的标签，需要使用 \tn{AddChoicesCounter} 命令将其添加进 \opt{label} 选项的识别范围内（类似 \pkg{enumitem} 宏包的 \tn{AddChoicesCounter} ）。其中 \meta{LaTeX command} 是在 \opt{label} 选项中的形式，\meta{internal command} 是内部的实现，\meta{widest label} 是最宽的标签。比如带圈数字的添加方法：
   \begin{latexcode}[gobble=4]
-    \AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}{1}
+    \AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}
   \end{latexcode}
 \end{function}
 
@@ -393,7 +393,7 @@
       \int_set:Nn \l_tmpa_int { \int_eval:n { #1 + 1 } }
       \int_use:N \l_tmpa_int
     }
-  \AddChoicesCounter \test \test_counter:n {1}
+  \AddChoicesCounter \test \test_counter:n
   \ExplSyntaxOff
   \begin{choices}[label = \test*]
     \item 1

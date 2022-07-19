@@ -550,7 +550,11 @@
     score-pre-content .tl_set:N = \l__examzh_score_pre_content_tl,
     score-post-content .tl_set:N = \l__examzh_score_post_content_tl,
     score-format .tl_set:N = \l__examzh_score_format_tl,
-    text-color .tl_set:N = \l__examzh_solution_text_color_tl
+    text-color .tl_set:N = \l__examzh_solution_text_color_tl,
+    show-blank .bool_set:N = \l__examzh_solution_show_blank_bool,
+    blank-vsep .skip_set:N = \l__examzh_solution_blank_vsep_skip,
+    top-sep    .skip_set:N = \l__examzh_solution_top_sep_skip,
+    bottom-sep .skip_set:N = \l__examzh_solution_bottom_sep_skip,
   }
 \keys_set:nn { exam-zh / solution }
   {
@@ -563,22 +567,36 @@
     score-pre-content  = {},
     score-post-content = 分,
     score-format       = \color{red},
-    text-color         = black
+    text-color         = black,
+    show-blank         = false,
+    blank-vsep         = 8ex plus .5ex minus .5ex,
+    top-sep            = .5em plus .5em minus .2em,
+    bottom-sep         = .5em plus .5em minus .2em 
   }
 \keys_define:nn { exam-zh }
   { solution .meta:nn = { exam-zh / solution } {#1} }
 % 解答题环境
-\NewDocumentEnvironment { solution } { O{ \l__examzh_solution_label_content_tl } +b }
+\NewDocumentEnvironment { solution } { O{ } +b }
   {
+    \addvspace { \l__examzh_solution_top_sep_skip }
+    \keys_set:nn { exam-zh / solution } {#1}
     % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
     \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
-    \bool_if:NT \l__examzh_solution_show_bool
+    \bool_if:NTF \l__examzh_solution_show_bool
       {
-        \__examzh_solution_print_answer:nn {#1} {#2}
+        \__examzh_solution_print_answer:n {#2}
       }
+      {
+        \bool_if:NT \l__examzh_solution_show_blank_bool
+          {
+            \addvspace { \l__examzh_solution_blank_vsep_skip }
+          }
+      }
+    \par
+    \addvspace { \l__examzh_solution_bottom_sep_skip }
   }
   {}
-\cs_new:Npn \__examzh_solution_print_answer:nn #1#2
+\cs_new:Npn \__examzh_solution_print_answer:n #1
   {
     \par
     \pushQED { \qed }
@@ -587,13 +605,13 @@
     % \item \relax
     \group_begin:
       % \hspace* { 2\ccwd }
-      \bfseries #1 
+      \bfseries  \l__examzh_solution_label_content_tl  
       \@addpunct { \l__examzh_solution_label_punct_tl }
     \group_end:
     \hspace{0.5em} 
     % \ignorespaces
     \group_begin:
-      \color { \l__examzh_solution_text_color_tl } #2
+      \color { \l__examzh_solution_text_color_tl } #1
     \group_end:
     \bool_if:NT \l__examzh_solution_show_qed_bool
       { \popQED }
