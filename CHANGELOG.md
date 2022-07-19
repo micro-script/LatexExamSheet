@@ -12,8 +12,8 @@
 ### Added
 
 - 新增 `exam-zh-chinese.sty` 模块
-- 新增 `select` 环境
-- 新增 `lineto` 连线环境
+- 新增 `select` 环境（#I5HG8K）
+- 新增 `lineto` 连线环境（#I5FXOX）
 
 ## [0.1.10] - 2022-07-17
 
