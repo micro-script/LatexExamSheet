@@ -746,6 +746,25 @@
 
 注意 “|/|” 的前后均不可以出现空白字符。
 
+
+\subsubsection{风格设置}
+
+\begin{function}[added = 2022-07-20]{style}
+  \begin{ccnusyntax}[emph={[1]style}]
+    style = (*\marg{键值列表}*)
+    style/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目，具体内容见下。
+\end{function}
+
+\begin{function}[added = 2022-07-20]{style/fullwidth-stop}
+  \begin{ccnusyntax}[emph={[1]fullwidth-stop}]
+    fullwidth-stop = (*<(catcode)|false>*)
+  \end{ccnusyntax}
+  是否将 |。| 映射为 |.|。\opt{catcode} 表示映射；\opt{false} 表示不映射。
+\end{function}
+
+
 \subsubsection{中国化数学符号}  \label{subsubsec:参数-中国化数学符号}
 
 

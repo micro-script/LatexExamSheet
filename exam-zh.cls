@@ -46,7 +46,7 @@
     \defaultCJKfontfeatures
       {
         Script  = CJK,
-        Mapping = fullwidth-stop ,
+        % Mapping = fullwidth-stop ,
       }
   }
 
@@ -127,6 +127,31 @@
 \examzh_package_conflict:nn { enumitem } { paralist }
 
 
+% 标点处理
+\tl_const:Nn \c__examzh_fwid_full_stop_tl { ^^^^ff0e }
+
+\keys_define:nn { exam-zh }
+  { style .meta:nn = { exam-zh / style } {#1} }
+\keys_define:nn { exam-zh / style }
+  {
+    fullwidth-stop .choice:,
+    fullwidth-stop .value_required:n = true,
+    fullwidth-stop / catcode .code:n =
+      { 
+        \__examzh_set_fullwidth_stop_catcode:
+      },
+    fullwidth-stop / false .code:n = { }
+  }
+\cs_new:Npn \__examzh_set_fullwidth_stop_catcode:
+  {
+    \char_set_active_eq:NN ^^^^3002 \c__examzh_fwid_full_stop_tl
+    \char_set_catcode_active:N ^^^^3002
+  }
+
+\keys_set:nn { exam-zh / style }
+  {
+    fullwidth-stop = catcode
+  }
 
 \keys_set:nn { ctex }
   {
