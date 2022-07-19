@@ -36,7 +36,7 @@
     label-sep   .dim_set:N = \l__examzh_choices_label_sep_dim ,
     label-width .dim_set:N = \l__examzh_choices_label_width_dim ,
     max-columns .int_set:N = \l__examzh_choices_max_columns_int ,
-    index .int_set:N = \l__examzh_choices_item_index_int
+    index       .int_set:N = \l__examzh_choices_item_index_int
   }
 
 \keys_set:nn { exam-zh / choices }
@@ -58,26 +58,22 @@
 
 \tl_new:N \l__examzh_choices_counters_tl
 
-\NewDocumentCommand \AddChoicesCounter { m m m }
+\NewDocumentCommand \AddChoicesCounter { m m }
   % #1: \Alph
   % #2: \@Alph
-  % #3: widest number, not used yet
   {
     % TODO 这一步的作用是什么，为什么要把函数放在 tl 变量里而不是直接在某处使用？
     \tl_put_right:Nn \l__examzh_choices_counters_tl
       { \l__examzh_process_counter:NN #1 #2 }
-    % \__examzh_choices_save_\arabic: 和 \__examzh_choices_save_\@arabic: 都是一样的含义：\@alph
-    % 那为何要有两个
     \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #1 : } #2
     \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #2 : } #2
   }
 
-% TODO #3 的作用是什么
-\AddChoicesCounter \arabic \@arabic { 0 }
-\AddChoicesCounter \alph   \@alph   { m }
-\AddChoicesCounter \Alph   \@Alph   { M }
-\AddChoicesCounter \roman  \@roman  { viii }
-\AddChoicesCounter \Roman  \@Roman  { VIII }
+\AddChoicesCounter \arabic \@arabic
+\AddChoicesCounter \alph   \@alph
+\AddChoicesCounter \Alph   \@Alph
+\AddChoicesCounter \roman  \@roman
+\AddChoicesCounter \Roman  \@Roman
 
 
 \dim_new:N \l__examzh_choices_total_width_dim
@@ -535,7 +531,7 @@
 \msg_new:nnn { exam-zh / choices } { invalid-circled-number }
   { Invalid~ circled~ number~ #1. }
 
-\AddChoicesCounter \circlednumber \__examzh_choices_circled_number:n {1}
+\AddChoicesCounter \circlednumber \__examzh_choices_circled_number:n
 
 
 % TODO 答案控制
