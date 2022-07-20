@@ -101,6 +101,7 @@
     top-sep             .skip_set:N = \l__examzh_question_top_sep_skip ,
     % 下方间距
     bottom-sep          .skip_set:N = \l__examzh_question_bottom_sep_skip ,
+    label .tl_set:N = \l__examzh_question_label_tl,
   }
 
 \keys_set:nn { exam-zh / question }
@@ -110,7 +111,8 @@
     points-separate-par = false ,
     show-answer         = false ,
     top-sep             = .5em plus .5em minus .2em ,
-    bottom-sep          = .5em plus .5em minus .2em 
+    bottom-sep          = .5em plus .5em minus .2em ,
+    label               = \arabic*.,
   }
 
 
@@ -169,7 +171,11 @@
           { \bool_set_false:N \l__examzh_question_show_points_bool }
       }
     % 使用列表环境输出
-    \list { \int_use:N \g__examzh_question_index_int . }
+    \list 
+      {
+        % \int_use:N \g__examzh_question_index_int . 
+        \__examzh_question_the_label:
+      }
       {
         \dim_set:Nn \topsep    { 0pt }
         \dim_set:Nn \partopsep { 0pt }
@@ -213,6 +219,103 @@
     % 增加下方间距
     \addvspace { \l__examzh_question_bottom_sep_skip }
   }
+
+% 处理 question / problem 的 label
+\tl_new:N \l__examzh_question_counters_commands_set_tl
+
+\cs_new:Npn \__examzh_question_the_label:
+  {
+    \group_begin:
+      % 定义计数器相关的命令函数
+      \l__examzh_question_counters_commands_set_tl
+      % 输出处理后的 label
+      \l__examzh_question_label_tl
+    \group_end:
+  }
+
+\NewDocumentCommand \AddQuestionCounter { m m }
+  {
+    % 生成用户层命令
+    \tl_put_right:Nn \l__examzh_question_counters_commands_set_tl
+      { \__examzh_question_process_counter:NN #1 #2 }
+    % 把核心函数存起来
+    \cs_set_eq:cN { __examzh_question_save_ \cs_to_str:N #1 : } #2
+    \cs_set_eq:cN { __examzh_question_save_ \cs_to_str:N #2 : } #2
+  }
+
+\AddQuestionCounter \arabic \@arabic
+\AddQuestionCounter \alph   \@alph
+\AddQuestionCounter \Alph   \@Alph
+\AddQuestionCounter \roman  \@roman
+\AddQuestionCounter \Roman  \@Roman
+
+\cs_new:Npn \__examzh_question_process_counter:NN #1#2
+  % #1: \Alph
+  % #2: \@Alph
+  {
+    \cs_set:Npn #1 { \__examzh_question_process_counter_aux:Nn #2 }
+    \cs_set:Npn #2 { \__examzh_question_process_counter_aux:Nn #2 }
+  }
+
+\cs_new:Npn \__examzh_question_process_counter_aux:Nn #1#2
+  {
+    \tl_if_eq:nnTF {#2} { * }
+      {
+        % \Alph*
+        \use:c { __examzh_question_save_ \cs_to_str:N #1 : }
+          { \g__examzh_question_index_int }
+      }
+      {
+        % \Alph{...}
+        \use:c { __examzh_question_save_ \cs_to_str:N #1 : }
+          {#2}
+      }
+  }
+
+% 使用中文字体直接输出 unicode 带圈数字
+% \questioncirclednumber 的参数既可以接受 LaTeX2e 的 <counter>，也可以直接接受 <intexpr>。
+\NewDocumentCommand \questioncirclednumber { m }
+  {
+    \int_if_exist:cTF { c@ #1 }
+      { \int_set_eq:Nc \l_tmpa_int { c@#1 } }
+      { \int_set:Nn \l_tmpa_int { #1 } }
+    \exp_args:Nx \__examzh_question_circled_number:n { \int_use:N \l_tmpa_int }
+  }
+
+\cs_new:Npn \__examzh_question_circled_number:n #1
+  {
+    \int_set:Nn \l_tmpa_int {#1}
+    \int_compare:nNnTF { \l_tmpa_int } = { 0 }
+      { \int_set:Nn \l_tmpa_int { "24EA } }
+      {
+        \int_compare:nNnTF { \l_tmpa_int } < { 21 }
+          { \int_add:Nn \l_tmpa_int { "245F } }
+          {
+            \int_compare:nNnTF { \l_tmpa_int } < { 36 }
+              { \int_add:Nn \l_tmpa_int { "3250 } }
+              {
+                \int_compare:nNnTF { \l_tmpa_int } < { 51 }
+                  { \int_add:Nn \l_tmpa_int { "32B0 } }
+                  {
+                    \msg_error:nnn { exam-zh / question }
+                      { invalid-circled-number } { \int_use:N \l_tmpa_int }
+                  }
+              }
+          }
+      }
+    \group_begin:
+      % TODO 为何要用 \CJKfamily+ { }
+      % xeCJK 宏包文档：当 \CJKfamily+ 参数为空时，则使用当前的 CJK 字体族。
+      \CJKfamily+ { }
+      \symbol { \l_tmpa_int }
+    \group_end:
+  }
+
+\msg_new:nnn { exam-zh / question } { invalid-circled-number }
+{ Invalid~ circled~ number~ #1. }
+
+\AddQuestionCounter \questioncirclednumber \__examzh_question_circled_number:n
+
 
 
 % 选择题括号

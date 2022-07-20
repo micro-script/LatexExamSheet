@@ -274,7 +274,7 @@
 \end{function}
 
 
-\subsubsection{题干}
+\subsubsection{题干}  \label{subsubsec:命令环境-题干}
 
 \begin{function}{question 环境}
   \begin{ccnusyntax}[emph={[2]question}]
@@ -347,6 +347,18 @@
 \end{latexexample}
 
 
+\begin{function}[added = 2022-07-20]{\AddQuestionCounter}
+  \begin{ccnusyntax}[emph={[2]\AddQuestionCounter}]
+    \AddQuestionCounter(*\marg{LaTeX command}*)(*\marg{internal command}*)
+  \end{ccnusyntax}
+  如果用户需要使用其它形式的数字作为 \env{question} 环境和 \env{problem} 的标签，需要使用 \tn{AddQuestionCounter} 命令将其添加进 \opt{label} 选项的识别范围内（类似 \pkg{enumitem} 宏包的 \tn{AddEnumerateCounter} ）。其中 \meta{LaTeX command} 是在 \opt{label} 选项中的形式，\meta{internal command} 是内部的实现，\meta{widest label} 是最宽的标签。比如带圈数字的添加方法：
+  \begin{latexcode}[gobble=4]
+    \AddQuestionCounter{\questioncirclednumber}{\__examzh_question_circled_number:n}
+  \end{latexcode}
+\end{function}
+
+
+
 \subsubsection{选择题} \label{subsubsec:命令环境-选择题}
 
 \begin{function}{choices 环境}
@@ -379,7 +391,7 @@
   \begin{ccnusyntax}[emph={[2]\AddChoicesCounter}]
     \AddChoicesCounter(*\marg{LaTeX command}*)(*\marg{internal command}*)
   \end{ccnusyntax}
-  如果用户需要使用其它形式的数字作为 \env{choices} 环境的标签，需要使用 \tn{AddChoicesCounter} 命令将其添加进 \opt{label} 选项的识别范围内（类似 \pkg{enumitem} 宏包的 \tn{AddChoicesCounter} ）。其中 \meta{LaTeX command} 是在 \opt{label} 选项中的形式，\meta{internal command} 是内部的实现，\meta{widest label} 是最宽的标签。比如带圈数字的添加方法：
+  如果用户需要使用其它形式的数字作为 \env{choices} 环境的标签，需要使用 \tn{AddChoicesCounter} 命令将其添加进 \opt{label} 选项的识别范围内（类似 \pkg{enumitem} 宏包的 \tn{AddEnumerateCounter} ）。其中 \meta{LaTeX command} 是在 \opt{label} 选项中的形式，\meta{internal command} 是内部的实现，\meta{widest label} 是最宽的标签。比如带圈数字的添加方法：
   \begin{latexcode}[gobble=4]
     \AddChoicesCounter{\circlednumber}{\__examzh_choices_circled_number:n}
   \end{latexcode}
@@ -1318,6 +1330,25 @@
 \end{function}
 
 
+\begin{function}[added = 2022-07-20]{question/label}
+  \begin{ccnusyntax}[emph={[1]label}]
+    label = (*\meta{label}*)
+  \end{ccnusyntax}
+  \env{question} 和 \env{problem} 环境的标签的格式。默认值为 |\arabic*.|。\meta{label} 中可以使用的已定义的计数器样式主要有以下几种：
+\end{function}
+
+\begin{choices}[label = \circlednumber*]
+  \item arabic（阿拉伯数字）
+  \item alph（小写英文）
+  \item Alph（大写英文）
+  \item roman（小写罗马数字）
+  \item Roman（大写罗马数字）
+  \item questioncirclednumber（带圈数字）
+\end{choices}
+
+
+还可以使用~\ref{subsubsec:命令环境-题干} 节的 \tn{AddQuestionCounter} 命令自定义计数器样式，使用方式和~\ref{subsubsec:命令环境-选择题} 节的 \tn{AddChoicesCounter} 命令一样。
+
 
 \subsubsection{选择题} \label{subsubsec:参数-选择题}
 
@@ -1371,7 +1402,7 @@
   \begin{ccnusyntax}[emph={[1]label}]
     label = (*\meta{label}*)
   \end{ccnusyntax}
-  标签的格式。默认效果等效于 |label = \Alph*.|。计数器样式主要有以下几种：
+  标签的格式。默认值 |\Alph*.|。\meta{label} 中可以使用的已定义的计数器样式主要有以下几种：
 \end{function}
 
 \begin{choices}[label = \circlednumber*]

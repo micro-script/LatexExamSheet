@@ -7,6 +7,14 @@
 
 ## [Unreleased]
 
+## [0.1.11] - 2022-07-20
+
+### Added
+
+- 增加 `question` 和 `problem`  环境的 `label` 键值
+
+
+
 ## [0.1.11] - 2022-07-19
 
 ### Added
