@@ -59,12 +59,14 @@
 \tl_new:N \l__examzh_choices_counters_tl
 
 \NewDocumentCommand \AddChoicesCounter { m m }
-  % #1: \Alph
-  % #2: \@Alph
+  % #1: \Alph（用户接口）
+  % #2: \@Alph（具体实现的命令或函数（开发层））
   {
     % TODO 这一步的作用是什么，为什么要把函数放在 tl 变量里而不是直接在某处使用？
+    % 猜测：put_right 而不是 set，是为了保证操作 label 的输入值前
+    %      几个函数都被 set
     \tl_put_right:Nn \l__examzh_choices_counters_tl
-      { \l__examzh_process_counter:NN #1 #2 }
+      { \__examzh_choices_process_counter:NN #1 #2 }
     \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #1 : } #2
     \cs_set_eq:cN { __examzh_choices_save_ \cs_to_str:N #2 : } #2
   }
@@ -161,7 +163,9 @@
   {
     \group_begin:
       \int_set:Nn \l__examzh_choices_index_int {#1}
+      % 定义计数器转换函数（如 \Alph 等）
       \l__examzh_choices_counters_tl
+      % 输出
       \l__examzh_choices_label_tl
     \group_end:
   }
@@ -246,15 +250,17 @@
     \group_end:
   }
 
-\cs_new:Npn \l__examzh_process_counter:NN #1#2
+\cs_new:Npn \__examzh_choices_process_counter:NN #1#2
   % #1: \Alph
   % #2: \@Alph
   {
-    \cs_set:Npn #1 { \l__examzh_process_counter_aux:Nn #2 }
-    \cs_set:Npn #2 { \l__examzh_process_counter_aux:Nn #2 }
+    % 用户可以同时使用 #1 和 #2 两个函数（命令）作为 label 的操作函数
+    % #1 的内核原理函数是 #2
+    \cs_set:Npn #1 { \__examzh_choices_process_counter_aux:Nn #2 }
+    \cs_set:Npn #2 { \__examzh_choices_process_counter_aux:Nn #2 }
   }
 
-\cs_new:Npn \l__examzh_process_counter_aux:Nn #1#2
+\cs_new:Npn \__examzh_choices_process_counter_aux:Nn #1#2
   % #1: \@Alph
   {
     \tl_if_eq:nnTF {#2} { * }
