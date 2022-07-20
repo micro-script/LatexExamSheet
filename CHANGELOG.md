@@ -12,8 +12,11 @@
 ### Added
 
 - 增加 `question` 和 `problem`  环境的 `label` 键值
+- 增加 `solution` 环境的 `parbreak` 键值
 
+### Changed
 
+- 完善 `question/blank-type=hide` 的效果
 
 ## [0.1.11] - 2022-07-19
 
