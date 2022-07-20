@@ -665,6 +665,7 @@
     blank-vsep .skip_set:N = \l__examzh_solution_blank_vsep_skip,
     top-sep    .skip_set:N = \l__examzh_solution_top_sep_skip,
     bottom-sep .skip_set:N = \l__examzh_solution_bottom_sep_skip,
+    parbreak .bool_set:N = \l__examzh_solution_par_break_bool
   }
 \keys_set:nn { exam-zh / solution }
   {
@@ -681,7 +682,8 @@
     blank-type         = none,
     blank-vsep         = 12ex plus 1ex minus 1ex,
     top-sep            = .5em plus .5em minus .2em,
-    bottom-sep         = .5em plus .5em minus .2em 
+    bottom-sep         = .5em plus .5em minus .2em,
+    parbreak           = false
   }
 \keys_define:nn { exam-zh }
   { solution .meta:nn = { exam-zh / solution } {#1} }
@@ -721,7 +723,8 @@
         breakable,
         opacityback  = 0,
         opacityframe = 0,
-        size         = minimal
+        size  = minimal,
+        width = \linewidth
       ]
       #1
     \end{tcolorbox}
@@ -740,6 +743,8 @@
     \group_end:
     \hspace{0.5em} 
     % \ignorespaces
+    % 是否要新起一段开始
+    \bool_if:NT \l__examzh_solution_par_break_bool { \par }
     \group_begin:
       \color { \l__examzh_solution_text_color_tl } #1
     \group_end:
