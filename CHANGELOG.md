@@ -7,6 +7,16 @@
 
 ## [Unreleased]
 
+## [0.1.11] - 2022-07-21
+
+### Added
+
+- `\fillin` 不显示答案时增加 `counter` 类型的显示
+
+### Changed
+
+- `fillin/show-blacktriangle` 键值改为 `no-answer-type`
+
 ## [0.1.11] - 2022-07-20
 
 ### Added

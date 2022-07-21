@@ -400,26 +400,36 @@
 % fillin 的下划线样式控制
 \str_new:N \l__examzh_fillin_type_str
 
+% 不显示答案时显示的类型
+\str_new:N \l__examzh_fillin_no_answer_type_str
+
+% no-answer-type = counter 的计数器
+\int_new:N \g__examzh_fillin_no_answer_counter_int
+
 \keys_define:nn { exam-zh / fillin }
   {
     type .code:n = 
       {
         \str_set:Nn \l__examzh_fillin_type_str {#1}
       },
-    show-blacktriangle .bool_set:N = \l__examzh_fillin_show_blacktriangle_bool,
     show-answer .bool_set:N = \l__examzh_question_show_fillin_answer_bool,
     width .skip_set:N = \l__examzh_fillin_F_width_skip,
     color .tl_set:N = \l__examzh_fillin_color_tl,
     text-color .tl_set:N = \l__examzh_fillin_text_color_tl,
+    no-answer-type .choices:nn =
+      { blacktriangle, counter, none }
+      { \str_set:Nx \l__examzh_fillin_no_answer_type_str { \l_keys_choice_tl } },
+    no-answer-counter-index .int_gset:N = \g__examzh_fillin_no_answer_counter_int
   }
 \keys_set:nn { exam-zh / fillin }
   {
-    type               = line,
-    show-blacktriangle = true,
-    show-answer        = false,
-    width              = 3em plus 1em minus 1em,
-    color              = black,
-    text-color         = black,
+    type                     = line,
+    show-answer              = false,
+    width                    = 3em plus 1em minus 1em,
+    color                    = black,
+    text-color               = black,
+    no-answer-type           = blacktriangle,
+    no-answer-counter-index  = 1
   }
 
 \keys_define:nn { exam-zh }
@@ -429,7 +439,10 @@
 \dim_new:N \l__examzh_question_answer_depth_dim
 
 % 填空命令
-% \fillin \fillin[] \fillin[][] 在 show-blacktriangle = true, show-answer = false 的情况下就显示黑色三角形
+% \fillin \fillin[] \fillin[][] 在 show-answer = false 的情况下
+% no-answer-type = blacktriangle 就显示黑色三角形
+% no-answer-type = counter ：计数器（设计来源于完形填空）
+% no-answer-type = none ：不显示
 \NewDocumentCommand \fillin { O{} o }
   {
     \group_begin:
@@ -438,17 +451,15 @@
           % \fillin[]
           % \tl_if_blank:nTF {#1}
             % {
-              \bool_lazy_and:nnTF
+              \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
                 {
-                  !\bool_if_p:N \l__examzh_question_show_fillin_answer_bool
+                  % 显示答案
+                  \__examzh_fillin:n {#1}
                 }
                 {
-                  \bool_if_p:N \l__examzh_fillin_show_blacktriangle_bool
+                  % 不显示答案
+                  \__examzh_fillin_no_answer_typeset:
                 }
-                {
-                  \__examzh_fillin_without_judge:n { \__examzh_fillin_blacktriangle: }
-                }
-                { \__examzh_fillin:n {#1} }
             % }
             % {
               % \__examzh_fillin:n {#1}
@@ -458,19 +469,28 @@
           % \fillin[][]
           \keys_set:nn { exam-zh / fillin }
             {#1}
+          \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+            {
+              % 显示答案
+              \__examzh_fillin:n {#2}
+            }
+            {
+              % 不显示答案
+              \__examzh_fillin_no_answer_typeset:
+            }
           % \tl_if_blank:nTF {#2}
             % {
-              \bool_lazy_and:nnTF
-                {
-                  !\bool_if_p:N \l__examzh_question_show_fillin_answer_bool
-                }
-                {
-                  \bool_if_p:N \l__examzh_fillin_show_blacktriangle_bool
-                }
-                {
-                  \__examzh_fillin_without_judge:n { \__examzh_fillin_blacktriangle: }
-                }
-                { \__examzh_fillin:n {#2} }
+              % \bool_lazy_and:nnTF
+                % {
+                %   !\bool_if_p:N \l__examzh_question_show_fillin_answer_bool
+                % }
+                % {
+                %   \bool_if_p:N \l__examzh_fillin_show_blacktriangle_bool
+                % }
+                % {
+                %   \__examzh_fillin_without_judge:n { \__examzh_fillin_blacktriangle: }
+                % }
+                % { \__examzh_fillin:n {#2} }
             % }
             % {
               % \__examzh_fillin:n {#2}
@@ -478,6 +498,38 @@
         }
       \group_end:
     \space \ignorespaces
+  }
+\msg_new:nnn { exam-zh / fillin } { no-such-noanswertype }
+  {
+    There~is~no~such~noanswertype~named~#1!\\
+    Please~read~the~manual~carefully!
+  }
+\cs_new:Npn \__examzh_fillin_no_answer_typeset:
+  {
+    \str_case:VnF \l__examzh_fillin_no_answer_type_str
+      {
+        { blacktriangle } { \__examzh_fillin_no_answer_typeset_blacktriangle: }
+        { counter } { \__examzh_fillin_no_answer_typeset_counter: }
+        { none } { \__examzh_fillin_no_answer_typeset_none: }
+      }
+      {
+        \msg_error:nnx { exam-zh / fillin } { no-such-noanswertype }
+          { \l__examzh_fillin_no_answer_type_str }
+      }
+  }
+\cs_new:Npn \__examzh_fillin_no_answer_typeset_blacktriangle:
+  {
+    \__examzh_fillin_without_judge:n { \__examzh_fillin_blacktriangle: }
+  }
+\cs_new:Npn \__examzh_fillin_no_answer_typeset_counter:
+  {
+    \int_gincr:N \g__examzh_fillin_no_answer_counter_int
+    \__examzh_fillin_without_judge:n
+      { \int_eval:n { \g__examzh_fillin_no_answer_counter_int - 1 } }
+  }
+\cs_new:Npn \__examzh_fillin_no_answer_typeset_none:
+  {
+    \__examzh_fillin_output_F:
   }
 \cs_new:Npn \__examzh_fillin_without_judge:n #1
   {

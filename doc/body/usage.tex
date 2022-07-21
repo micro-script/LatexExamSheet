@@ -672,6 +672,13 @@
     \item* \pinyin{she2}
   \end{select}
   本
+
+  \begin{select}
+    \item* 疏
+    \item 蔬
+    \item 输
+  \end{select}
+  远
 \end{latexexample}
 
 
@@ -1614,11 +1621,23 @@
 \end{function}
 
 
-\begin{function}[added = 2022-07-03]{fillin/show-blacktriangle}
-  \begin{ccnusyntax}[emph={[1]show-blacktriangle}]
-    show-blacktriangle = (*\TTF*)
+\begin{function}[added = 2022-07-21]{fillin/no-answer-type}
+  \begin{ccnusyntax}[emph={[1]no-answer-type}]
+    no-answer-type = (*<(blacktriangle)|counter|none>*)
   \end{ccnusyntax}
-  填空命令 \tn{fillin} 在 \kvopt{show-blacktriangle}{true} 和 \kvopt{question/show-answer}{false} 的情况下会显示黑色三角形（即使已经输入了答案 |\fillin[foo]|）。
+  填空命令 \tn{fillin} 在 \kvopt{show-answer}{false} 的情况下的显示情况：
+  \begin{itemize}
+    \item \opt{blacktriangle}：内容部分变成黑色三角形（即使已经输入了答案 |\fillin[foo]|）
+    \item \opt{counter}：内容部分变成计数器（每使用一次显示内容的数值加一），设计来源于英语学科的完形填空
+    \item \opt{none}：除了 \tn{fillin} 的 \opt{type} 相关的显示（比如下划线，括号）和一定的间距外不显示其它
+  \end{itemize}
+\end{function}
+
+\begin{function}[added = 2022-07-21]{fillin/no-answer-counter-index}
+  \begin{ccnusyntax}[emph={[1]no-answer-counter-index}]
+    no-answer-counter-index = (*\meta{integer}*)
+  \end{ccnusyntax}
+  填空命令 \tn{fillin} 在 \kvopt{show-answer}{false} 和 \kvopt{no-answer-type}{counter} 下的计数器的非负整数值。默认为 |1|
 \end{function}
 
 
