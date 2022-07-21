@@ -273,13 +273,19 @@
   }
 
 % 使用中文字体直接输出 unicode 带圈数字
-% \questioncirclednumber 的参数既可以接受 LaTeX2e 的 <counter>，也可以直接接受 <intexpr>。
-\NewDocumentCommand \questioncirclednumber { m }
+% \circlednumber 的参数既可以接受 LaTeX2e 的 <counter>，也可以直接接受 <intexpr>。
+\NewDocumentCommand \circlednumber { s m }
   {
-    \int_if_exist:cTF { c@ #1 }
-      { \int_set_eq:Nc \l_tmpa_int { c@#1 } }
-      { \int_set:Nn \l_tmpa_int { #1 } }
-    \exp_args:Nx \__examzh_question_circled_number:n { \int_use:N \l_tmpa_int }
+    \int_if_exist:cTF { c@ #2 }
+      { \int_set_eq:Nc \l_tmpa_int { c@#2 } }
+      { \int_set:Nn \l_tmpa_int { #2 } }
+    \IfBooleanTF {#1}
+      {
+        \exp_args:Nx \__examzh_tikz_circled_number:n { \int_use:N \l_tmpa_int }
+      }
+      {
+        \exp_args:Nx \__examzh_question_circled_number:n { \int_use:N \l_tmpa_int }
+      }
   }
 
 \cs_new:Npn \__examzh_question_circled_number:n #1
@@ -314,9 +320,70 @@
 \msg_new:nnn { exam-zh / question } { invalid-circled-number }
 { Invalid~ circled~ number~ #1. }
 
-\AddQuestionCounter \questioncirclednumber \__examzh_question_circled_number:n
+\AddQuestionCounter \circlednumber \__examzh_question_circled_number:n
 
 
+% tikz 绘制带圈数字
+\fp_new:N \l__examzh_tikz_circled_number_xscale_fp   % 水平压缩系数
+\fp_new:N \l__examzh_tikz_circled_number_yscale_fp   % 垂直压缩系数
+\dim_new:N \l__examzh_tikz_circled_number_total_hegiht_dim   % 数字的总高度
+\dim_new:N \l__examzh_tikz_circled_number_radius_dim     % 半径
+
+\cs_new:Npn \__examzh_tikz_circled_number_aux:n #1
+  {
+    % 根据数字大小设置压缩系数
+    \fp_set:Nn \l__examzh_tikz_circled_number_xscale_fp
+      {
+        \int_compare:nNnTF {#1} < { 10 } 
+          { 0.9 }
+          {
+            \int_compare:nNnTF {#1} < { 100 }
+              { 0.7 }
+              { 0.5 }
+          } 
+      }
+    \fp_set:Nn \l__examzh_tikz_circled_number_yscale_fp
+      {
+        \int_compare:nNnTF {#1} < { 10 } 
+          { 0.9 }
+          {
+            \int_compare:nNnTF {#1} < { 100 }
+              { 0.8 }
+              { 0.6 }
+          } 
+      }
+    % 获取数字的高度
+    \hbox_set:Nn \l_tmpa_box {#1}
+    \dim_set:Nn \l__examzh_tikz_circled_number_total_hegiht_dim
+      { \box_ht:N \l_tmpa_box + \box_dp:N \l_tmpa_box  }
+    % 设置圆的半径
+    \dim_set:Nn \l__examzh_tikz_circled_number_radius_dim 
+      { \dim_eval:n { \l__examzh_tikz_circled_number_total_hegiht_dim / 2 + 0.34 ex } }
+    % 绘制
+    \tikz [ baseline ]
+      {
+        \node at (0, \dim_use:N \l__examzh_tikz_circled_number_total_hegiht_dim / 2 ) 
+          {
+            \makebox[0.35em][c]
+              { 
+                \scalebox { \fp_use:N \l__examzh_tikz_circled_number_xscale_fp } 
+                  [ \fp_use:N \l__examzh_tikz_circled_number_yscale_fp ] 
+                  {
+                    \int_compare:nNnTF {#1} > {9}
+                      { \textbf {#1} }
+                      {#1}
+                  } 
+              }
+          };
+        \draw (0, \l__examzh_tikz_circled_number_total_hegiht_dim / 2 )
+          circle ( \l__examzh_tikz_circled_number_radius_dim );
+      }
+  }
+\cs_new:Npn \__examzh_tikz_circled_number:n #1
+  {
+    \__examzh_tikz_circled_number_aux:n { \int_eval:n {#1} }
+  }
+\AddQuestionCounter \tikzcirclednumber \__examzh_tikz_circled_number:n
 
 % 选择题括号
 % 控制括号是否右对齐

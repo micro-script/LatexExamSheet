@@ -497,13 +497,13 @@
 
 % 使用中文字体直接输出 unicode 带圈数字
 % \circlednumber 的参数既可以接受 LaTeX2e 的 <counter>，也可以直接接受 <intexpr>。
-\NewDocumentCommand \circlednumber { m }
-  {
-    \int_if_exist:cTF { c@ #1 }
-      { \int_set_eq:Nc \l_tmpa_int { c@#1 } }
-      { \int_set:Nn \l_tmpa_int { #1 } }
-    \exp_args:Nx \__examzh_choices_circled_number:n { \int_use:N \l_tmpa_int }
-  }
+% \NewDocumentCommand \circlednumber { m }
+%   {
+%     \int_if_exist:cTF { c@ #1 }
+%       { \int_set_eq:Nc \l_tmpa_int { c@#1 } }
+%       { \int_set:Nn \l_tmpa_int { #1 } }
+%     \exp_args:Nx \__examzh_choices_circled_number:n { \int_use:N \l_tmpa_int }
+%   }
 
 \cs_new:Npn \__examzh_choices_circled_number:n #1
   {

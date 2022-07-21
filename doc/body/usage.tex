@@ -414,13 +414,15 @@
 \end{latexexample}
 
 
-\begin{function}{\circlednumber}
-  \begin{ccnusyntax}[emph={[2]\circlednumber}]
+\begin{function}[updated = 2022-07-21]{\circlednumber,\circlednumber*}
+  \begin{ccnusyntax}[emph={[2]\circlednumber,\circlednumber*}]
     \circlednumber(*\meta{数字或计数器名字}*)
+    \circlednumber*(*\meta{数字或计数器名字}*)
   \end{ccnusyntax}
-  带圈数字命令。
+  带圈数字命令。不带星号的基于字体开发，带星号的基于 \TikZ 开发。|\circlednumber| 仅接受 0～50 的输入值，而 |\circlednumber*| 无限制。
   \begin{latexexample}{\tn{circlednumber} 的使用示例}
     \circlednumber{1} \circlednumber{2}
+    \circlednumber*{1} \circlednumber*{2}
     \circlednumber{page} \circlednumber{section}
   \end{latexexample}
 \end{function}
@@ -1350,7 +1352,8 @@
   \item Alph（大写英文）
   \item roman（小写罗马数字）
   \item Roman（大写罗马数字）
-  \item questioncirclednumber（带圈数字）
+  \item circlednumber（基于字体的带圈数字）
+  \item tikzcirclednumber（\TikZ 绘制的带圈数字）
 \end{choices}
 
 

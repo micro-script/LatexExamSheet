@@ -12,10 +12,13 @@
 ### Added
 
 - `\fillin` 不显示答案时增加 `counter` 类型的显示
+- `question/label` 增加基于 `TiKZ` 的带圈数字 `\tikzcirclednumber` 类型计数器
 
 ### Changed
 
 - `fillin/show-blacktriangle` 键值改为 `no-answer-type`
+- `questioncirclednumber` 改为 `circlednumber`
+- `\circlednumber` 命令增加 `\circlednumber*` 类型
 
 ## [0.1.11] - 2022-07-20
 
