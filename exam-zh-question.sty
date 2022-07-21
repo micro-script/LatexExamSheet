@@ -150,7 +150,8 @@
     % 设置键值
     \keys_set:nn { exam-zh / question } { #1 }
     % 设置上方间距
-    \addvspace { \l__examzh_question_top_sep_skip }
+    % \addvspace { \l__examzh_question_top_sep_skip }
+    \vspace* { \l__examzh_question_top_sep_skip }
     % 严格禁止孤行和寡行
     \int_set:Nn \clubpenalty { 10000 }
     \int_set:Nn \widowpenalty { 10000 }
@@ -217,7 +218,8 @@
     % 结束列表环境
     \endlist
     % 增加下方间距
-    \addvspace { \l__examzh_question_bottom_sep_skip }
+    % \addvspace { \l__examzh_question_bottom_sep_skip }
+    \vspace* { \l__examzh_question_bottom_sep_skip }
   }
 
 % 处理 question / problem 的 label
@@ -264,7 +266,7 @@
       {
         % \Alph*
         \use:c { __examzh_question_save_ \cs_to_str:N #1 : }
-          { \g__examzh_question_index_int }
+          { \int_eval:n { \g__examzh_question_index_int - 1 } }
       }
       {
         % \Alph{...}

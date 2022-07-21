@@ -21,6 +21,7 @@
 - `fillin/show-blacktriangle` 键值改为 `no-answer-type`
 - `questioncirclednumber` 改为 `circlednumber`
 - `\circlednumber` 命令增加 `\circlednumber*` 类型
+- 将 `question` 环境的上下方间距从 `\addvspace` 改为 `\vspace*`
 
 ## [0.1.11] - 2022-07-20
 
