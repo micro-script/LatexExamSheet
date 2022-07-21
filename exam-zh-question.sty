@@ -237,7 +237,7 @@
   {
     % 生成用户层命令
     \tl_put_right:Nn \l__examzh_question_counters_commands_set_tl
-      { \__examzh_question_process_counter:NN #1 #2 }
+      { \__examzh_process_counter:NNn #1 #2 { question } }
     % 把核心函数存起来
     \cs_set_eq:cN { __examzh_question_save_ \cs_to_str:N #1 : } #2
     \cs_set_eq:cN { __examzh_question_save_ \cs_to_str:N #2 : } #2
@@ -249,12 +249,13 @@
 \AddQuestionCounter \roman  \@roman
 \AddQuestionCounter \Roman  \@Roman
 
-\cs_new:Npn \__examzh_question_process_counter:NN #1#2
+\cs_new:Npn \__examzh_process_counter:NNn #1#2#3
   % #1: \Alph
   % #2: \@Alph
+  % #3: question / fillin
   {
-    \cs_set:Npn #1 { \__examzh_question_process_counter_aux:Nn #2 }
-    \cs_set:Npn #2 { \__examzh_question_process_counter_aux:Nn #2 }
+    \cs_set:Npn #1 { \use:c { __examzh_ #3 _process_counter_aux:Nn } #2 }
+    \cs_set:Npn #2 { \use:c { __examzh_ #3 _process_counter_aux:Nn } #2 }
   }
 
 \cs_new:Npn \__examzh_question_process_counter_aux:Nn #1#2
@@ -268,6 +269,52 @@
       {
         % \Alph{...}
         \use:c { __examzh_question_save_ \cs_to_str:N #1 : }
+          {#2}
+      }
+  }
+
+
+% 处理 fillin/no-answer-type = counter 的 label
+\tl_new:N \l__examzh_fillin_counters_commands_set_tl
+
+
+\cs_new:Npn \__examzh_fillin_the_label:
+  {
+    \group_begin:
+      % 定义计数器相关的命令函数
+      \l__examzh_fillin_counters_commands_set_tl
+      % 输出处理后的 label
+      \l__examzh_fillin_label_tl
+    \group_end:
+  }
+
+\NewDocumentCommand \AddFillinCounter { m m }
+  {
+    % 生成用户层命令
+    \tl_put_right:Nn \l__examzh_fillin_counters_commands_set_tl
+      { \__examzh_process_counter:NNn #1 #2 { fillin } }
+    % 把核心函数存起来
+    \cs_set_eq:cN { __examzh_fillin_save_ \cs_to_str:N #1 : } #2
+    \cs_set_eq:cN { __examzh_fillin_save_ \cs_to_str:N #2 : } #2
+  }
+
+\AddFillinCounter \arabic \@arabic
+\AddFillinCounter \alph   \@alph
+\AddFillinCounter \Alph   \@Alph
+\AddFillinCounter \roman  \@roman
+\AddFillinCounter \Roman  \@Roman
+
+\cs_new:Npn \__examzh_fillin_process_counter_aux:Nn #1#2
+  {
+    \tl_if_eq:nnTF {#2} { * }
+      {
+        % \Alph*
+        \use:c { __examzh_fillin_save_ \cs_to_str:N #1 : }
+          { \int_eval:n { \g__examzh_fillin_no_answer_counter_int - 1 } }
+      }
+      {
+        % \Alph{...}
+        \use:c { __examzh_fillin_save_ \cs_to_str:N #1 : }
           {#2}
       }
   }
@@ -288,7 +335,7 @@
       }
   }
 
-\cs_new:Npn \__examzh_question_circled_number:n #1
+\cs_new:Npn \__examzh_circled_number:nn #1#2
   {
     \int_set:Nn \l_tmpa_int {#1}
     \int_compare:nNnTF { \l_tmpa_int } = { 0 }
@@ -303,7 +350,7 @@
                 \int_compare:nNnTF { \l_tmpa_int } < { 51 }
                   { \int_add:Nn \l_tmpa_int { "32B0 } }
                   {
-                    \msg_error:nnn { exam-zh / question }
+                    \msg_error:nnn { exam-zh / #2 }
                       { invalid-circled-number } { \int_use:N \l_tmpa_int }
                   }
               }
@@ -320,8 +367,16 @@
 \msg_new:nnn { exam-zh / question } { invalid-circled-number }
 { Invalid~ circled~ number~ #1. }
 
-\AddQuestionCounter \circlednumber \__examzh_question_circled_number:n
+\msg_new:nnn { exam-zh / fillin } { invalid-circled-number }
+{ Invalid~ circled~ number~ #1. }
 
+\cs_new:Npn \__examzh_question_circled_number:n #1
+  { \__examzh_circled_number:nn {#1} { question } }
+\cs_new:Npn \__examzh_fillin_circled_number:n #1
+  { \__examzh_circled_number:nn {#1} { fillin } }
+
+\AddQuestionCounter \circlednumber \__examzh_question_circled_number:n
+\AddFillinCounter \circlednumber  \__examzh_fillin_circled_number:n
 
 % tikz 绘制带圈数字
 \fp_new:N \l__examzh_tikz_circled_number_xscale_fp   % 水平压缩系数
@@ -362,7 +417,9 @@
     % 绘制
     \tikz [ baseline ]
       {
-        \node at (0, \dim_use:N \l__examzh_tikz_circled_number_total_hegiht_dim / 2 ) 
+        \node
+          [ inner~sep = 0pt, outer~sep = 0pt ]
+          at (0, \dim_use:N \l__examzh_tikz_circled_number_total_hegiht_dim / 2 ) 
           {
             \makebox[0.35em][c]
               { 
@@ -384,6 +441,7 @@
     \__examzh_tikz_circled_number_aux:n { \int_eval:n {#1} }
   }
 \AddQuestionCounter \tikzcirclednumber \__examzh_tikz_circled_number:n
+\AddFillinCounter \tikzcirclednumber \__examzh_tikz_circled_number:n
 
 % 选择题括号
 % 控制括号是否右对齐
@@ -486,7 +544,8 @@
     no-answer-type .choices:nn =
       { blacktriangle, counter, none }
       { \str_set:Nx \l__examzh_fillin_no_answer_type_str { \l_keys_choice_tl } },
-    no-answer-counter-index .int_gset:N = \g__examzh_fillin_no_answer_counter_int
+    no-answer-counter-index .int_gset:N = \g__examzh_fillin_no_answer_counter_int,
+    no-answer-counter-label .tl_set:N = \l__examzh_fillin_label_tl
   }
 \keys_set:nn { exam-zh / fillin }
   {
@@ -496,7 +555,8 @@
     color                    = black,
     text-color               = black,
     no-answer-type           = blacktriangle,
-    no-answer-counter-index  = 1
+    no-answer-counter-index  = 1,
+    no-answer-counter-label  = \arabic*
   }
 
 \keys_define:nn { exam-zh }
@@ -592,7 +652,8 @@
   {
     \int_gincr:N \g__examzh_fillin_no_answer_counter_int
     \__examzh_fillin_without_judge:n
-      { \int_eval:n { \g__examzh_fillin_no_answer_counter_int - 1 } }
+      { \__examzh_fillin_the_label: }
+      % { \int_eval:n { \g__examzh_fillin_no_answer_counter_int - 1 } }
   }
 \cs_new:Npn \__examzh_fillin_no_answer_typeset_none:
   {

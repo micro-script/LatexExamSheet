@@ -353,7 +353,7 @@
   \end{ccnusyntax}
   如果用户需要使用其它形式的数字作为 \env{question} 环境和 \env{problem} 的标签，需要使用 \tn{AddQuestionCounter} 命令将其添加进 \opt{label} 选项的识别范围内（类似 \pkg{enumitem} 宏包的 \tn{AddEnumerateCounter} ）。其中 \meta{LaTeX command} 是在 \opt{label} 选项中的形式，\meta{internal command} 是内部的实现，\meta{widest label} 是最宽的标签。比如带圈数字的添加方法：
   \begin{latexcode}[gobble=4]
-    \AddQuestionCounter{\questioncirclednumber}{\__examzh_question_circled_number:n}
+    \AddQuestionCounter{\circlednumber}{\__examzh_question_circled_number:n}
   \end{latexcode}
 \end{function}
 
@@ -452,6 +452,17 @@
   即可。
 
 需要注意的是，如果 \tn{fillin} 的参数重含有不配对的中括号时会报错，如 |\fillin[$(−\infty, 1]$]|。这时需要使用大括号将内容保护起来：|\fillin[{$(−\infty, 1]$}]|。
+
+
+\begin{function}[added = 2022-07-21]{\AddFillinCounter}
+  \begin{ccnusyntax}[emph={[1]\AddFillinCounter}]
+    \AddFillinCounter(*\marg{LaTeX command}*)(*\marg{internal command}*)
+  \end{ccnusyntax}
+  如果用户需要使用其它形式的数字作为 \kvopt{fillin/no-answer-type}{counter} 下 \opt{counter} 的标签，需要使用 \tn{AddFillinCounter} 命令将其添加进 \opt{label} 选项的识别范围内（类似 \pkg{enumitem} 宏包的 \tn{AddEnumerateCounter} ）。其中 \meta{LaTeX command} 是在 \opt{label} 选项中的形式，\meta{internal command} 是内部的实现，\meta{widest label} 是最宽的标签。比如带圈数字的添加方法：
+  \begin{latexcode}[gobble=4]
+    \AddFillinCounter{\circlednumber}{\__examzh_fillin_circled_number:n}
+  \end{latexcode}
+\end{function}
 
 
 \subsubsection{判断题}
@@ -1642,6 +1653,24 @@
   \end{ccnusyntax}
   填空命令 \tn{fillin} 在 \kvopt{show-answer}{false} 和 \kvopt{no-answer-type}{counter} 下的计数器的非负整数值。默认为 |1|
 \end{function}
+
+\begin{function}[added = 2022-07-21]{fillin/no-answer-counter-label}
+  \begin{ccnusyntax}[emph={[1]no-answer-counter-label}]
+    no-answer-counter-label = (*\meta{label}*)
+  \end{ccnusyntax}
+  填空命令 \tn{fillin} 在 \kvopt{show-answer}{false} 和 \kvopt{no-answer-type}{counter} 下的计数器的样式。默认为 |\arabic*|。\meta{label} 中可以使用的已定义的计数器样式主要有以下几种：
+\end{function}
+
+\begin{choices}[label = \circlednumber*]
+  \item arabic（阿拉伯数字）
+  \item alph（小写英文）
+  \item Alph（大写英文）
+  \item roman（小写罗马数字）
+  \item Roman（大写罗马数字）
+  \item circlednumber（基于字体的带圈数字）
+  \item tikzcirclednumber（\TikZ 绘制的带圈数字）
+\end{choices}
+
 
 
 \begin{function}[added = 2022-07-05]{fillin/show-answer}
