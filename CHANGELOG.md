@@ -13,6 +13,7 @@
 
 - `\fillin` 不显示答案时增加 `counter` 类型的显示
 - `question/label` 增加基于 `TiKZ` 的带圈数字 `\tikzcirclednumber` 类型计数器
+- 增加 `select/show-mark` 键值控制 `select` 环境的 mark 显示
 
 ### Changed
 

@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2022 Kangwei Xia
+% Copyright (c) 2022 Kangwei Xia, Lijun Guo
 % Released under the LaTeX Project Public License v1.3c License.
 % Repository: https://gitee.com/zepinglee/exam-zh
 %
@@ -33,6 +33,7 @@
     seperator .tl_set:N = \l__examzh_select_seperator_tl,
     pre-content .tl_set:N = \l__examzh_select_pre_content_tl,
     post-content .tl_set:N = \l__examzh_select_post_content_tl,
+    show-mark .bool_set:N = \l__examzh_select_show_mark_bool
   }
 \keys_set:nn { exam-zh / select }
   {
@@ -41,8 +42,9 @@
     mark-xshift   = 0pt,
     mark-yshift   = 0pt,
     seperator     = \hspace{1em},
-    pre-content     = (,
-    post-content    = ),
+    pre-content   = (,
+    post-content  = ),
+    show-mark     = false
   }
 
 \seq_new:N \l__examzh_select_seq      % 储存输入的内容
@@ -77,8 +79,11 @@
         \__examzh_chinese_select_coffin_new:n {##1}
         % 看 seq 的项是否开头是 *，是的话去掉 * 和空格存到 content coffin 并且在 mark coffin 里加入 mark，不是的话就只存到 content coffin
         \__examzh_chinese_select_coffin_set:nn {##1} {##2}
-        % 拼接 content coffin 和 mark coffin
-        \__examzh_chinese_select_coffin_join:n {##1}
+        \bool_if:NT \l__examzh_select_show_mark_bool
+          {
+            % 拼接 content coffin 和 mark coffin
+            \__examzh_chinese_select_coffin_join:n {##1}
+          }
         % 输出 content coffin
         \__examzh_chinese_select_coffin_typeset:n {##1}
       }
