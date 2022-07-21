@@ -416,9 +416,9 @@
 \setlist{nosep}
 
 \setlist[enumerate, 2]{
-  left       = 2em,
+  % left       = 2em,
   labelsep   = 0pt,
-  label = { （ \arabic * ） }
+  label      = { （ \arabic * ） }
 }
 
 % 多种方法: method环境
