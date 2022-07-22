@@ -1798,7 +1798,7 @@
     \str_gput_right:Nn \g__examzh_student_version_jobname_str { " }
   }
 
-\AtEndPreamble
+  \AtEndPreamble
   {
     \sys_if_shell_unrestricted:T
       {
@@ -1808,19 +1808,32 @@
           {
             \l__examzh_latexmk_str \c_space_tl
             \l__examzh_latexmk_engine_str \c_space_tl
-            \bool_if:NT \l__examzh_student_version_clean_aux_bool
-              { -c \c_space_tl }
             -usepretex="\string\AtBeginDocument{\string\ExamPrintAnswer}" \c_space_tl
             -jobname=\g__examzh_student_version_jobname_str \c_space_tl
             \c_sys_jobname_str
+            \bool_if:NT \l__examzh_student_version_clean_aux_bool
+              {
+                &&
+                \l__examzh_latexmk_str \c_space_tl
+                \l__examzh_latexmk_engine_str \c_space_tl
+                -c \c_space_tl
+                -jobname=\g__examzh_student_version_jobname_str \c_space_tl
+                \c_sys_jobname_str
+              }
           }
         \sys_shell_now:x
           {
             \l__examzh_latexmk_str \c_space_tl
             \l__examzh_latexmk_engine_str \c_space_tl
-            \bool_if:NT \l__examzh_student_version_clean_aux_bool
-              { -c \c_space_tl }
             \c_sys_jobname_str
+            \bool_if:NT \l__examzh_student_version_clean_aux_bool
+              {
+                &&
+                \l__examzh_latexmk_str \c_space_tl
+                \l__examzh_latexmk_engine_str \c_space_tl
+                -c \c_space_tl
+                \c_sys_jobname_str
+              }
           }
         \stop
       }
