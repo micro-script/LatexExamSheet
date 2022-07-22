@@ -3,11 +3,18 @@
 
 \examsetup{
   page/size=a4paper,
-  sealline = {
-    show = true,
-    scope = first-and-last
-  }
+  sealline/show=false
 }
+
+\ExamPrintAnswerSet{
+  sealline/show=true,
+  page/size=a3paper,
+  paren/show-paren=true,
+  paren/show-answer=true,
+  fillin/show-answer=true,
+  solution/show-solution=true,
+}
+
 
 \everymath{\displaystyle}
 
@@ -323,8 +330,6 @@
   当 $x \in(0, 1)$ 时, $f^{\prime}(x) > 0$, 当 $x \in(1, +\infty)$ 时, $f^{\prime}(x) < 0$,
   故 $f(x)$ 的递增区间为 $(0,1)$, 递减区间为 $(1, +\infty)$.
 \end{solution}
-
-\draftpaper
 
 
 \end{document}
