@@ -150,7 +150,7 @@
 
 \keys_set:nn { exam-zh / style }
   {
-    fullwidth-stop = catcode
+    fullwidth-stop = false
   }
 
 \keys_set:nn { ctex }
@@ -226,9 +226,9 @@
             \l__examzh_latexmk_str \c_space_tl
             \l__examzh_latexmk_engine_str \c_space_tl
             -pretex='
-              \string\RequirePackage{etoolbox}
-              % \string\AtEndPreamble{\string\ExamPrintAnswer}
-              \string\BeforeBeginEnvironment{document}{\string\ExamPrintAnswer}
+              % \string\RequirePackage{etoolbox}
+              % \string\BeforeBeginEnvironment{document}{\string\ExamPrintAnswer}
+              \string\AddToHook{env/document/before}{\string\ExamPrintAnswer}
               % \string\AtBeginDocument{\string\ExamPrintAnswer}
             ' \c_space_tl
             -usepretex \c_space_tl
