@@ -5,7 +5,13 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
-## [Unreleased]
+
+## [0.1.11] - 2022-07-22
+
+### Added
+
+- 实现师生两版
+
 
 ## [0.1.11] - 2022-07-21
 

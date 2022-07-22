@@ -723,6 +723,57 @@
 示例见~\ref{subsubsec:参数-连线题型}。
 
 
+
+\subsubsection{师生两版}   \label{subsubsec:命令环境-师生两版}
+
+\begin{function}[added = 2022-07-21]{\ExamPrintAnswerSet}
+  \begin{ccnusyntax}[emph={[1]ExamPrintAnswerSet}]
+    \ExamPrintAnswerSet(*\oarg{cmd list}\marg{key-val list}*)
+  \end{ccnusyntax}
+  设置用户对于师生两版的第二个版本 PDF 的导言区设置（可以自由选择第二个版本的键值设置，自由度高）。其中 \meta{cmd list} 和 \meta{key-val list} 的内容均用西文逗号分隔。
+  \begin{itemize}
+    \item \meta{key-val list}：list 的项为 |foo/bar| 形式，为本手册中介绍的键值，会通过 \tn{ExamPrintAnswer} 传递给 \tn{examsetup} 命令；
+    \item \meta{cmd list}：list 的项为一般的命令
+  \end{itemize}
+\end{function}
+
+示例如下：
+\begin{latexcode}
+  \ExamPrintAnswerSet[
+    \geometry{showframe}
+  ]{
+    page/size=a3paper,
+    solution/show-solution=true,
+    paren/show-paren=true,
+    paren/show-answer=true
+  }
+\end{latexcode}
+
+
+\begin{function}[added = 2022-07-21]{\ExamPrintAnswer}
+  \begin{ccnusyntax}[emph={[1]ExamPrintAnswer}]
+    \ExamPrintAnswer
+  \end{ccnusyntax}
+  用于“生效” \tn{ExamPrintAnswerSet} 中的设置。可以在导言区使用，但是一般不需要用户单独使用（因为集成在师生两版的代码实现中）。
+\end{function}
+
+如何实现师生两版？在使用 \tn{ExamPrintAnswerSet} 设置完后，只需要通过编译方式的不同即可实现：
+\begin{itemize}
+  \item 正常编译
+\begin{shellcode}
+  xelatex <jobname>
+\end{shellcode}
+  \item 师生两版
+\begin{shellcode}
+  xelatex -shell-escape <jobname>
+\end{shellcode}
+
+\end{itemize}
+
+关于师生两版的键值设置见~\ref{subsubsec:参数-师生两版} 节。
+
+
+
 \subsection{参数设置}
 
 \begin{function}{\examsetup}
@@ -795,6 +846,24 @@
   \end{ccnusyntax}
   是否将 |。| 映射为 |.|。\opt{catcode} 表示映射；\opt{false} 表示不映射。
 \end{function}
+
+
+\subsubsection{师生两版}   \label{subsubsec:参数-师生两版}
+
+\begin{function}[added = 2022-07-22]{style/student-version-suffix}
+  \begin{ccnusyntax}[emph={[1]student-version-suffix}]
+    student-version-suffix = (*\meta{suffix}*)
+  \end{ccnusyntax}
+  师生两版的第二个版本的 PDF 名称的后缀。即第二个 PDF 的名称为 |<jobname><suffix>.pdf|。默认值为 |_student_version|。
+\end{function}
+
+\begin{function}[added = 2022-07-22]{style/student-version-cleanaux}
+  \begin{ccnusyntax}[emph={[1]student-version-cleanaux}]
+    student-version-cleanaux = (*\TTF*)
+  \end{ccnusyntax}
+  师生两版的编译是否自动清除中途文件。
+\end{function}
+
 
 
 \subsubsection{中国化数学符号}  \label{subsubsec:参数-中国化数学符号}
@@ -1608,6 +1677,9 @@
     \end{choices}
   \end{question}
 \end{latexexample}
+
+（注：上面的例子中|）| 和 |个| 之间间距不正常是本手册的一个小 bug，\cls{exam-zh} 中使用是正常的）
+
 
 
 \subsubsection{填空题} \label{subsubsec:参数-填空题}

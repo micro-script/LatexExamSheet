@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-19} {v0.1.10} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-22} {v0.1.11} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -1746,3 +1746,82 @@
   }
 \keys_define:nn { exam-zh }
   { scoringbox .meta:nn = { exam-zh / scoringbox } {#1} }
+
+
+% 师生两版
+
+% 用户自定义统一控制的预设 (将所需要控制的键值进行预设置)
+
+\NewDocumentCommand { \ExamPrintAnswerSet } { O{} m }
+  % #1: 命令
+  % #2: 键值  foo/bar
+  {
+    \clist_const:Nn \g__examzh_print_answer_cmd_set_clist {#1}
+    \clist_const:Nn \g__examzh_print_answer_keys_set_clist {#2}
+  }
+
+\NewDocumentCommand { \ExamPrintAnswer } { }
+  {
+    \clist_use:Nn \g__examzh_print_answer_cmd_set_clist {}
+    \clist_if_empty:NF \g__examzh_print_answer_keys_set_clist
+      {
+        \keys_set:nx { exam-zh }
+          { \g__examzh_print_answer_keys_set_clist }
+      }
+  }
+
+
+
+\str_new:N \l__examzh_latexmk_engine_str
+\str_new:N \g__examzh_student_version_jobname_str
+\str_new:N \l__examzh_student_version_suffix_str
+\str_const:Nn \l__examzh_latexmk_str { latexmk }
+
+\keys_define:nn { exam-zh / style }
+  {
+    student-version-suffix .code:n = 
+      { \str_set:Nn \l__examzh_student_version_suffix_str {#1} },
+    student-version-cleanaux .bool_set:N = \l__examzh_student_version_clean_aux_bool
+  }
+\keys_set:nn { exam-zh / style }
+  {
+    student-version-suffix   = { _student_version },
+    student-version-cleanaux = true
+  }
+
+\cs_new:Nn \__examzh_build_student_version_jobname:
+  {
+    \str_gset:Nx \g__examzh_student_version_jobname_str { \c_sys_jobname_str }
+    \str_gremove_all:Nn \g__examzh_student_version_jobname_str { " }
+    \str_gput_left:Nn \g__examzh_student_version_jobname_str { " }
+    \str_gput_right:Nx \g__examzh_student_version_jobname_str { \l__examzh_student_version_suffix_str }
+    \str_gput_right:Nn \g__examzh_student_version_jobname_str { " }
+  }
+
+\AtEndPreamble
+  {
+    \sys_if_shell_unrestricted:T
+      {
+        \str_set:Nn \l__examzh_latexmk_engine_str { -xelatex }
+        \__examzh_build_student_version_jobname:
+        \sys_shell_now:x
+          {
+            \l__examzh_latexmk_str \c_space_tl
+            \l__examzh_latexmk_engine_str \c_space_tl
+            \bool_if:NT \l__examzh_student_version_clean_aux_bool
+              { -c \c_space_tl }
+            -usepretex="\string\AtBeginDocument{\string\ExamPrintAnswer}" \c_space_tl
+            -jobname=\g__examzh_student_version_jobname_str \c_space_tl
+            \c_sys_jobname_str
+          }
+        \sys_shell_now:x
+          {
+            \l__examzh_latexmk_str \c_space_tl
+            \l__examzh_latexmk_engine_str \c_space_tl
+            \bool_if:NT \l__examzh_student_version_clean_aux_bool
+              { -c \c_space_tl }
+            \c_sys_jobname_str
+          }
+        \stop
+      }
+  }
