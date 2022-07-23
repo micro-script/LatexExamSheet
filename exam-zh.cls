@@ -1340,18 +1340,18 @@
 % 信息的方格
 \keys_define:nn { exam-zh / square }
   {
-    square-x .dim_set:N = \l__examzh_information_square_x_dim,
-    square-y .dim_set:N = \l__examzh_information_square_y_dim,
-    square-baseline .dim_set:N = \l__examzh_information_square_baseline_dim,
-    square-linewidth .dim_set:N = \l__examzh_information_square_linewidth_dim,
-    square-xshift .dim_set:N = \l__examzh_information_square_xshift_dim
+    x-length .dim_set:N = \l__examzh_information_square_x_dim,
+    y-length .dim_set:N = \l__examzh_information_square_y_dim,
+    baseline .dim_set:N = \l__examzh_information_square_baseline_dim,
+    linewidth .dim_set:N = \l__examzh_information_square_linewidth_dim,
+    xshift .dim_set:N = \l__examzh_information_square_xshift_dim
   }
 \keys_set:nn { exam-zh / square }
   {
-    square-x         = 1.4em,
-    square-y         = 1.2em,
-    square-baseline  = 3pt,
-    square-linewidth = 0.4pt,
+    x-length  = 1.4em,
+    y-length  = 1.2em,
+    baseline  = 3pt,
+    linewidth = 0.4pt,
   }
 \keys_define:nn { exam-zh }
   { square .meta:nn = { exam-zh / square } {#1} }

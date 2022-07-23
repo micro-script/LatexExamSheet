@@ -1208,40 +1208,40 @@
   该选项包含许多子项目，用于设置方格。具体内容见下。
 \end{function}
 
-\begin{function}[added = 2022-07-04]{square/square-x}
-  \begin{ccnusyntax}[emph={[1]square-x}]
-    square-x = (*\meta{dimension}*)
+\begin{function}[added = 2022-07-04,updated = 2022-07-23]{square/x-length}
+  \begin{ccnusyntax}[emph={[1]x-length}]
+    x-length = (*\meta{dimension}*)
   \end{ccnusyntax}
   \tn{examsquare} 命令单位方形的长。默认为 |1.4em|。
 \end{function}
 
-\begin{function}[added = 2022-07-04]{square/square-y}
-  \begin{ccnusyntax}[emph={[1]square-y}]
-    square-y = (*\meta{dimension}*)
+\begin{function}[added = 2022-07-04,updated = 2022-07-23]{square/y-length}
+  \begin{ccnusyntax}[emph={[1]y}]
+    y-length = (*\meta{dimension}*)
   \end{ccnusyntax}
   \tn{examsquare} 命令单位方形的宽。默认为 |1.2em|。
 \end{function}
 
 
-\begin{function}[added = 2022-07-04]{square/square-baseline}
-  \begin{ccnusyntax}[emph={[1]square-baseline}]
-    square-baseline = (*\meta{dimension}*)
+\begin{function}[added = 2022-07-04,updated = 2022-07-23]{square/baseline}
+  \begin{ccnusyntax}[emph={[1]baseline}]
+    baseline = (*\meta{dimension}*)
   \end{ccnusyntax}
   \tn{examsquare} 命令的基线偏移。默认为 |3pt|。一般长宽有较大的改动的情况才会改此参数。
 \end{function}
 
-\begin{function}[added = 2022-07-04]{square/square-linewidth}
-  \begin{ccnusyntax}[emph={[1]square-linewidth}]
-    square-linewidth = (*\meta{dimension}*)
+\begin{function}[added = 2022-07-04,updated = 2022-07-23]{square/linewidth}
+  \begin{ccnusyntax}[emph={[1]linewidth}]
+    linewidth = (*\meta{dimension}*)
   \end{ccnusyntax}
   \tn{examsquare} 命令单位方形的线宽。默认为 |0.4pt|。
 \end{function}
 
-\begin{function}[added = 2022-07-04]{square/square-xshift}
-  \begin{ccnusyntax}[emph={[1]square-xshift}]
-    square-xshift = (*\meta{dimension}*)
+\begin{function}[added = 2022-07-04,updated = 2022-07-23]{square/xshift}
+  \begin{ccnusyntax}[emph={[1]xshift}]
+    xshift = (*\meta{dimension}*)
   \end{ccnusyntax}
-  \tn{examsquare} 命令必选参数大于 1 时，后面的方格相对于前面的水平偏移。默认和 \opt{square-linewidth} 的值相同，一般不需要自己修改。
+  \tn{examsquare} 命令必选参数大于 1 时，后面的方格相对于前面的水平偏移。默认和 \opt{linewidth} 的值相同，一般不需要自己修改。
 \end{function}
 
 
@@ -2061,7 +2061,7 @@
 \end{function}
 
 \begin{latexexample}{\opt{mark-symbol} 使用示例}
-  \begin{select}[mark-symbol = {\color{red}{$\times$}}]
+  \begin{select}[mark-symbol = {\textcolor{red}{$\times$}},show-mark = true]
     \item 正确
     \item* 错误
     \item* 错误
@@ -2120,7 +2120,7 @@
 
 \begin{latexexample}{\env{select}相关键值的综合使用}
   折
-  \begin{select}[pre-content = {[}, post-content = {\}}, mark-symbol = {\tiny $\triangle$}, seperator = {, },mark-position = bottom]
+  \begin{select}[pre-content = {[}, post-content = {\}}, mark-symbol = {\tiny $\triangle$}, seperator = {, },mark-position = bottom, show-mark=true]
     \item \pinyin{zhe1}
     \item \pinyin{zhe2}
     \item \pinyin{zhe3}
