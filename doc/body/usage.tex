@@ -666,12 +666,12 @@
 
 本节主要介绍 \file{exam-zh-chinese.sty} 模块中的命令环境的使用。要注意的是，此模块中大部分命令环境设计灵感和原因一般来自于语文学科，但是具体使用起来一般不限制于语文学科。
 
-\begin{function}[added = 2022-07-19]{select 环境}
+\begin{function}[added = 2022-07-19,updated = 2022-07-23]{select 环境}
   \begin{ccnusyntax}[emph={[2]select}]
     \begin{select}(*\oarg{键值列表}*)
-      \item (*\meta{未标记的选项}*)
-      \item (*\meta{未标记的选项}*)
-      \item* (*\meta{标记的选项}*)
+      \sitem (*\meta{未标记的选项}*)
+      \sitem (*\meta{未标记的选项}*)
+      \sitem* (*\meta{标记的选项}*)
       ...
     \end{select}
   \end{ccnusyntax}
@@ -681,15 +681,15 @@
 \begin{latexexample}{\env{select} 环境的基本使用}
   折
   \begin{select}
-    \item \pinyin{zhe2}
-    \item* \pinyin{she2}
+    \sitem \pinyin{zhe2}
+    \sitem* \pinyin{she2}
   \end{select}
   本
 
   \begin{select}
-    \item* 疏
-    \item 蔬
-    \item 输
+    \sitem* 疏
+    \sitem 蔬
+    \sitem 输
   \end{select}
   远
 \end{latexexample}
@@ -1068,8 +1068,28 @@
     odd-text = (*\meta{content}*)
     even-text = (*\meta{content}*)
   \end{ccnusyntax}
-  沿着密封线的文字，效果为均匀分散，类似于 \tn{makebox} 的 \cmd{s} 选项。默认值为 |密封线内不得答题|
+  沿着密封线的文字，效果为均匀分散，类似于 \tn{makebox} 的 \cmd{s} 选项。默认值为 |密封线内不得答题|。\meta{content} 中不能有命令，字体设置要通过 \opt{sealline/text-font} 设置。
 \end{function}
+
+\begin{function}[added = 2022-07-24]{sealline/text-width,sealline/odd-text-width,sealline/even-text-width}
+  \begin{ccnusyntax}[emph={[1]text-width,odd-text-width,even-text-width}]
+    text-width = (*\meta{dimension}*)
+    odd-text-width = (*\meta{dimension}*)
+    even-text-width = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  沿着密封线的文字的宽度（此时以试卷顺时针转 90 度为参考系）。默认值为 |0.8\textheight|。
+\end{function}
+
+
+\begin{function}[added = 2022-07-24]{sealline/text-font,sealline/odd-text-font,sealline/even-text-font}
+  \begin{ccnusyntax}[emph={[1]text-font,odd-text-font,even-text-font}]
+    text-font = (*\meta{font}*)
+    odd-text-font = (*\meta{font}*)
+    even-text-font = (*\meta{font}*)
+  \end{ccnusyntax}
+  沿着密封线的文字的字体设置。可以是 \tn{zihao} 或颜色或字体设置等。默认为 |\zihao{4}\sffamily|。
+\end{function}
+
 
 \begin{function}{sealline/text-xshift,sealline/odd-text-xshift,sealline/even-text-xshift}
   \begin{ccnusyntax}[emph={[1]text-xshift,odd-text-xshift,even-text-xshift}]
@@ -1081,23 +1101,47 @@
 \end{function}
 
 
-\begin{function}{sealline/text-yshift,sealline/odd-text-yshift,sealline/even-text-yshift}
+\begin{function}[updated = 2022-07-24]{sealline/text-yshift,sealline/odd-text-yshift,sealline/even-text-yshift}
   \begin{ccnusyntax}[emph={[1]text-yshift,odd-text-yshift,even-text-yshift}]
     text-yshift = (*\meta{dimension}*)
     odd-text-yshift = (*\meta{dimension}*)
     even-text-yshift = (*\meta{dimension}*)
   \end{ccnusyntax}
-  沿着密封线的文字的垂直伸缩量。默认为 |30mm|。作用与 \opt{line-yshift} 类似，奇偶页效果相同。\meta{dimension} 为正值时，文字部分同时“往内缩 \meta{dimension} 长度”。如果设置成为 0mm，则文字部分的总长度为版心高度。
+  沿着密封线的文字的垂直偏移量。默认为 |0pt|。\meta{dimension} 为正时，奇数页的文字往上移动，而偶数页有两种情况：
+  \begin{itemize}
+    \item \kvopt{sealline/text-direction-vertical}{true} 时，方向和奇数页相同（因为此时文字排版效果奇偶相同）；
+    \item \kvopt{sealline/text-direction-vertical}{false} 时，方向和奇数页相反（因为此时文字排版效果奇偶相反）；
+  \end{itemize}
 \end{function}
 
-\begin{function}[added = 2022-07-04]{sealline/text-align,sealline/odd-text-align,sealline/even-text-align}
-  \begin{ccnusyntax}[emph={[1]text-align,odd-text-align,even-text-align}]
-    text-align = (*<(fit to path)|left|center|right>*)
-    odd-text-align = (*<(fit to path)|left|center|right>*)
-    even-text-align = (*<(fit to path)|left|center|right>*)
+
+\begin{function}[added = 2022-07-24]{sealline/text-xscale,sealline/odd-text-xscale,sealline/even-text-xscale}
+  \begin{ccnusyntax}[emph={[1]text-xscale,odd-text-xscale,even-text-xscale}]
+    text-xscale = (*\meta{float point}*)
+    odd-text-xscale = (*\meta{float point}*)
+    even-text-xscale = (*\meta{float point}*)
   \end{ccnusyntax}
-  沿着密封线的文字的对齐方式。\opt{fit to path} 表示沿着路径分散开（类似于 \tn{makebox} 的 \opt{s} 参数；\opt{left} 表示文字正常，整体在路径的左侧（以密封线为参考）；\opt{center} 表示文字正常，整体在路径的中间（以密封线为参考）；\opt{right} 表示文字正常，整体在路径的右侧（以密封线为参考）。
+  沿着密封线的文字的水平放缩（以旋转试卷为参考系）。默认为 |1.0|。
 \end{function}
+
+\begin{function}[added = 2022-07-24]{sealline/text-yscale,sealline/odd-text-yscale,sealline/even-text-yscale}
+  \begin{ccnusyntax}[emph={[1]text-yscale,odd-text-yscale,even-text-yscale}]
+    text-yscale = (*\meta{float point}*)
+    odd-text-yscale = (*\meta{float point}*)
+    even-text-yscale = (*\meta{float point}*)
+  \end{ccnusyntax}
+  沿着密封线的文字的垂直放缩（以旋转试卷为参考系）。默认为 |0.8|。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{sealline/text-direction-vertical,sealline/odd-text-direction-vertical,sealline/even-text-direction-vertical}
+  \begin{ccnusyntax}[emph={[1]text-direction-vertical,odd-text-direction-vertical,even-text-direction-vertical}]
+    text-direction-vertical = (*\TFF*)
+    odd-text-direction-vertical = (*\TFF*)
+    even-text-direction-vertical = (*\TFF*)
+  \end{ccnusyntax}
+  沿着密封线的文字是否垂直从上往下不旋转显示文字内容。\opt{true} 表示奇偶页均为从上往下显示文字，且文字不旋转；\opt{false} 表示奇数页逆时针转 90 度并从下往上（若以旋转试卷为参考，即为从左往右）显示文字内容，偶数页顺时针转 90 度并从上往下显示文字内容。
+\end{function}
+
 
 \begin{function}{sealline/circle-show,sealline/odd-circle-show,sealline/even-circle-show}
   \begin{ccnusyntax}[emph={[1]circle-show,odd-circle-show,even-circle-show}]
@@ -2062,9 +2106,9 @@
 
 \begin{latexexample}{\opt{mark-symbol} 使用示例}
   \begin{select}[mark-symbol = {\textcolor{red}{$\times$}},show-mark = true]
-    \item 正确
-    \item* 错误
-    \item* 错误
+    \sitem 正确
+    \sitem* 错误
+    \sitem* 错误
   \end{select}
 \end{latexexample}
 
@@ -2121,14 +2165,14 @@
 \begin{latexexample}{\env{select}相关键值的综合使用}
   折
   \begin{select}[pre-content = {[}, post-content = {\}}, mark-symbol = {\tiny $\triangle$}, seperator = {, },mark-position = bottom, show-mark=true]
-    \item \pinyin{zhe1}
-    \item \pinyin{zhe2}
-    \item \pinyin{zhe3}
-    \item \pinyin{zhe4}
-    \item \pinyin{she1}
-    \item* \pinyin{she2}
-    \item \pinyin{she3}
-    \item \pinyin{she4}
+    \sitem \pinyin{zhe1}
+    \sitem \pinyin{zhe2}
+    \sitem \pinyin{zhe3}
+    \sitem \pinyin{zhe4}
+    \sitem \pinyin{she1}
+    \sitem* \pinyin{she2}
+    \sitem \pinyin{she3}
+    \sitem \pinyin{she4}
   \end{select}
   本
 \end{latexexample}
