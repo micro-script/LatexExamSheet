@@ -74,6 +74,7 @@
 \RequirePackage { lastpage }
 \RequirePackage { amsmath }
 \RequirePackage { enumitem }
+\RequirePackage { varwidth }
 
 \ExplSyntaxOff
 \RequirePackage { tikzpagenodes }
@@ -849,12 +850,12 @@
         \dim_gset:Nn \g__examzh_sealline_even_text_width_dim {#1}
       },
     % 密封线路径文字的字体
-    odd-text-font .tl_set:N = \g__examzh_sealline_odd_text_font_tl,
-    even-text-font .tl_set:N = \g__examzh_sealline_even_text_font_tl,
-    text-font .code:n = 
+    odd-text-format .tl_set:N = \g__examzh_sealline_odd_text_format_tl,
+    even-text-format .tl_set:N = \g__examzh_sealline_even_text_format_tl,
+    text-format .code:n = 
       {
-        \tl_gset:Nn \g__examzh_sealline_odd_text_font_tl {#1}
-        \tl_gset:Nn \g__examzh_sealline_even_text_font_tl {#1}
+        \tl_gset:Nn \g__examzh_sealline_odd_text_format_tl {#1}
+        \tl_gset:Nn \g__examzh_sealline_even_text_format_tl {#1}
       },
     % 密封线路径文字的方向
     odd-text-direction-vertical .bool_gset:N = \g__examzh_sealline_odd_text_direction_vertical_bool,
@@ -965,7 +966,7 @@
     text-xshift             = 11mm,
     text-yshift             = 0pt,
     text-width              = 0.8\textheight,
-    text-font               = \zihao{4}\sffamily,
+    text-format             = \zihao{4}\sffamily,
     text-xscale             = 1.0,
     text-yscale             = 0.8,
     text-direction-vertical = false,
@@ -1381,7 +1382,7 @@
     \node [ anchor = east ]
       at ([xshift = -\g__examzh_sealline_odd_text_xshift_dim, yshift = \g__examzh_sealline_odd_text_yshift_dim]current~page~text~area.west)
       {
-        \g__examzh_sealline_odd_text_font_tl
+        \g__examzh_sealline_odd_text_format_tl
         \__examzh_sealline_odd_spread_box:nn { \g__examzh_sealline_odd_text_width_dim }
           { \g__examzh_sealline_odd_text_tl }
       };
@@ -1399,7 +1400,7 @@
     \node [ anchor = west ]
       at ([xshift = \g__examzh_sealline_even_text_xshift_dim, yshift = \g__examzh_sealline_even_text_yshift_dim]current~page~text~area.east)
       {
-        \g__examzh_sealline_even_text_font_tl
+        \g__examzh_sealline_even_text_format_tl
         \__examzh_sealline_even_spread_box:nn { \g__examzh_sealline_even_text_width_dim }
           { \g__examzh_sealline_even_text_tl }
       };
@@ -1839,7 +1840,137 @@
     \clearpage
   }
 
+
+
 % 评分框 scoring box
+
+\bool_new:N \g__examzh_combine_section_with_scoringbox_position_left_bool
+
+\NewCommandCopy { \examzholdsection } { \section }
+\cs_new:Npn \__examzh_combine_section_with_twocolumn_scoringbox:
+  {
+    \bool_if:NTF \g__examzh_combine_section_with_scoringbox_position_left_bool
+      {
+        \RenewDocumentCommand { \section } { m }
+          {
+            \par\addvspace{1.5em}\noindent
+            \begin{tabular}{lc}
+              \begin{minipage}{0.2\columnwidth}
+                \begin{tabular}{|c|c|}
+                  \hline 
+                  得分 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+                  阅卷人 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+                \end{tabular}
+              \end{minipage} & 
+              \begin{minipage}{0.745\columnwidth}
+                \examzholdsection {##1}
+              \end{minipage}
+            \end{tabular}
+            \par
+            \addvspace{1em}
+          }
+      }
+      {
+        \RenewDocumentCommand { \section } { m }
+          {
+            \par\addvspace{1.5em}\noindent
+            \begin{tabular}{lc}
+              \begin{minipage}{0.745\columnwidth}
+                \examzholdsection {##1}
+              \end{minipage} & 
+              \begin{minipage}{0.2\columnwidth}
+                \begin{tabular}{|c|c|}
+                  \hline 
+                  得分 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+                  阅卷人 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
+                \end{tabular}
+              \end{minipage}
+            \end{tabular}
+            \par
+            \addvspace{1em}
+          }
+      }
+  }
+\cs_new:Npn \__examzh_combine_section_with_onecolumn_scoringbox:
+  {
+    \bool_if:NTF \g__examzh_combine_section_with_scoringbox_position_left_bool
+      {
+        \RenewDocumentCommand { \section } { m }
+          {
+            \par\addvspace{1.5em}\noindent
+            \begin{tabular}{cc}
+              \begin{varwidth}{3.5em}
+                \begin{tabular}{|c|}
+                  \hline 
+                  得分\rule[-0.7em]{0pt}{2em} \\\hline
+                  \rule[-0.7em]{0pt}{2em} \\\hline
+                \end{tabular}
+              \end{varwidth} & 
+              \begin{varwidth}{0.865\columnwidth}
+                \examzholdsection {##1}
+              \end{varwidth}
+            \end{tabular}
+            \par
+            \addvspace{1em}
+          }
+      }
+      {
+        \RenewDocumentCommand { \section } { m }
+          {
+            \par\addvspace{1.5em}\noindent
+            \begin{tabular}{cc}
+              \begin{varwidth}{0.865\columnwidth}
+                \examzholdsection {##1}
+              \end{varwidth} &
+              \begin{varwidth}{3.5em}
+                \begin{tabular}{|c|}
+                  \hline 
+                  得分\rule[-0.7em]{0pt}{2em} \\\hline
+                  \rule[-0.7em]{0pt}{2em} \\\hline
+                \end{tabular}
+              \end{varwidth}
+            \end{tabular}
+            \par
+            \addvspace{1em}
+          }
+      }
+  }
+\cs_new:Npn \__examzh_restore_section:
+  {
+    \RenewCommandCopy { \section } { \examzholdsection }
+  }
+
+\keys_define:nn { exam-zh / scoringbox }
+  {
+    type .choice:,
+    type / onecolumn .code:n =
+      {
+        \AtEndPreamble { \__examzh_combine_section_with_onecolumn_scoringbox: }
+      },
+    type / twocolumn .code:n =
+      {
+        \AtEndPreamble { \__examzh_combine_section_with_twocolumn_scoringbox: }
+      },
+    type / none .code:n = { \__examzh_restore_section: },
+    position .choice:,
+    position / left .code:n =
+      {
+        \bool_gset_true:N \g__examzh_combine_section_with_scoringbox_position_left_bool
+      },
+    position / right .code:n =
+      {
+        \bool_gset_false:N \g__examzh_combine_section_with_scoringbox_position_left_bool
+      },
+  }
+\keys_set:nn { exam-zh / scoringbox }
+  {
+    type = none,
+    position = left
+  }
+\keys_define:nn { exam-zh }
+  { scoringbox .meta:nn = { exam-zh / scoringbox } {#1} }
+
+
 \NewDocumentCommand { \scoringbox } { s }
   {
     \IfBooleanTF {#1}
@@ -1862,79 +1993,6 @@
       \rule[-0.7em]{0pt}{2em} \\\hline
     \end{tabular}
   }
-\cs_set_eq:NN \__exam_section:n \section
-\cs_new:Npn \__examzh_combine_section_with_twocolumn_scoringbox:
-  {
-    % \AtEndPreamble
-    %   {
-        \RenewDocumentCommand { \section } { m }
-          {
-            \par\addvspace{1.5em}\noindent
-            \begin{tabular}{lc}
-              \begin{minipage}{0.2\columnwidth}
-                \begin{tabular}{|c|c|}
-                  \hline 
-                  得分 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
-                  阅卷人 & \rule{3em}{0pt}\rule[-0.7em]{0pt}{2em} \\\hline
-                \end{tabular}
-              \end{minipage} & 
-              \begin{minipage}{0.745\columnwidth}
-                \__exam_section:n {##1}
-              \end{minipage}
-            \end{tabular}
-            \par
-            \addvspace{1em}
-          }
-      % }
-  }
-\cs_new:Npn \__examzh_combine_section_with_onecolumn_scoringbox:
-  {
-    % \AtEndPreamble
-    %   {
-        \RenewDocumentCommand { \section } { m }
-          {
-            \par\addvspace{1.5em}\noindent
-            \begin{tabular}{cc}
-              \begin{minipage}{3.5em}
-                \begin{tabular}{|c|}
-                  \hline 
-                  得分\rule[-0.7em]{0pt}{2em} \\\hline
-                  \rule[-0.7em]{0pt}{2em} \\\hline
-                \end{tabular}
-              \end{minipage} & 
-              \begin{minipage}{0.865\columnwidth}
-                \__exam_section:n {##1}
-              \end{minipage}
-            \end{tabular}
-            \par
-            \addvspace{1em}
-          }
-      % }
-  }
-\cs_new:Npn \__examzh_restore_section:
-  {
-    \RenewDocumentCommand { \section } { m }
-      { \__exam_section:n {##1} }
-  }
-\keys_define:nn { exam-zh / scoringbox }
-  {
-    type .choice:,
-    type / onecolumn .code:n =
-      {
-        \__examzh_combine_section_with_onecolumn_scoringbox:
-      },
-    type / twocolumn .code:n =
-      {
-        \__examzh_combine_section_with_twocolumn_scoringbox:
-      },
-    type / none .code:n = { \__examzh_restore_section: },
-  }
-\keys_set:nn { exam-zh / scoringbox }
-  {
-    type = none
-  }
-\keys_define:nn { exam-zh }
-  { scoringbox .meta:nn = { exam-zh / scoringbox } {#1} }
 
 
 

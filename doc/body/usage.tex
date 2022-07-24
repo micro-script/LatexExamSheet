@@ -1069,7 +1069,7 @@
     odd-text = (*\meta{content}*)
     even-text = (*\meta{content}*)
   \end{ccnusyntax}
-  沿着密封线的文字，效果为均匀分散，类似于 \tn{makebox} 的 \cmd{s} 选项。默认值为 |密封线内不得答题|。\meta{content} 中不能有命令，字体设置要通过 \opt{sealline/text-font} 设置。
+  沿着密封线的文字，效果为均匀分散，类似于 \tn{makebox} 的 \cmd{s} 选项。默认值为 |密封线内不得答题|。\meta{content} 中不能有命令，字体设置要通过 \opt{sealline/text-format} 设置。
 \end{function}
 
 \begin{function}[added = 2022-07-24]{sealline/text-width,sealline/odd-text-width,sealline/even-text-width}
@@ -1082,11 +1082,11 @@
 \end{function}
 
 
-\begin{function}[added = 2022-07-24]{sealline/text-font,sealline/odd-text-font,sealline/even-text-font}
-  \begin{ccnusyntax}[emph={[1]text-font,odd-text-font,even-text-font}]
-    text-font = (*\meta{font}*)
-    odd-text-font = (*\meta{font}*)
-    even-text-font = (*\meta{font}*)
+\begin{function}[added = 2022-07-24]{sealline/text-format,sealline/odd-text-format,sealline/even-text-format}
+  \begin{ccnusyntax}[emph={[1]text-format,odd-text-format,even-text-format}]
+    text-format = (*\meta{font}*)
+    odd-text-format = (*\meta{font}*)
+    even-text-format = (*\meta{font}*)
   \end{ccnusyntax}
   沿着密封线的文字的字体设置。可以是 \tn{zihao} 或颜色或字体设置等。默认为 |\zihao{4}\sffamily|。
 \end{function}
@@ -2085,6 +2085,14 @@
     type = (*<onecolumn|twocolumn|(none)>*)
   \end{ccnusyntax}
   该键值用于重定义 \tn{section} 命令，使得 \tn{scoringbox} 和 \tn{section} 结合起来。\opt{onecolumn} 表示单栏（即只有“得分”）的评分框和 \tn{section} 绑定，评分框置于左边；\opt{twocolumn} 表示双栏（即有“得分”和“评卷人”）的评分框和 \tn{section} 绑定，评分框置于左边；\opt{none} 表示不重定义 \tn{section} 命令，即不显示评分框。
+\end{function}
+
+
+\begin{function}[added = 2022-07-24]{scoringbox/position}
+  \begin{ccnusyntax}[emph={[1]position}]
+    position = (*<(left)|right>*)
+  \end{ccnusyntax}
+  \kvopt{scoringbox/type}{onecolumn} 或 \kvopt{scoringbox/type}{twocolumn} 时，评分框相对于 \tn{section} 的位置。\opt{left} 表示评分框在 \tn{section} 的左边； \opt{right} 表示评分框在 \tn{section} 的右边。
 \end{function}
 
 

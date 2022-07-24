@@ -10,11 +10,12 @@
 
 ### Added
 
-- 增加密封线 `text-width`, `text-font`, `text-xscale`,`text-yscale`, `text-direction-vertical` 键值
+- 增加密封线 `text-width`, `text-format`, `text-xscale`,`text-yscale`, `text-direction-vertical` 键值
 - 增加 `select` 环境的 `above` 和 `below` 键值
 - 增加 `sealline/scope` 同效键值 `sealline/type`
 - 增加脚注设置
 - 增加 `\subject` 的可选参数
+- 增加 `scoringbox/position` 键值
 
 ### Changed
 
