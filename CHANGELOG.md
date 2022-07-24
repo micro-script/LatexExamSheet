@@ -19,6 +19,11 @@
 - `foot-style` 改为 `foot-type`
 - 修改 `solution`, `choices` 的 `top-sep`, `bottom-sep` 的默认值
 
+
+### Fixed
+
+- 更正 `select/seperator` 为 `select/separator`
+
 ## [0.1.13] - 2022-07-23
 
 ### Changed
