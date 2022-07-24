@@ -5,11 +5,28 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+
+## [0.1.13] - 2022-07-24
+
+### Added
+
+- 增加密封线 `text-width`, `text-font`, `text-xscale`,`text-yscale`, `text-direction-vertical` 键值
+
+### Changed
+
+- `foot-style` 改为 `foot-type`
+- 修改 `solution`, `choices` 的 `top-sep`, `bottom-sep` 的默认值
+
 ## [0.1.13] - 2022-07-23
 
 ### Changed
 
 - 修改 `square` 键值名称
+- 将 `select` 环境的 `\item` 改为 `\sitem` 以兼容 `choices` 环境
+
+### Removed
+
+- 去掉 `sealline/text-align` 键值
 
 ## [0.1.12] - 2022-07-22
 
