@@ -723,6 +723,22 @@
 示例见~\ref{subsubsec:参数-连线题型}。
 
 
+\begin{function}[added = 2022-07-24]{material 环境}
+  \begin{ccnusyntax}[emph={[2]material}]
+    \begin{material}(*\oarg{键值列表}*)
+      <content>
+    \end{material}
+  \end{ccnusyntax}
+  语文的材料/文章环境。\oarg{键值列表} 见~\ref{subsubsec:参数-语文} 节。
+\end{function}
+
+\begin{latexexample}{\env{material} 环境示例}
+  \begin{material}[title = \LaTeX{} 入门, author = 夏大鱼羊, format = {\sffamily \zihao{-4}},source={（摘自《夏大鱼羊自传》）}]
+    劳仑衣普桑，认至将指点效则机，最你更枝。想板整月正进好志次回总般，段然取向使张规军证回，世市总李率英茄持伴。用阶千样响领交出，器程办管据家元写，名其直金团。
+  \end{material}
+\end{latexexample}
+
+
 
 \subsubsection{师生两版}   \label{subsubsec:命令环境-师生两版}
 
@@ -1389,14 +1405,14 @@
 
 \begin{function}[added = 2022-07-03]{title/top-sep}
   \begin{ccnusyntax}[emph={[1]top-sep}]
-    top-sep = (*\meta{dimension}*)
+    top-sep = (*\meta{弹性长度}*)
   \end{ccnusyntax}
   \tn{title} 和 \tn{subject} 的整体上方间距。默认为 |-.5em plus 0.3em minus 0.2em|。
 \end{function}
 
 \begin{function}[added = 2022-07-03]{title/bottom-sep}
   \begin{ccnusyntax}[emph={[1]bottom-sep}]
-    bottom-sep = (*\meta{dimension}*)
+    bottom-sep = (*\meta{弹性长度}*)
   \end{ccnusyntax}
   \tn{title} 和 \tn{subject} 的整体下方间距。默认为 |0em plus 0.3em minus 0.2em|。
 \end{function}
@@ -2191,7 +2207,7 @@
 \subsubsection{连线题型}  \label{subsubsec:参数-连线题型}
 
 \begin{function}[updated = 2022-07-19]{lineto}
-  \begin{ccnusyntax}[emph={[1]chinese}]
+  \begin{ccnusyntax}[emph={[1]lineto}]
     lineto = (*\marg{键值列表}*)
     lineto/(*\meta{key}*) = (*\meta{value}*)
   \end{ccnusyntax}
@@ -2238,3 +2254,99 @@
     \lineconnect{a-3,b-2,c-3}
   \end{lineto}
 \end{latexexample}
+
+
+\subsubsection{语文相关} \label{subsubsec:参数-语文}
+
+\begin{function}[updated = 2022-07-24]{material}
+  \begin{ccnusyntax}[emph={[1]material}]
+    material = (*\marg{键值列表}*)
+    material/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含多个子项目。用于设置 \env{material} 环境。可以在 \tn{examsetup} 中使用，也可以在 \env{material} 环境的可选参数中使用。
+\end{function}
+
+
+\begin{function}[updated = 2022-07-24]{material/title}
+  \begin{ccnusyntax}[emph={[1]title}]
+    title = (*\meta{标题}*)
+  \end{ccnusyntax}
+  \env{material} 环境的上方标题的 \emph{内容}。可以为空或不写。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/title-format}
+  \begin{ccnusyntax}[emph={[1]title-format}]
+    title-format = (*\meta{格式}*)
+  \end{ccnusyntax}
+  \env{material} 环境的上方标题的 \emph{格式}。默认为 |\large|。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/author}
+  \begin{ccnusyntax}[emph={[1]author}]
+    author = (*\meta{作者}*)
+  \end{ccnusyntax}
+  \env{material} 环境的上方作者的 \emph{作者名}。可以为空或不写。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/author-format}
+  \begin{ccnusyntax}[emph={[1]author-format}]
+    author-format = (*\meta{格式}*)
+  \end{ccnusyntax}
+  \env{material} 环境的上方作者的 \emph{格式}。默认为 |\small|。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/title-author-sep}
+  \begin{ccnusyntax}[emph={[1]title-author-sep}]
+    title-author-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{material} 环境的上方标题和作者之间的距离。默认为 |2em|。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/title-material-sep}
+  \begin{ccnusyntax}[emph={[1]title-material-sep}]
+    title-material-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{material} 环境和上方标题的间距。默认为 |2em|。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/format}
+  \begin{ccnusyntax}[emph={[1]format}]
+    format = (*\meta{格式}*)
+  \end{ccnusyntax}
+  \env{material} 环境内容的格式。默认为 |\kaishu|。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/source}
+  \begin{ccnusyntax}[emph={[1]source}]
+    source = (*\meta{来源出处}*)
+  \end{ccnusyntax}
+  \env{material} 环境下方的来源出处。会新起一行并右对齐。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{material/source-format}
+  \begin{ccnusyntax}[emph={[1]source-format}]
+    source-format = (*\meta{格式}*)
+  \end{ccnusyntax}
+  \env{material} 环境下方的来源出处的格式。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{material/top-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep}]
+    top-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{material} 环境和标题（如果有）的整体上方间距。默认为 |.5em plus .5em minus .5em|。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{material/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]bottom-sep}]
+    bottom-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{material} 环境的下方间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{material/title-material-sep}
+  \begin{ccnusyntax}[emph={[1]title-material-sep}]
+    title-material-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{material} 环境和标题（如果有）的间距。默认为 |.5em minus .5em|。
+\end{function}

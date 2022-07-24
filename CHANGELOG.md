@@ -16,6 +16,7 @@
 - 增加脚注设置
 - 增加 `\subject` 的可选参数
 - 增加 `scoringbox/position` 键值
+- 增加 `material` 环境
 
 ### Changed
 

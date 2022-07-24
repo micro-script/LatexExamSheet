@@ -284,3 +284,80 @@
           }
       }
   }
+
+
+% 语文的文章 材料
+\keys_define:nn { exam-zh / material }
+  {
+    title .tl_set:N = \l__examzh_material_title_content_tl,
+    title-format .tl_set:N = \l__examzh_material_title_format_tl,
+    title-material-sep .skip_set:N = \l__examzh_material_title_material_sep_skip,
+    format .tl_set:N = \l__examzh_material_format_tl,
+    top-sep .skip_set:N = \l__examzh_material_top_sep_skip,
+    bottom-sep .skip_set:N = \l__examzh_material_bottom_sep_skip,
+    author .tl_set:N = \l__examzh_material_author_content_tl,
+    author-format .tl_set:N = \l__examzh_material_author_format_tl,
+    title-author-sep .skip_set:N = \l__examzh_material_title_author_sep_skip,
+    source .tl_set:N = \l__examzh_material_source_content_tl,
+    source-format .tl_set:N = \l__examzh_material_source_format_tl,
+  }
+
+\keys_set:nn { exam-zh / material }
+  {
+    title-format        = \large,
+    author-format       = \small,
+    format              = \kaishu,
+    title-author-sep    = 2em,
+    top-sep             = .5em plus .5em minus .5em,
+    bottom-sep          = 0pt,
+    title-material-sep  = .5em minus .5em,
+  }
+
+\NewDocumentEnvironment { material } { O{ } +b }
+  {
+    \par
+    \keys_set:nn { exam-zh / material } {#1}
+    \addvspace { \l__examzh_material_top_sep_skip }
+    \__examzh_material_title_author_type:
+    \group_begin:
+      \l__examzh_material_format_tl
+      #2
+    \group_end:
+  }
+  {
+    \tl_if_empty:NF \l__examzh_material_source_content_tl
+      {
+        \par
+        \group_begin:
+          \hfill
+          \l__examzh_material_source_format_tl
+          \l__examzh_material_source_content_tl
+        \group_end:
+      }
+    \par
+    \addvspace { \l__examzh_material_bottom_sep_skip }
+    \par
+  }
+
+\cs_new:Npn \__examzh_material_title_author_type:
+  {
+    \tl_if_empty:NF \l__examzh_material_title_content_tl
+      {
+        \noindent \hfill
+          \group_begin:
+            \l__examzh_material_title_format_tl
+            \l__examzh_material_title_content_tl
+          \group_end:
+          \tl_if_empty:NF \l__examzh_material_author_content_tl
+            {
+              \hspace { \l__examzh_material_title_author_sep_skip }
+              \group_begin:
+                \l__examzh_material_author_format_tl
+                \l__examzh_material_author_content_tl
+              \group_end:
+            }
+        \hfill \null
+        \par
+        \addvspace { \l__examzh_material_title_material_sep_skip }
+      }
+  }
