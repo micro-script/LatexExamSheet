@@ -1051,6 +1051,8 @@
   toprule      = 1pt, % top rule weight
   bottomrule   = 1pt, % bottom rule weight
   left         = 2mm,
+  parbox       = false,
+  before upper = \indent,
   title        = {#2}, 
   #1,
   listing options = {
