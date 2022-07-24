@@ -189,18 +189,18 @@
 % \end{function}
 
 
-\subsubsection{中文字体}
+% \subsubsection{中文字体}
 
-在语文试卷中可能需要不同的字体，比如楷体等，在 \cls{exam-zh} 中，不使用 \tn{kaiti} 等命令（一般会有报错），推荐使用 \tn{itshape} 等命令：
-\begin{latexexample}{不同字体命令效果}
-  测试 {\normalfont 测试}
+% 在语文试卷中可能需要不同的字体，比如楷体等，在 \cls{exam-zh} 中，不使用 \tn{kaiti} 等命令（一般会有报错），推荐使用 \tn{itshape} 等命令：
+% \begin{latexexample}{不同字体命令效果}
+%   测试 {\normalfont 测试}
 
-  加粗 {\bfseries 测试}
+%   加粗 {\bfseries 测试}
 
-  黑体 {\sffamily 测试}
+%   黑体 {\sffamily 测试}
 
-  楷体 {\itshape 测试}
-\end{latexexample}
+%   楷体 {\itshape 测试}
+% \end{latexexample}
 
 
 \subsubsection{抬头}   \label{subsubsec:抬头}
@@ -259,11 +259,11 @@
   标题。在 \tn{maketitle} 前使用。参数控制见~\ref{subsubsec:参数-抬头} 节。
 \end{function}
 
-\begin{function}{\subject}
+\begin{function}[updated = 2022-07-24]{\subject}
   \begin{ccnusyntax}[emph={[1]subject}]
-    \subject(*\marg{科目}*)
+    \subject(*\oarg{宽度}\marg{科目}*)
   \end{ccnusyntax}
-  科目。在 \tn{maketitle} 前使用。可以为空或不写。参数控制见~\ref{subsubsec:参数-抬头} 节。
+  科目。在 \tn{maketitle} 前使用。可以为空或不写。\meta{科目} 内容在 \meta{宽度} 盒子内均匀分散。\meta{宽度} 默认为 \meta{科目} 宽度。参数控制见~\ref{subsubsec:参数-抬头} 节。
 \end{function}
 
 \begin{function}{\maketitle}
@@ -1212,9 +1212,9 @@
 \end{function}
 
 
-\begin{function}{sealline/odd-info-seperator}
-  \begin{ccnusyntax}[emph={[1]odd-info-seperator}]
-    odd-info-seperator = (*\meta{seperator}*)
+\begin{function}{sealline/odd-info-separator}
+  \begin{ccnusyntax}[emph={[1]odd-info-separator}]
+    odd-info-separator = (*\meta{separator}*)
   \end{ccnusyntax}
   奇数页密封线旁的学生信息的分隔符。即上方 \cmd{odd-info-content} 几个内容之间的分隔符，默认为 |\hspace*{3em}|，即用 |3em| 的空白分隔。一般为水平空白。
 \end{function}
@@ -1391,14 +1391,14 @@
   \begin{ccnusyntax}[emph={[1]top-sep}]
     top-sep = (*\meta{dimension}*)
   \end{ccnusyntax}
-  \tn{title} 和 \tn{subject} 的整体上方间距。默认为 |0.5em plus 0.3em minus 0.2em|。
+  \tn{title} 和 \tn{subject} 的整体上方间距。默认为 |-.5em plus 0.3em minus 0.2em|。
 \end{function}
 
 \begin{function}[added = 2022-07-03]{title/bottom-sep}
   \begin{ccnusyntax}[emph={[1]bottom-sep}]
     bottom-sep = (*\meta{dimension}*)
   \end{ccnusyntax}
-  \tn{title} 和 \tn{subject} 的整体下方间距。默认为 |0.5em plus 0.3em minus 0.2em|。
+  \tn{title} 和 \tn{subject} 的整体下方间距。默认为 |0em plus 0.3em minus 0.2em|。
 \end{function}
 
 
@@ -2141,9 +2141,9 @@
   \env{select} 环境的标记符号的垂直偏移量。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/seperator}
-  \begin{ccnusyntax}[emph={[1]seperator}]
-    seperator = (*\meta{symbol}*)
+\begin{function}[added = 2022-07-19]{chinese/separator}
+  \begin{ccnusyntax}[emph={[1]separator}]
+    separator = (*\meta{symbol}*)
   \end{ccnusyntax}
   \env{select} 环境内容的间隔符。
 \end{function}
@@ -2165,7 +2165,7 @@
 
 \begin{latexexample}{\env{select}相关键值的综合使用}
   折
-  \begin{select}[pre-content = {[}, post-content = {\}}, mark-symbol = {\tiny $\triangle$}, seperator = {, },mark-position = bottom, show-mark=true]
+  \begin{select}[pre-content = {[}, post-content = {\}}, mark-symbol = {\tiny $\triangle$}, separator = {, },mark-position = bottom, show-mark=true]
     \sitem \pinyin{zhe1}
     \sitem \pinyin{zhe2}
     \sitem \pinyin{zhe3}
