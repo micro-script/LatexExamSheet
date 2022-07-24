@@ -978,11 +978,12 @@
   是否显示密封线。
 \end{function}
 
-\begin{function}{sealline/scope}
-  \begin{ccnusyntax}[emph={[1]scope}]
+\begin{function}[updated = 2022-07-24]{sealline/scope,sealline/type}
+  \begin{ccnusyntax}[emph={[1]scope,type}]
     scope = (*<firstpage|oddpage|(everypage)>*)
+    type = (*<firstpage|oddpage|(everypage)>*)
   \end{ccnusyntax}
-  密封线的作用范围。\opt{firstpage} 表示仅在第一页有密封线；\opt{oddpage} 表示仅有奇数页有密封线，在页面左侧；\opt{everypage} 表示每页都有密封线，奇数页密封线在页面左侧，偶数页密封线在页面右侧。
+  密封线的作用范围。\opt{scope} 和 \opt{type} 同效。\opt{firstpage} 表示仅在第一页有密封线；\opt{oddpage} 表示仅有奇数页有密封线，在页面左侧；\opt{everypage} 表示每页都有密封线，奇数页密封线在页面左侧，偶数页密封线在页面右侧。
 \end{function}
 
 

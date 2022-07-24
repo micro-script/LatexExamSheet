@@ -747,6 +747,10 @@
       {
         \str_gset:Nn \g__examzh_sealline_scope_str {#1}
       },
+    type .code:n = 
+      {
+        \str_gset:Nn \g__examzh_sealline_scope_str {#1}
+      },
     % 线的厚度
     odd-line-thickness .dim_set:N = \g__examzh_sealline_odd_line_thickness_dim,
     even-line-thickness .dim_set:N = \g__examzh_sealline_even_line_thickness_dim,

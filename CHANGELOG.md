@@ -12,6 +12,7 @@
 
 - 增加密封线 `text-width`, `text-font`, `text-xscale`,`text-yscale`, `text-direction-vertical` 键值
 - 增加 `select` 环境的 `above` 和 `below` 键值
+- 增加 `sealline/scope` 同效键值 `sealline/type`
 
 ### Changed
 
