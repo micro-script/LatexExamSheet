@@ -424,15 +424,20 @@
           [ inner~sep = 0pt, outer~sep = 0pt ]
           at (0, \dim_use:N \l__examzh_tikz_circled_number_total_hegiht_dim / 2 ) 
           {
+            \hbox_set:Nn \l_tmpa_box
+              {
+                \int_compare:nNnTF {#1} > {9}
+                  { \textbf {#1} }
+                  {#1}
+              }
             \makebox[0.35em][c]
               { 
-                \scalebox { \fp_use:N \l__examzh_tikz_circled_number_xscale_fp } 
-                  [ \fp_use:N \l__examzh_tikz_circled_number_yscale_fp ] 
-                  {
-                    \int_compare:nNnTF {#1} > {9}
-                      { \textbf {#1} }
-                      {#1}
-                  } 
+                % \scalebox { \fp_use:N \l__examzh_tikz_circled_number_xscale_fp } 
+                  % [ \fp_use:N \l__examzh_tikz_circled_number_yscale_fp ] 
+                \box_scale:Nnn \l_tmpa_box
+                  { \fp_use:N \l__examzh_tikz_circled_number_xscale_fp }
+                  { \fp_use:N \l__examzh_tikz_circled_number_yscale_fp } 
+                \box_use_drop:N \l_tmpa_box
               }
           };
         \draw (0, \l__examzh_tikz_circled_number_total_hegiht_dim / 2 )
