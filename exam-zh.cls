@@ -512,7 +512,7 @@
 \setlist{nosep}
 
 \setlist[enumerate, 2]{
-  % left       = 2em,
+  left       = 2em,
   labelsep   = 0pt,
   label      = { （ \arabic * ） }
 }
@@ -609,22 +609,47 @@
   {
     title-format   = \Large,
     subject-format = \sffamily \bfseries \huge,
-    top-sep        = 0.5em plus 0.3em minus 0.2em,
-    bottom-sep     = 0.5em plus 0.3em minus 0.2em,
+    top-sep        = -.5em plus 0.3em minus 0.2em,
+    bottom-sep     = 0em plus 0.3em minus 0.2em,
   }
 \keys_define:nn { exam-zh }
   { title .meta:nn = { exam-zh / title } {#1} }
 
+\cs_new_protected:Npn \__examzh_spread_box:nn #1#2
+  {
+    \mode_leave_vertical:
+    \hbox_to_wd:nn {#1}
+      { \tl_map_inline:xn {#2} { ##1 \hfil } \unskip }
+  }
+
 % 科目
 \tl_new:N \l__exam_zh_subject_tl
-\NewDocumentCommand \subject { m }
-  { \tl_set:Nn \l__exam_zh_subject_tl {#1} }
+\NewDocumentCommand \subject { o m }
+  {
+    \IfNoValueTF {#1}
+      {
+        % 默认使用自然宽度
+        \hbox_set:Nn \l_tmpa_box {#2}
+        \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box * 2 }
+        \tl_set:Nn \l__exam_zh_subject_tl
+          {
+            \__examzh_spread_box:nn { \l_tmpa_dim } {#2}
+          }
+      }
+      {
+        % 手动调整宽度
+        \tl_set:Nn \l__exam_zh_subject_tl
+          {
+            \__examzh_spread_box:nn {#1} {#2}
+          }
+      }
+  }
 
 % 输出标题
 \RenewDocumentCommand \maketitle { }
   {
     \par
-    \addvspace { \l__examzh_title_top_sep_skip }
+    \vspace { \l__examzh_title_top_sep_skip }
     \begin { center }
       \let \footnote \thanks
       { \l__examzh_title_format_tl \@title \par }
@@ -635,7 +660,7 @@
         }
     \end { center }
     \par
-    \addvspace { \l__examzh_title_bottom_sep_skip }
+    \vspace { \l__examzh_title_bottom_sep_skip }
   }
 
 
@@ -708,6 +733,8 @@
         format    = \heiti \bfseries ,
         number    = \chinese { section } ,
         aftername = { 、 } ,
+        beforeskip = 2ex plus 1ex minus .5ex,
+        afterskip = 1ex plus .2ex minus 1ex
       }
   }
 
@@ -1908,3 +1935,142 @@
   }
 \keys_define:nn { exam-zh }
   { scoringbox .meta:nn = { exam-zh / scoringbox } {#1} }
+
+
+
+% 脚注
+% 摘自 fduthesis.cls
+
+\cs_new_protected:Npn \__examzh_define_fn_style:nn #1#2
+  { \tl_const:cn { c__examzh_fn_style_ #1 _tl } {#2} }
+\cs_new:Npn \__examzh_symbol:n #1 { \tex_char:D #1 \scan_stop: }
+
+\clist_map_inline:nn
+  {
+    { plain           } { plain           },
+    { libertinus      } { libertinus      },
+    { libertinus_neg  } { libertinus*     },
+    { libertinus_sans } { libertinus-sans },
+    { pifont          } { pifont          },
+    { pifont_neg      } { pifont*         },
+    { pifont_sans     } { pifont-sans     },
+    { pifont_sans_neg } { pifont-sans*    },
+    { xits            } { xits            },
+    { xits_sans       } { xits-sans       },
+    { xits_sans_neg   } { xits-sans*      }
+  }
+  { \__examzh_define_fn_style:nn #1 }
+\tl_new:N \l__examzh_fn_style_tl
+\keys_define:nn { exam-zh / style }
+  {
+    footnote-style .choices:nn =
+      {
+        plain,
+        libertinus, libertinus*, libertinus-sans,
+        pifont,     pifont*,     pifont-sans,     pifont-sans*,
+        xits,                    xits-sans,       xits-sans*
+      }
+      {
+        \tl_gset_eq:NN \l__examzh_fn_style_tl \l_keys_choice_tl
+        \int_compare:nT { 5 <= \l_keys_choice_int <= 8 }
+          { \RequirePackage { pifont } }
+      },
+    footnote-style .value_required:n = true
+  }
+\keys_set:nn { exam-zh / style }
+  {
+    footnote-style = xits
+  }
+\cs_new:Npn \__examzh_fn_symbol_libertinus:n #1
+  {
+    \int_compare:nTF { #1 >= 21 }
+      {
+        \int_compare:nTF { #1 >= 47 }
+          { \__examzh_symbol:n { \int_eval:n { "24B6 - 47 + #1 } } }
+          { \__examzh_symbol:n { \int_eval:n { "24D0 - 21 + #1 } } }
+      }
+      { \__examzh_symbol:n { \int_eval:n { "2460 - 1 + #1 } } }
+  }
+\cs_new:Npn \__examzh_fn_symbol_libertinus_neg:n #1
+  {
+    \int_compare:nTF { #1 >= 11 }
+      { \__examzh_symbol:n { \int_eval:n { "24EB - 11 + #1 } } }
+      { \__examzh_symbol:n { \int_eval:n { "2776 -  1 + #1 } } }
+  }
+\cs_new_eq:NN \__examzh_fn_symbol_libertinus_sans:n \__examzh_fn_symbol_libertinus:n
+\cs_new:Npn \__examzh_fn_symbol_pifont:n #1
+  { \ding { \int_eval:n { 171 + #1 } } }
+\cs_new:Npn \__examzh_fn_symbol_pifont_neg:n #1
+  { \ding { \int_eval:n { 181 + #1 } } }
+\cs_new:Npn \__examzh_fn_symbol_pifont_sans:n #1
+  { \ding { \int_eval:n { 191 + #1 } } }
+\cs_new:Npn \__examzh_fn_symbol_pifont_sans_neg:n #1
+  { \ding { \int_eval:n { 201 + #1 } } }
+\cs_new:Npn \__examzh_fn_symbol_xits:n #1
+  {
+    \int_compare:nTF { #1 >= 10 }
+      {
+        \int_compare:nTF { #1 >= 36 }
+          { \__examzh_symbol:n { \int_eval:n { "24B6 - 36 + #1 } } }
+          { \__examzh_symbol:n { \int_eval:n { "24D0 - 10 + #1 } } }
+      }
+      { \__examzh_symbol:n { \int_eval:n { "2460 - 1 + #1 } } }
+  }
+\cs_new:Npn \__examzh_fn_symbol_xits_sans:n #1
+  { \__examzh_symbol:n { \int_eval:n { "2780 - 1 + #1 } } }
+\cs_new:Npn \__examzh_fn_symbol_xits_sans_neg:n #1
+  { \__examzh_symbol:n { \int_eval:n { "278A - 1 + #1 } } }
+\cs_set:Npn \thefootnote { \examzh_footnote_number:N \c@footnote }
+\cs_new:Npn \examzh_footnote_number:N #1
+  {
+    \tl_case:NnF \l__examzh_fn_style_tl
+      {
+        \c__examzh_fn_style_plain_tl
+          { \int_use:N #1 }
+        \c__examzh_fn_style_libertinus_tl
+          {
+            \fontspec { LibertinusSerif-Regular .otf }
+            \__examzh_fn_symbol_libertinus:n {#1}
+          }
+        \c__examzh_fn_style_libertinus_neg_tl
+          {
+            \fontspec { LibertinusSerif-Regular .otf }
+            \__examzh_fn_symbol_libertinus_neg:n {#1}
+          }
+        \c__examzh_fn_style_libertinus_sans_tl
+          {
+            \fontspec { LibertinusSans-Regular .otf }
+            \__examzh_fn_symbol_libertinus_sans:n {#1}
+          }
+        \c__examzh_fn_style_pifont_tl
+          { \__examzh_fn_symbol_pifont:n {#1} }
+        \c__examzh_fn_style_pifont_neg_tl
+          { \__examzh_fn_symbol_pifont_neg:n {#1} }
+        \c__examzh_fn_style_pifont_sans_tl
+          { \__examzh_fn_symbol_pifont_sans:n {#1} }
+        \c__examzh_fn_style_pifont_sans_neg_tl
+          { \__examzh_fn_symbol_pifont_sans_neg:n {#1} }
+        \c__examzh_fn_style_xits_tl
+          {
+            \fontspec { XITS-Regular .otf }
+            \__examzh_fn_symbol_xits:n {#1}
+          }
+        \c__examzh_fn_style_xits_sans_tl
+          {
+            \fontspec { XITS-Regular .otf }
+            \__examzh_fn_symbol_xits_sans:n {#1}
+          }
+        \c__examzh_fn_style_xits_sans_neg_tl
+          {
+            \fontspec { XITS-Regular .otf }
+            \__examzh_fn_symbol_xits_sans_neg:n {#1}
+          }
+      }
+      { \int_use:N #1 }
+  }
+\cs_set:Npn \@makefntext #1
+  {
+    \mode_leave_vertical:
+    \hbox_to_wd:nn { 1.5 em } { \@thefnmark \hfil }
+    #1
+  }
