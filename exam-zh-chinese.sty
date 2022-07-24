@@ -58,7 +58,7 @@
     % 检测 mark-position 的输入
     \__examzh_chinese_select_coffin_position_test:
     % 对输入用 \item 进行分割
-    \seq_set_split:Nnn \l__examzh_select_seq { \item } {#2}
+    \seq_set_split:Nnn \l__examzh_select_seq { \sitem } {#2}
     \seq_if_empty:NF \l__examzh_select_seq
       { \seq_pop_left:NN \l__examzh_select_seq \l_tmpa_tl }
     % 将内容和 mark 符号存入 coffin 并拼接输出
