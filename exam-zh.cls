@@ -436,13 +436,13 @@
       },
     size .value_required:n = true,
     % 页脚的类型
-    foot-style .choice:,
-    foot-style / common .code:n =
+    foot-type .choice:,
+    foot-type / common .code:n =
       {
         \bool_gset_true:c 
           { g__examzh_page_a3paper_foot_common_bool }
       },
-    foot-style / separate .code:n =
+    foot-type / separate .code:n =
       {
         \bool_gset_false:c 
           { g__examzh_page_a3paper_foot_common_bool }
@@ -451,7 +451,7 @@
 \keys_set:nn { exam-zh / page }
   {
     size = a4paper,
-    foot-style = separate,
+    foot-type = separate,
   }
 
 \keys_define:nn { exam-zh }
