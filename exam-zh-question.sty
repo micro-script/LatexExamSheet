@@ -142,17 +142,17 @@
 \cs_new:Npn \__examzh_question_begin:nn #1#2
   {
     \par
-    % 题干计数器的值加一
-    \int_gincr:N \g__examzh_question_index_int
     % 根据是否按解答题方式排版来设置是否分数要分段
     \bool_if:NTF \l__examzh_question_problem_style_bool
       { \keys_set:nn { exam-zh / question } { points-separate-par = true  } }
       { \keys_set:nn { exam-zh / question } { points-separate-par = false } }
     % 设置键值
     \keys_set:nn { exam-zh / question } { #1 }
+    % 题干计数器的值加一
+    \int_gincr:N \g__examzh_question_index_int
     % 设置上方间距
     % \addvspace { \l__examzh_question_top_sep_skip }
-    \vspace* { \l__examzh_question_top_sep_skip }
+    \vspace { \l__examzh_question_top_sep_skip }
     % 严格禁止孤行和寡行
     \int_set:Nn \clubpenalty { 10000 }
     \int_set:Nn \widowpenalty { 10000 }
@@ -220,7 +220,7 @@
     \endlist
     % 增加下方间距
     % \addvspace { \l__examzh_question_bottom_sep_skip }
-    \vspace* { \l__examzh_question_bottom_sep_skip }
+    \vspace { \l__examzh_question_bottom_sep_skip }
   }
 
 % 处理 question / problem 的 label

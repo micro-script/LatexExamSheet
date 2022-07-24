@@ -26,6 +26,7 @@
 ### Fixed
 
 - 更正 `select/seperator` 为 `select/separator`
+- 修复 `question` 环境的 `index` 减一问题
 
 
 
