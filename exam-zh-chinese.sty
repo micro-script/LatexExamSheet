@@ -131,7 +131,9 @@
     \str_case:VnF \l__examzh_select_mark_position_str
       {
         { top } { }
+        { above } { }
         { bottom } { }
+        { below } { }
         { left } { }
         { right } { }
       }
@@ -154,6 +156,9 @@
       { \l__examzh_select_mark_xshift_dim }
       { \l__examzh_select_mark_yshift_dim + 2pt }
   }
+\cs_set_eq:NN 
+  \__examzh_chinese_select_coffin_join_above:n 
+  \__examzh_chinese_select_coffin_join_top:n
 \cs_new:Npn \__examzh_chinese_select_coffin_join_bottom:n #1
   {
     \coffin_join:cnncnnnn
@@ -164,6 +169,9 @@
       { \l__examzh_select_mark_xshift_dim }
       { \l__examzh_select_mark_yshift_dim - 2pt }
   }
+\cs_set_eq:NN 
+  \__examzh_chinese_select_coffin_join_below:n 
+  \__examzh_chinese_select_coffin_join_bottom:n
 \cs_new:Npn \__examzh_chinese_select_coffin_join_left:n #1
   {
     \coffin_join:cnncnnnn

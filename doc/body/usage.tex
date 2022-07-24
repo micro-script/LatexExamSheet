@@ -2119,11 +2119,11 @@
   是否显示 \env{select} 环境的标记符号。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{chinese/mark-position}
+\begin{function}[added = 2022-07-19, updated = 2022-07-24]{chinese/mark-position}
   \begin{ccnusyntax}[emph={[1]mark-position}]
-    mark-position = (*top|bottom|left|(right)>*)
+    mark-position = (*top|above|below|bottom|left|(right)>*)
   \end{ccnusyntax}
-  \env{select} 环境的标记符号相对于内容的位置。\opt{right} 表示 \opt{mark-symbol} 在内容的右侧，其余的含义同理。
+  \env{select} 环境的标记符号相对于内容的位置。\opt{right} 表示 \opt{mark-symbol} 在内容的右侧，其余的含义同理。其中 \opt{top} 和 \opt{above} 等效，\opt{below} 和 \opt{bottom} 等效。
 \end{function}
 
 \begin{function}[added = 2022-07-19]{chinese/mark-xshift}
