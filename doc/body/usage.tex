@@ -837,7 +837,7 @@
   \begin{ccnusyntax}[emph={[1]ExamPrintAnswerSet}]
     \ExamPrintAnswerSet(*\oarg{cmd list}\marg{key-val list}*)
   \end{ccnusyntax}
-  设置用户对于师生两版的第二个版本 PDF 的导言区设置（可以自由选择第二个版本的键值设置，自由度高）。其中 \meta{cmd list} 和 \meta{key-val list} 的内容均用西文逗号分隔。
+  设置用户对于师生两版的第二个版本 PDF 的导言区设置（可以自由选择第二个版本的键值设置，自由度高）。其中 \meta{cmd list} 和 \meta{key-val list} 的内容均用西文逗号分隔。\emph{注意第二个版本的设置是本 \file{.tex} 文件的设置基础之后加上 \tn{ExamPrintAnswerSet} 生成的，所以键值的使用要注意。（比如本 \file{.tex} 文件中设置了 \kvopt{fillin/show-answer}{true}，如果 \tn{ExamPrintAnswerSet} 不写 \kvopt{fillin/show-answer}{false} 的话，则还是按照 \kvopt{fillin/show-answer}{true} 的设置编译的）}
   \begin{itemize}
     \item \meta{key-val list}：list 的项为 |foo/bar| 形式，为本手册中介绍的键值，会通过 \tn{ExamPrintAnswer} 传递给 \tn{examsetup} 命令；
     \item \meta{cmd list}：list 的项为一般的命令
