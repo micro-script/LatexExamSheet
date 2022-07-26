@@ -726,16 +726,23 @@
 \keys_define:nn { exam-zh / notice }
   {
     label .tl_set:N = \l__examzh_notice_label_tl,
-    label-format .tl_set:N = \l__examzh_notice_label_format_tl
+    label-format .tl_set:N = \l__examzh_notice_label_format_tl,
+    top-sep    .skip_set:N = \l__examzh_notice_top_sep_skip,
+    bottom-sep .skip_set:N = \l__examzh_notice_bottom_sep_skip,
+    
   }
 \keys_set:nn { exam-zh / notice }
   {
-    label = 注意事项：,
-    label-format = \sffamily \bfseries
+    label           = 注意事项：,
+    label-format    = \sffamily \bfseries,
+    top-sep         = .25em plus .25em minus .1em,
+    bottom-sep      = .25em plus .25em minus .1em,
   }
 \NewDocumentEnvironment { notice } { O { } O { } }
   {
     \keys_set:nn { exam-zh / notice } {#1}
+    \par
+    \vspace { \l__examzh_notice_top_sep_skip }
     \noindent
     \group_begin:
       \l__examzh_notice_label_format_tl
@@ -754,6 +761,7 @@
   }
   {
     \end { enumerate }
+    \vspace { \l__examzh_notice_bottom_sep_skip }
   }
 
 

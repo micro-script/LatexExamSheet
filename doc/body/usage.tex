@@ -266,6 +266,15 @@
   \env{notice} 环境的 \meta{label} 格式。默认为 |\sffamily \bfseries|。
 \end{function}
 
+\begin{function}[added = 2022-07-26]{notice/top-sep,notice/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep,bottom-sep}]
+    top-sep = (*\meta{skip}*)
+    bottom-sep = (*\meta{skip}*)
+  \end{ccnusyntax}
+  \env{notice} 环境的上下方的弹性间距。默认均为 |.25em plus .25em minus .1em|。
+\end{function}
+
+
 \begin{function}{\title}
   \begin{ccnusyntax}[emph={[1]title}]
     \title(*\marg{标题}*)
