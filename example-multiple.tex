@@ -4,68 +4,37 @@
 
 
 \documentclass{exam-zh}
+\usepackage{siunitx}
 
 \examsetup{
   page = {
-    size       = a3paper,         % 页面尺寸：a3paper|a4paper
-    % foot-style  = separate,        % 两页是否共用页脚（仅对style = a3paper 生效）：common|separate
-    show-chapter  = true,   % 是否显示 \chapter 的内容（但是目录始终都有）
+    size            = a3paper,
+    show-columnline = false
   },
+  style/fullwidth-stop = catcode,
+  fillin/no-answer-type = none,
   sealline = {
     show        = true,
-    % scope        = firstpage,
-    % scope        = oddpage,
-    % scope        = everypage,
-    % scope        = first-and-last,
-    scope        = mod-2,
-    line-thickness       = 1pt,
-    line-xshift          = 8mm,
-    line-yshift          = 0mm,
-    line-type            = densely-dashed,
-    text                 = 密封线内不得答题,
-    text-xshift          = 11mm,
-    text-yshift          = 30mm,
-    circle-show          = true,
-    circle-start         = 0.07,
-    circle-end           = 0.92,
-    circle-step          = 3.5em,
-    circle-diameter      = 3mm,
-    circle-xshift        = 8mm,
-    odd-info-content     = {
-      {\kaishu 姓名} {\underline{\hspace*{8em}}},
-      {\kaishu 准考证号} {\examsquare{9}},
-      {\kaishu 考场号} {\examsquare{2}},
-      {\kaishu 座位号} {\examsquare{2}},
+    scope       = mod-2,
+    circle-show = false,
+    line-type   = solid,
+    odd-info-content = {
+      {\heiti \zihao{4}姓名} {\underline{\hspace*{8em}}},
+      {\heiti \zihao{4}准考证号} {\examsquare{9}},
+      {\heiti \zihao{4}考场号} {\examsquare{2}},
+      {\heiti \zihao{4}座位号} {\examsquare{2}},
     },
-    odd-info-seperator   = \hspace*{3em},
-    odd-info-align       = center,
-    odd-info-xshift      = 20mm,
-    odd-info-yshift      = 0mm
+    odd-info-xshift = 12mm,
+    text = {此卷只装订不密封},
+    text-width = 0.98\textheight,
+    text-format  = \zihao{-3}\sffamily,
+    text-xshift = 20mm
   },
-  font      = newcm,
-  math-font = newcm,
-  question = {
-    show-points  = auto,    % 显示题目分数
-    show-answer  = true,    % 统一控制 \paren 和 \fillin 的答案显示
-    top-sep      = .5em plus .5em minus .2em ,
-    bottom-sep   = .5em plus .5em minus .2em ,
-  },
-  choices = {
-    column-sep  = 1em,    % 选项列之间的最小间隔
-    label-pos   = auto,   % 标签的位置
-    label-sep   = 0.5em,  % 标签与选项之间的距离
-    max-columns = 4,      % 最大列数
-  },
-  paren/show-answer = false,
-  fillin = {
-    type        = line,
-    show-answer = true
-  },
-  scoringbox/type = none
+  square = {
+    x-length = 1.8em,
+    y-length = 1.6em
+  }
 }
-
-\usepackage{graphicx}
-\usepackage{siunitx}
 
 
 % 行内公式统一按照行间的样式
