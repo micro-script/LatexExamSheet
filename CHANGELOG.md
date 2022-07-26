@@ -11,6 +11,7 @@
 ### Added
 
 - 增加第一层级 `enumerate` 的设置
+- 增加 `notice` 环境的键值 `label` 和 `label-format`
 
 ### Changed
 

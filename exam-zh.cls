@@ -723,12 +723,23 @@
 
 
 % 注意事项环境 notice
-\NewDocumentEnvironment { notice } { O { 注意事项：} O { } }
+\keys_define:nn { exam-zh / notice }
   {
+    label .tl_set:N = \l__examzh_notice_label_tl,
+    label-format .tl_set:N = \l__examzh_notice_label_format_tl
+  }
+\keys_set:nn { exam-zh / notice }
+  {
+    label = 注意事项：,
+    label-format = \sffamily \bfseries
+  }
+\NewDocumentEnvironment { notice } { O { } O { } }
+  {
+    \keys_set:nn { exam-zh / notice } {#1}
     \noindent
     \group_begin:
-      \sffamily \bfseries
-      #1
+      \l__examzh_notice_label_format_tl
+      \l__examzh_notice_label_tl
     \group_end:
     \begin { enumerate }
       [

@@ -242,14 +242,28 @@
   祝福语命令。祝福语默认为 |祝考试顺利|。
 \end{function}
 
-\begin{function}{notice 环境}
+\begin{function}[updated = 2022-07-26]{notice 环境}
   \begin{ccnusyntax}[emph={[2]notice}]
-    \begin{notice}(*\oarg{键值列表}*)
+    \begin{notice}(*\oarg{键值列表 1}\oarg{键值列表 2}*)
       \item ...
       \item ...
     \end{notice}
   \end{ccnusyntax}
-  注意事项环境。是 \env{enumerate} 环境的包装，\meta{键值列表} 传递给 \env{enumerate} 环境的可选参数。
+  注意事项环境，是 \env{enumerate} 环境的包装，\meta{键值列表 2} 是传递给 \env{enumerate} 环境的可选参数。\meta{键值列表 1} 如下。
+\end{function}
+
+\begin{function}[added = 2022-07-26]{notice/label}
+  \begin{ccnusyntax}[emph={[1]label}]
+    label = (*\meta{label}*)
+  \end{ccnusyntax}
+  \env{notice} 环境的 \meta{label} 内容。默认为 |注意事项：|。
+\end{function}
+
+\begin{function}[added = 2022-07-26]{notice/label-format}
+  \begin{ccnusyntax}[emph={[1]label-format}]
+    label-format = (*\meta{format}*)
+  \end{ccnusyntax}
+  \env{notice} 环境的 \meta{label} 格式。默认为 |\sffamily \bfseries|。
 \end{function}
 
 \begin{function}{\title}
@@ -662,9 +676,9 @@
 其余的见~\ref{subsubsec:抬头} 节。
 
 
-\subsubsection{其它题型相关命令环境}
+\subsubsection{选择标记题型}
 
-本节主要介绍 \file{exam-zh-chinese.sty} 模块中的命令环境的使用。要注意的是，此模块中大部分命令环境设计灵感和原因一般来自于语文学科，但是具体使用起来一般不限制于语文学科。
+% 本节主要介绍 \file{exam-zh-chinese.sty} 模块中的命令环境的使用。要注意的是，此模块中大部分命令环境设计灵感和原因一般来自于语文学科，但是具体使用起来一般不限制于语文学科。
 
 \begin{function}[added = 2022-07-19,updated = 2022-07-23]{select 环境}
   \begin{ccnusyntax}[emph={[2]select}]
@@ -695,6 +709,8 @@
 \end{latexexample}
 
 
+\subsubsection{连线题型}
+
 \begin{function}[added = 2022-07-19]{lineto 环境,\linelistset,\lineconnect}
   \begin{ccnusyntax}[emph={[2]lineto,linelistset,lineconnect}]
     \begin{lineto}(*\oarg{键值列表}*)
@@ -723,6 +739,10 @@
 示例见~\ref{subsubsec:参数-连线题型}。
 
 
+
+\subsubsection{语文-材料文章}
+
+
 \begin{function}[added = 2022-07-24]{material 环境}
   \begin{ccnusyntax}[emph={[2]material}]
     \begin{material}(*\oarg{键值列表}*)
@@ -733,9 +753,45 @@
 \end{function}
 
 \begin{latexexample}{\env{material} 环境示例}
-  \begin{material}[title = \LaTeX{} 入门, author = 夏大鱼羊, format = {\sffamily \zihao{-4}},source={（摘自《夏大鱼羊自传》）}]
+  \begin{material}[title = \LaTeX{} 入门, author = 夏大鱼羊, format = {\sffamily \zihao{-4}},source={（摘自《夏大鱼羊自传》） \\ 2022年}]
     劳仑衣普桑，认至将指点效则机，最你更枝。想板整月正进好志次回总般，段然取向使张规军证回，世市总李率英茄持伴。用阶千样响领交出，器程办管据家元写，名其直金团。
   \end{material}
+\end{latexexample}
+
+
+\subsubsection{语文-古诗}
+
+
+\begin{function}[added = 2022-07-24]{poem 环境}
+  \begin{ccnusyntax}[emph={[2]poem}]
+    \begin{poem}(*\oarg{键值列表}*)
+      <line 1> \\
+      <line 2> \\
+        ...
+      <line n> \\
+    \end{poem}
+  \end{ccnusyntax}
+  语文古诗环境。\meta{键值列表} 见~\ref{subsubsec:参数-语文} 节。
+\end{function}
+
+
+\begin{function}[added = 2022-07-24]{\zhu}
+  \begin{ccnusyntax}[emph={[2]zhu}]
+    \zhu(*\meta{注释}*)
+  \end{ccnusyntax}
+  语文古诗环境的注释命令，只能在 \env{poem} 环境中使用。
+\end{function}
+
+\examsetup{
+  poem/format = \itshape
+}
+\begin{latexexample}{\env{poem} 环境示例}
+  \begin{poem}[author = 杨巨源, title = {寄江州白司马\zhu{江州白司马：即白居易。}}]
+    江州司马平安否？ 惠远东林住得无 \zhu{惠远：东晋高僧，居庐山东林寺。}？ \\
+    湓浦曾闻似衣带，庐峰见说胜香炉。\\
+    题诗岁晏离鸿断，望阙天遥病鹤孤。\\
+    莫谩拘牵雨花社\zhu{莫谩：不要。雨花社：指佛教讲经的集会。}，青云依旧是前途。
+  \end{poem}
 \end{latexexample}
 
 
@@ -2278,7 +2334,7 @@
   \begin{ccnusyntax}[emph={[1]title-format}]
     title-format = (*\meta{格式}*)
   \end{ccnusyntax}
-  \env{material} 环境的上方标题的 \emph{格式}。默认为 |\large|。
+  \env{material} 环境的上方标题的 \emph{格式}。默认为 |\zihao{4}|。
 \end{function}
 
 \begin{function}[updated = 2022-07-24]{material/author}
@@ -2302,12 +2358,6 @@
   \env{material} 环境的上方标题和作者之间的距离。默认为 |2em|。
 \end{function}
 
-\begin{function}[updated = 2022-07-24]{material/title-material-sep}
-  \begin{ccnusyntax}[emph={[1]title-material-sep}]
-    title-material-sep = (*\meta{弹性长度}*)
-  \end{ccnusyntax}
-  \env{material} 环境和上方标题的间距。默认为 |2em|。
-\end{function}
 
 \begin{function}[updated = 2022-07-24]{material/format}
   \begin{ccnusyntax}[emph={[1]format}]
@@ -2334,7 +2384,7 @@
   \begin{ccnusyntax}[emph={[1]top-sep}]
     top-sep = (*\meta{弹性长度}*)
   \end{ccnusyntax}
-  \env{material} 环境和标题（如果有）的整体上方间距。默认为 |.5em plus .5em minus .5em|。
+  \env{material} 环境和标题（如果有）的整体上方间距。默认为 |0pt|。
 \end{function}
 
 \begin{function}[added = 2022-07-24]{material/bottom-sep}
@@ -2348,5 +2398,85 @@
   \begin{ccnusyntax}[emph={[1]title-material-sep}]
     title-material-sep = (*\meta{弹性长度}*)
   \end{ccnusyntax}
-  \env{material} 环境和标题（如果有）的间距。默认为 |.5em minus .5em|。
+  \env{material} 环境和标题（如果有）的间距。默认为 |0pt|。
+\end{function}
+
+
+\begin{function}[updated = 2022-07-24]{poem}
+  \begin{ccnusyntax}[emph={[1]material}]
+    poem = (*\marg{键值列表}*)
+    poem/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含多个子项目。用于设置 \env{poem} 环境。可以在 \tn{examsetup} 中使用，也可以在 \env{poem} 环境的可选参数中使用。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{poem/title}
+  \begin{ccnusyntax}[emph={[1]title}]
+    title = (*\meta{标题}*)
+  \end{ccnusyntax}
+  \env{poem} 环境的上方标题的 \emph{内容}。可以为空或不写。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{poem/title-format}
+  \begin{ccnusyntax}[emph={[1]title-format}]
+    title-format = (*\meta{格式}*)
+  \end{ccnusyntax}
+  \env{poem} 环境的上方标题的 \emph{格式}。默认为 |\zihao{5}|。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{poem/author}
+  \begin{ccnusyntax}[emph={[1]author}]
+    author = (*\meta{作者}*)
+  \end{ccnusyntax}
+  \env{poem} 环境的上方作者的 \emph{作者名}。可以为空或不写。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{poem/author-format}
+  \begin{ccnusyntax}[emph={[1]author-format}]
+    author-format = (*\meta{格式}*)
+  \end{ccnusyntax}
+  \env{poem} 环境的上方作者的 \emph{格式}。默认为 |\small|。
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{poem/title-author-sep}
+  \begin{ccnusyntax}[emph={[1]title-author-sep}]
+    title-author-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{poem} 环境的上方标题和作者之间的距离。默认为 |2em|。
+\end{function}
+
+
+\begin{function}[updated = 2022-07-24]{poem/format}
+  \begin{ccnusyntax}[emph={[1]format}]
+    format = (*\meta{格式}*)
+  \end{ccnusyntax}
+  \env{poem} 环境内容的格式。默认为 |\kaishu|。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{poem/top-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep}]
+    top-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{poem} 环境和标题（如果有）的整体上方间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{poem/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]bottom-sep}]
+    bottom-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{poem} 环境的下方间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{poem/title-poem-sep}
+  \begin{ccnusyntax}[emph={[1]title-poem-sep}]
+    title-poem-sep = (*\meta{弹性长度}*)
+  \end{ccnusyntax}
+  \env{poem} 环境和标题（如果有）的间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-07-25]{poem/type}
+  \begin{ccnusyntax}[emph={[1]type}]
+    type = (*<minipage|(chinese)>*)
+  \end{ccnusyntax}
+  \env{poem} 环境的类型（主要体现在页脚）。\opt{minipage} 表示 \env{poem} 环境的页脚是基于 \env{minipage} 环境形成的，脚注上方有横线，且两条脚注之间是分行的；\opt{chinese} 表示脚注不分行，连着显示，且最前方有 |[注]| 字（设计来源于“2021 年普通高等学校招生全国统一考试”语文真题卷）。
 \end{function}
