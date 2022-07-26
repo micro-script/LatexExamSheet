@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-22} {v0.1.11} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-26} {v0.1.12} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -277,6 +277,7 @@
 \RenewDocumentCommand { \tableofcontents } { }
   {
     \newpage
+    \int_set:Nn \c@page { 0 }
     \group_begin:
       % \str_case:VnT \g__examzh_sealline_scope_str
       %   {
@@ -285,7 +286,6 @@
       %   }
       %   {
       %     \RemoveFromHook { shipout / background }
-      %   }
       \cs_set_eq:NN \onecolumn \twocolumn
       \bool_set_true:N \g__examzh_page_show_chapter_bool
       \keys_set:nn { ctex }
@@ -465,26 +465,24 @@
 
 % 中文字体
 
-
-
 % 在 ctex 的字体配置的基础上进行一些修改
 % 将苹方和微软雅黑分别替换为华文黑体和中易黑体
 
 \str_if_eq:onTF { \g__ctex_fontset_tl } { mac }
   {
-    \setCJKmainfont{Source~Han~Serif~SC}
-      [
-        ItalicFont     = FZKai-Z03,
-      ]
+    % \setCJKmainfont{Source~Han~Serif~SC}
+    %   [
+    %     ItalicFont     = FZKai-Z03,
+    %   ]
     \setCJKsansfont { Heiti~ SC~ Light } [ BoldFont = Heiti~ SC~ Medium ]
   }
   {
     \str_if_eq:onT { \g__ctex_fontset_tl } { windows }
       { 
-        \setCJKmainfont{Source~Han~Serif~SC}
-          [
-            ItalicFont     = FZKai-Z03,
-          ]
+        % \setCJKmainfont{Source~Han~Serif~SC}
+        %   [
+        %     ItalicFont     = FZKai-Z03,
+        %   ]
         \setCJKsansfont { SimHei } 
       }
   }
@@ -804,21 +802,12 @@
     % 是否显示密封线
     show .bool_gset:N = \g__examzh_sealline_show_bool,
     % 密封线类型（也理解为出现的类型，比如只在第一页，只在奇数页）
-    % scope .choice:,
-    % scope / firstpage .code:n =
-    %   { \__examzh_sealline_scope_firstpage: },
-    % scope / oddpage .code:n =
-    %   { \__examzh_sealline_scope_oddpage: },
-    % scope / everypage .code:n =
-    %   { \__examzh_sealline_scope_everypage: },
-    scope .code:n = 
-      {
-        \str_gset:Nn \g__examzh_sealline_scope_str {#1}
-      },
-    type .code:n = 
-      {
-        \str_gset:Nn \g__examzh_sealline_scope_str {#1}
-      },
+    scope .choices:nn =
+      { firstpage, oddpage, everypage, first-and-last, mod-2, mod-3, mod-4, mod-6 }
+      { \str_gset:Nx \g__examzh_sealline_scope_str { \l_keys_choice_tl } },
+    type .choices:nn =
+      { firstpage, oddpage, everypage, first-and-last, mod-2, mod-3, mod-4, mod-6 }
+      { \str_gset:Nx \g__examzh_sealline_scope_str { \l_keys_choice_tl } },
     % 线的厚度
     odd-line-thickness .dim_set:N = \g__examzh_sealline_odd_line_thickness_dim,
     even-line-thickness .dim_set:N = \g__examzh_sealline_even_line_thickness_dim,
@@ -1082,8 +1071,55 @@
           }
       }
   }
+% mod 2 = 1 的类型
+\cs_new:cpn { __examzh_sealline_scope_mod_2_equals_1: }
+  {
+    \AddToHook { shipout / background } [ sealline ]
+      {
+        \put (0cm, 0cm)
+          {
+            \int_compare:nNnT { \int_mod:nn { \c@page } { 2 } } = {1} { \__examzh_sealline_odd: }
+          }
+      }
+  }
+% mod 3 = 1 的类型
+\cs_new:cpn { __examzh_sealline_scope_mod_3_equals_1: }
+  {
+    \AddToHook { shipout / background } [ sealline ]
+      {
+        \put (0cm, 0cm)
+          {
+            \int_compare:nNnT { \int_mod:nn { \c@page } { 3 } } = {1} { \__examzh_sealline_odd: }
+          }
+      }
+  }
+% mod 4 = 1 的类型
+\cs_new:cpn { __examzh_sealline_scope_mod_4_equals_1: }
+  {
+    \AddToHook { shipout / background } [ sealline ]
+      {
+        \put (0cm, 0cm)
+          {
+            \int_compare:nNnT { \int_mod:nn { \c@page } { 4 } } = {1} { \__examzh_sealline_odd: }
+          }
+      }
+  }
+% mod 6 = 1 的类型
+\cs_new:cpn { __examzh_sealline_scope_mod_6_equals_1: }
+  {
+    \AddToHook { shipout / background } [ sealline ]
+      {
+        \put (0cm, 0cm)
+          {
+            \int_compare:nNnT { \int_mod:nn { \c@page } { 6 } } = {1} { \__examzh_sealline_odd: }
+          }
+      }
+  }
+
 
 \AtBeginDocument
+  { \__examzh_sealline_set: }
+\cs_new:Npn \__examzh_sealline_set:
   {
     \bool_if:NT \g__examzh_sealline_show_bool
       {
@@ -1094,6 +1130,10 @@
             { oddpage   } { \__examzh_sealline_scope_oddpage:   }
             { everypage } { \__examzh_sealline_scope_everypage: }
             { first-and-last } { \__examzh_sealline_scope_firstpage_and_lastpage: }
+            { mod-2 } { \use:c { __examzh_sealline_scope_mod_2_equals_1: } }
+            { mod-3 } { \use:c { __examzh_sealline_scope_mod_3_equals_1: } }
+            { mod-4 } { \use:c { __examzh_sealline_scope_mod_4_equals_1: } }
+            { mod-6 } { \use:c { __examzh_sealline_scope_mod_6_equals_1: } }
           }
       }
   }

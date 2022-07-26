@@ -11,6 +11,7 @@
 
 - 增加 `writingbox` 环境
 - 增加 `question/combine-fillin`, `question/combine-fillin-args` 键值
+- 增加密封线的范围值
 
 ## [0.1.12] - 2022-07-25
 
