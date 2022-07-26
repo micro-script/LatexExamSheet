@@ -56,6 +56,8 @@
 % 上下的间距
 \skip_new:N \l__examzh_question_top_sep_skip
 \skip_new:N \l__examzh_question_bottom_sep_skip
+% label 的对齐
+\tl_new:N \l__examzh_question_label_align_tl
 
 
 \keys_define:nn { exam-zh }
@@ -104,6 +106,9 @@
     label .tl_set:N = \l__examzh_question_label_tl,
     combine-fillin .bool_set:N = \l__examzh_question_combine_fillin_bool,
     combine-fillin-args .tl_set:N = \l__examzh_question_combine_fillin_args_tl,
+    label-align .choices:nn =
+      { left, center, right }
+      { \tl_set_eq:NN \l__examzh_question_label_align_tl \l_keys_choice_tl }
   }
 
 \keys_set:nn { exam-zh / question }
@@ -116,7 +121,8 @@
     top-sep             = .25em plus .25em minus .1em ,
     bottom-sep          = .25em plus .25em minus .1em ,
     label               = \arabic*.,
-    combine-fillin      = false
+    combine-fillin      = false,
+    label-align         = right
   }
 
 
@@ -179,18 +185,21 @@
     \list 
       {
         % \int_use:N \g__examzh_question_index_int . 
-        \bool_if:NT \l__examzh_question_combine_fillin_bool
+        \__examzh_question_make_label:n
           {
-            \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
-              { \fillin }
+            \bool_if:NT \l__examzh_question_combine_fillin_bool
               {
-                \use:x
+                \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
+                  { \fillin }
                   {
-                    \exp_not:N \fillin \l__examzh_question_combine_fillin_args_tl
+                    \use:x
+                      {
+                        \exp_not:N \fillin \l__examzh_question_combine_fillin_args_tl
+                      }
                   }
               }
+            \__examzh_question_the_label:
           }
-        \__examzh_question_the_label:
       }
       {
         \dim_set:Nn \topsep    { 0pt }
@@ -218,7 +227,20 @@
               { \dim_set:Nn \leftmargin { 2em } }
             \dim_set:Nn \itemindent { 0pt }
           }
-        \dim_set:Nn \labelsep   { .7em  }
+        \str_case:Vn \l__examzh_question_label_align_tl
+          {
+            { left   } 
+              { 
+                \str_case:VnF \l__examzh_fillin_type_str
+                  {
+                    { paren } { \dim_set:Nn \labelsep { 3.3em } }
+                    { line } { \dim_set:Nn \labelsep { 2.6em } }
+                  }
+                  { \dim_set:Nn \labelsep { 2.8em } }
+              }
+            { center } { \dim_set:Nn \labelsep { 1em } }
+            { right  } { \dim_set:Nn \labelsep { .7em } }
+          }
         \bool_if:NTF \l__examzh_question_combine_fillin_bool
           { \dim_set:Nn \labelwidth { 5em } }
           { \dim_set:Nn \labelwidth { 1.3em } }
@@ -261,7 +283,15 @@
       \l__examzh_question_label_tl
     \group_end:
   }
-
+\cs_new:Npn \__examzh_question_make_label:n #1
+  {
+    \str_case:Vn \l__examzh_question_label_align_tl
+      {
+        { left   } { \rlap { #1 } \hss }
+        { center } { \hss \clap { #1 } \hss }
+        { right  } { \hss \llap { #1 } }
+      }
+  }
 \NewDocumentCommand \AddQuestionCounter { m m }
   {
     % 生成用户层命令
@@ -877,7 +907,7 @@
     blank-vsep .skip_set:N = \l__examzh_solution_blank_vsep_skip,
     top-sep    .skip_set:N = \l__examzh_solution_top_sep_skip,
     bottom-sep .skip_set:N = \l__examzh_solution_bottom_sep_skip,
-    parbreak .bool_set:N = \l__examzh_solution_par_break_bool
+    parbreak .bool_set:N = \l__examzh_solution_par_break_bool,
   }
 \keys_set:nn { exam-zh / solution }
   {
