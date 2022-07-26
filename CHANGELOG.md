@@ -6,6 +6,12 @@
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
 
+## [0.1.13] - 2022-07-25
+
+### Added
+
+- 增加第一层级 `enumerate` 的设置
+
 ## [0.1.13] - 2022-07-24
 
 ### Added

@@ -465,15 +465,28 @@
 
 % 中文字体
 
+
+
 % 在 ctex 的字体配置的基础上进行一些修改
 % 将苹方和微软雅黑分别替换为华文黑体和中易黑体
+
 \str_if_eq:onTF { \g__ctex_fontset_tl } { mac }
   {
+    \setCJKmainfont{Source~Han~Serif~SC}
+      [
+        ItalicFont     = FZKai-Z03,
+      ]
     \setCJKsansfont { Heiti~ SC~ Light } [ BoldFont = Heiti~ SC~ Medium ]
   }
   {
     \str_if_eq:onT { \g__ctex_fontset_tl } { windows }
-      { \setCJKsansfont { SimHei } }
+      { 
+        \setCJKmainfont{Source~Han~Serif~SC}
+          [
+            ItalicFont     = FZKai-Z03,
+          ]
+        \setCJKsansfont { SimHei } 
+      }
   }
 
 % 罗马数字使用中文字体
@@ -512,11 +525,19 @@
 
 \setlist{nosep}
 
-\setlist[enumerate, 2]{
-  left       = 2em,
-  labelsep   = 0pt,
-  label      = { （ \arabic * ） }
-}
+\setlist[enumerate, 1]
+  {
+    labelindent = \parindent,
+    leftmargin  = *,
+    label       = { \arabic * .}
+  }
+
+\setlist[enumerate, 2]
+  {
+    left       = 2em,
+    labelsep   = 0pt,
+    label      = { （ \arabic * ） }
+  }
 
 % 多种方法: method环境
 \newlist{method}{enumerate}{1}
