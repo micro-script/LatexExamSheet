@@ -723,12 +723,12 @@
 
 
 % 注意事项环境 notice
-\NewDocumentEnvironment { notice } { O { } }
+\NewDocumentEnvironment { notice } { O { 注意事项：} O { } }
   {
     \noindent
     \group_begin:
       \sffamily \bfseries
-      注意事项：
+      #1
     \group_end:
     \begin { enumerate }
       [
@@ -738,7 +738,7 @@
         labelwidth = 1.5em ,
         align      = right ,
         label      = { \arabic * . } ,
-        #1
+        #2
       ]
   }
   {
