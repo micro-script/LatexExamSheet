@@ -5,14 +5,14 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
-## [0.1.13] - 2022-07-26
+## [0.1.12] - 2022-07-26
 
 ### Added
 
 - 增加 `writingbox` 环境
+- 增加 `question/combine-fillin`, `question/combine-fillin-args` 键值
 
-
-## [0.1.13] - 2022-07-25
+## [0.1.12] - 2022-07-25
 
 ### Added
 
@@ -23,7 +23,7 @@
 
 - 给 `notice` 环境增加参数
 
-## [0.1.13] - 2022-07-24
+## [0.1.12] - 2022-07-24
 
 ### Added
 
@@ -46,9 +46,7 @@
 - 更正 `select/seperator` 为 `select/separator`
 - 修复 `question` 环境的 `index` 减一问题
 
-
-
-## [0.1.13] - 2022-07-23
+## [0.1.12] - 2022-07-23
 
 ### Changed
 
@@ -58,6 +56,7 @@
 ### Removed
 
 - 去掉 `sealline/text-align` 键值
+
 
 ## [0.1.12] - 2022-07-22
 
@@ -177,7 +176,7 @@
 - 修复了 `a3paper` 和 `foot-style=separate` 的目录页码问题
 
 
-## [0.1.8] - 2022-07-13
+## [0.1.8] - 2022-07-12
 
 ### Fixed
 

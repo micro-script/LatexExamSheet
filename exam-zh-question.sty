@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-07-22} {v0.1.11}
+\ProvidesExplPackage {exam-zh-question} {2022-07-26} {v0.1.12}
   {exam-zh question module}
 
 \RequirePackage { amsthm }
@@ -102,6 +102,8 @@
     % 下方间距
     bottom-sep          .skip_set:N = \l__examzh_question_bottom_sep_skip ,
     label .tl_set:N = \l__examzh_question_label_tl,
+    combine-fillin .bool_set:N = \l__examzh_question_combine_fillin_bool,
+    combine-fillin-args .tl_set:N = \l__examzh_question_combine_fillin_args_tl,
   }
 
 \keys_set:nn { exam-zh / question }
@@ -114,6 +116,7 @@
     top-sep             = .25em plus .25em minus .1em ,
     bottom-sep          = .25em plus .25em minus .1em ,
     label               = \arabic*.,
+    combine-fillin      = false
   }
 
 
@@ -176,6 +179,17 @@
     \list 
       {
         % \int_use:N \g__examzh_question_index_int . 
+        \bool_if:NT \l__examzh_question_combine_fillin_bool
+          {
+            \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
+              { \fillin }
+              {
+                \use:x
+                  {
+                    \exp_not:N \fillin \l__examzh_question_combine_fillin_args_tl
+                  }
+              }
+          }
         \__examzh_question_the_label:
       }
       {
@@ -186,16 +200,28 @@
         \bool_if:NTF \l__examzh_question_problem_style_bool
           {
             % 解答题是正文 + 缩进 2em 的效果
-            \dim_set:Nn \leftmargin { 0pt }
-            \dim_set:Nn \itemindent { 2em }
+            \bool_if:NTF \l__examzh_question_combine_fillin_bool
+              {
+                % 如果 combine 的话就和 question 一样的缩进
+                \dim_set:Nn \leftmargin { 6em } 
+                \dim_set:Nn \itemindent { 0pt }
+              }
+              {
+                \dim_set:Nn \leftmargin { 0pt }
+                \dim_set:Nn \itemindent { 2em }
+              }
           }
           {
             % 选择和填空题是悬挂效果
-            \dim_set:Nn \leftmargin { 2em }
+            \bool_if:NTF \l__examzh_question_combine_fillin_bool
+              { \dim_set:Nn \leftmargin { 6em } }
+              { \dim_set:Nn \leftmargin { 2em } }
             \dim_set:Nn \itemindent { 0pt }
           }
         \dim_set:Nn \labelsep   { .7em  }
-        \dim_set:Nn \labelwidth { 1.3em }
+        \bool_if:NTF \l__examzh_question_combine_fillin_bool
+          { \dim_set:Nn \labelwidth { 5em } }
+          { \dim_set:Nn \labelwidth { 1.3em } }
         \dim_set_eq:NN \listparindent \itemindent
       }
     \item \relax
@@ -360,8 +386,6 @@
           }
       }
     \group_begin:
-      % TODO 为何要用 \CJKfamily+ { }
-      % xeCJK 宏包文档：当 \CJKfamily+ 参数为空时，则使用当前的 CJK 字体族。
       \CJKfamily+ { }
       \symbol { \l_tmpa_int }
     \group_end:
@@ -870,7 +894,7 @@
     blank-type         = none,
     blank-vsep         = 12ex plus 1ex minus 1ex,
     top-sep            = .25em plus .25em minus .1em,
-    bottom-sep         = .25em plus .25em minus .1em,
+    bottom-sep         = 0pt,
     parbreak           = false
   }
 \keys_define:nn { exam-zh }

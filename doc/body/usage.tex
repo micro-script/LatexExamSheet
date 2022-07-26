@@ -1022,7 +1022,7 @@
   \begin{ccnusyntax}[emph={[1]size}]
     size = (*<a3paper|(a4paper)>*)
   \end{ccnusyntax}
-  试卷尺寸。\opt{a4paper} 表示一页为 A4 纸大小；\opt{a3paper} 表示一页为 A3 纸大小，内容为连续两页 A4 拼接。
+  试卷尺寸。\opt{a4paper} 表示一页为 A4 纸大小；\opt{a3paper} 表示一页为 A3 纸大小，内容为连续两页 A4 拼接。此设置只能放在导言区。
 \end{function}
 
 \begin{function}[updated = 2022-07-24]{page/foot-type}
@@ -1085,12 +1085,12 @@
   是否显示密封线。
 \end{function}
 
-\begin{function}[updated = 2022-07-24]{sealline/scope,sealline/type}
+\begin{function}[updated = 2022-07-26]{sealline/scope,sealline/type}
   \begin{ccnusyntax}[emph={[1]scope,type}]
-    scope = (*<firstpage|oddpage|(everypage)>*)
-    type = (*<firstpage|oddpage|(everypage)>*)
+    scope = (*<firstpage|oddpage|(everypage)|first-and-last|mod-2|mod-3|mod-4|mod-6>*)
+    type = (*<firstpage|oddpage|(everypage)|first-and-last|mod-2|mod-3|mod-4|mod-6>*)
   \end{ccnusyntax}
-  密封线的作用范围。\opt{scope} 和 \opt{type} 同效。\opt{firstpage} 表示仅在第一页有密封线；\opt{oddpage} 表示仅有奇数页有密封线，在页面左侧；\opt{everypage} 表示每页都有密封线，奇数页密封线在页面左侧，偶数页密封线在页面右侧。
+  密封线的作用范围。\opt{scope} 和 \opt{type} 同效。\opt{firstpage} 表示仅在第一页有密封线；\opt{oddpage} 表示仅有奇数页有密封线，在页面左侧；\opt{everypage} 表示每页都有密封线，奇数页密封线在页面左侧，偶数页密封线在页面右侧；\opt{first-and-last} 表示只有第一页和最后一页有；\opt{mod-x} 表示满足 $y \mod x \equiv 1$ 的页数 $y$ 中有密封线。
 \end{function}
 
 
@@ -1528,12 +1528,11 @@
 \end{function}
 
 
-
 \begin{function}{question/points}
   \begin{ccnusyntax}[emph={[1]points}]
     points = (*\meta{color}*)
   \end{ccnusyntax}
-  \env{question} 和 \env{problem} 环境中的分数。
+  \env{question} 和 \env{problem} 环境中的分数。出现在题号后，如果不满足格式或位置的，可以自己手动输入 |（xx 分）|。
 \end{function}
 
 
@@ -1590,6 +1589,35 @@
 
 
 还可以使用~\ref{subsubsec:命令环境-题干} 节的 \tn{AddQuestionCounter} 命令自定义计数器样式，使用方式和~\ref{subsubsec:命令环境-选择题} 节的 \tn{AddChoicesCounter} 命令一样。
+
+\begin{function}[added = 2022-07-26]{question/combine-fillin}
+  \begin{ccnusyntax}[emph={[1]combine-fillin}]
+    combine-fillin = (*\TFF*)
+  \end{ccnusyntax}
+  是否将 \tn{fillin} 命令接入 \env{question} 环境。\opt{true} 表示 \tn{fillin} 会在 \env{question} 环境左侧。\kvopt{combine-fillin}{true} 下 \env{question} 和 \env{problem} 环境的缩进效果相同。
+\end{function}
+
+\begin{function}[added = 2022-07-26]{question/combine-fillin-args}
+  \begin{ccnusyntax}[emph={[1]combine-fillin-args}]
+    combine-fillin-args = (*\meta{\tn{fillin} 命令的参数}*)
+  \end{ccnusyntax}
+  \kvopt{combine-fillin}{true} 下 \tn{fillin} 接收的参数，和正常使用 \tn{fillin} 命令接收的参数相同。在此之前的 \opt{fillin/foo} 的相关键值会正常作用与接入 \env{question} 环境的 \tn{fillin}。
+\end{function}
+
+\examsetup{question/index=1}
+\begin{latexexample}{\opt{combine-fillin} 和 \opt{combine-fillin-args} 的使用示例}
+  \examsetup{
+    fillin/show-answer = true,
+    question/combine-fillin = true,
+  }
+  \begin{question}[combine-fillin-args = {[type = paren][A]}]
+    设集合 $A = \{x \mid -1 < x < 4\}$，$B = \{2, 3, 4, 5\}$，则 $A \cap B = $
+  \end{question}
+\end{latexexample}
+\examsetup{
+  fillin/show-answer = false,
+  question/combine-fillin = false,
+}
 
 
 \subsubsection{选择题} \label{subsubsec:参数-选择题}
