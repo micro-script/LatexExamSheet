@@ -771,16 +771,13 @@
 \subsubsection{语文-古诗}
 
 
-\begin{function}[added = 2022-07-24]{poem 环境}
+\begin{function}[added = 2022-07-24,updated = 2022-07-26]{poem 环境}
   \begin{ccnusyntax}[emph={[2]poem}]
     \begin{poem}(*\oarg{键值列表}*)
-      <line 1> \\
-      <line 2> \\
-        ...
-      <line n> \\
+      <content>
     \end{poem}
   \end{ccnusyntax}
-  语文古诗环境。\meta{键值列表} 见~\ref{subsubsec:参数-语文} 节。
+  语文古诗环境。整体居中。\meta{content} 内置于 \env{tabular} 环境，所以建议用 |\\| 分行，且每行距离不能过长。\meta{键值列表} 见~\ref{subsubsec:参数-语文} 节。
 \end{function}
 
 
@@ -803,6 +800,35 @@
   \end{poem}
 \end{latexexample}
 
+
+\subsubsection{英语-作文框}
+
+\begin{function}[added = 2022-07-26]{writingbox 环境}
+  \begin{ccnusyntax}[emph={[2]writingbox}]
+    \begin{writingbox}(*\oarg{键值列表}*)
+      <content>
+    \end{writingbox}
+  \end{ccnusyntax}
+  英语作文框环境。\meta{键值列表} 接入 \env{tcolorbox} 环境的可选参数。
+\end{function}
+
+\begin{latexexample}{\env{writingbox} 环境示例}
+  \begin{writingbox}[title = {Youth and me}]
+    \vspace*{4em}
+  \end{writingbox}
+\end{latexexample}
+
+\begin{latexexample}{\env{writingbox} 环境示例}
+  \begin{writingbox}
+    As the twins looked around them in disappointment, their father appeared. 
+
+    \vspace*{4em}
+  
+    The twins carried the breakfast upstairs and woke their mother up.
+  
+    \vspace*{4em}
+  \end{writingbox}
+\end{latexexample}
 
 
 \subsubsection{师生两版}   \label{subsubsec:命令环境-师生两版}
@@ -1533,7 +1559,7 @@
     top-sep = (*\meta{skip}*)
     bottom-sep = (*\meta{skip}*)
   \end{ccnusyntax}
-  \env{question} 和 \env{problem} 环境的上下方的弹性间距。默认均为 |.5em plus .5em minus .2em|
+  \env{question} 和 \env{problem} 环境的上下方的弹性间距。\opt{top-sep} 默认为 |.25em plus .25em minus .1em|；\opt{bottom-sep} 默认为 |0pt|。
 \end{function}
 
 
@@ -2455,11 +2481,18 @@
 \end{function}
 
 
-\begin{function}[updated = 2022-07-24]{poem/format}
+\begin{function}[added = 2022-07-24]{poem/format}
   \begin{ccnusyntax}[emph={[1]format}]
     format = (*\meta{格式}*)
   \end{ccnusyntax}
   \env{poem} 环境内容的格式。默认为 |\kaishu|。
+\end{function}
+
+\begin{function}[added = 2022-07-26]{poem/align}
+  \begin{ccnusyntax}[emph={[1]align}]
+    align = (*<(l)|c|r>*)
+  \end{ccnusyntax}
+  \env{poem} 环境内容的对齐方式。\opt{l} 表示左对齐；\opt{c} 表示居中对齐；\opt{r} 表示右对齐。
 \end{function}
 
 \begin{function}[added = 2022-07-24]{poem/top-sep}
@@ -2488,4 +2521,11 @@
     type = (*<minipage|(chinese)>*)
   \end{ccnusyntax}
   \env{poem} 环境的类型（主要体现在页脚）。\opt{minipage} 表示 \env{poem} 环境的页脚是基于 \env{minipage} 环境形成的，脚注上方有横线，且两条脚注之间是分行的；\opt{chinese} 表示脚注不分行，连着显示，且最前方有 |[注]| 字（设计来源于“2021 年普通高等学校招生全国统一考试”语文真题卷）。
+\end{function}
+
+\begin{function}[added = 2022-07-26]{poem/zhu-circlednumber-base}
+  \begin{ccnusyntax}[emph={[1]zhu-circlednumber-base}]
+    zhu-circlednumber-base = (*<tikz|(font)>*)
+  \end{ccnusyntax}
+  在 \kvopt{poem/type}{chinese} 键值下，\tn{zhu} 的带圈数字的源。\opt{tikz} 表示此时带圈数字基于 \TikZ，\opt{font} 表示此时带圈数字基于字体。
 \end{function}

@@ -5,6 +5,12 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.13] - 2022-07-26
+
+### Added
+
+- 增加 `writingbox` 环境
+
 
 ## [0.1.13] - 2022-07-25
 
