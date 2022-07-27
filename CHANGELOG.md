@@ -7,6 +7,10 @@
 
 ## [0.1.12] - 2022-07-27
 
+### Added
+
+- 增加 `\fillin*` 命令实现自动换行
+
 ### Changed
 
 - `exam-zh-chinese` 模块改名为 `exam-zh-chinese-english`

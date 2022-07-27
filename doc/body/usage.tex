@@ -453,11 +453,12 @@
 
 \subsubsection{填空题}
 
-\begin{function}{\fillin}
+\begin{function}[updated = 2022-07-27]{\fillin}
   \begin{ccnusyntax}[emph={[2]\fillin}]
     \fillin(*\oarg{键值列表}*)(*\oarg{答案}*)
+    \fillin*(*\oarg{键值列表}*)(*\oarg{答案}*)
   \end{ccnusyntax}
-  填空（下划线或括号）。\meta{答案} 可以受~\ref{subsubsec:参数-题干} 节的 \cmd{question/show-answer} 键值控制隐藏。\meta{键值列表} 见~\ref{subsubsec:参数-填空题} 节。
+  填空（下划线或括号）。\meta{答案} 可以受~\ref{subsubsec:参数-题干} 节的 \cmd{question/show-answer} 键值控制隐藏。\meta{键值列表} 见~\ref{subsubsec:参数-填空题} 节。\tn{fillin} 不可换行，但是会自动根据内容深度提升基线（比如排版分数不会“压线”）；\tn{fillin*} 可以自动换行但是没有前者的功能，且 \tn{fillin*} 的换行功能只适用于 \kvopt{fillin/type}{line}、\kvopt{fillin/type}{paren} 和 \kvopt{fillin/type}{blank}。
 \end{function}
 
 注意，\tn{fillin} 命令经过处理，|\fillin[<1>]| 表示 |\fillin[<答案>]|（而不是通常定义两个可选参数命令，若只写一个的时候默认为第一个参数），而如果仅仅改变 \tn{fillin} 的类型（见下）而不输入答案，则需要使用 |\fillin[type=paren][]|。这样设计是考虑到：大部分时候都是无答案和输入答案两种情况，而单独改某一个 \tn{fillin} 的类型的情况很少，一般都是一些题目统一改，这个时候在需要修改的 \tn{fillin} 之前使用

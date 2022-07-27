@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-07-27} {v0.1.12}
+\ProvidesExplPackage {exam-zh-question} {2022-07-27} {v0.1.13}
   {exam-zh question module}
 
 \RequirePackage { amsthm }
@@ -568,11 +568,11 @@
 % “打印出”答案内容 因为 show 被用作“显示与否”的含义了，所以此处用 print
 \cs_new:Npn \__examzh_fillin_print_answer:n #1
   {
-    \group_begin:
+    % \group_begin:
       \tl_if_eq:NnF \l__examzh_fillin_text_color_tl { black }
         { \exp_args:NV \color \l__examzh_fillin_text_color_tl }
       #1
-    \group_end:
+    % \group_end:
   }
 \cs_new:Npn \__examzh_paren_print_answer:n #1
   {
@@ -632,58 +632,49 @@
 % no-answer-type = blacktriangle 就显示黑色三角形
 % no-answer-type = counter ：计数器（设计来源于完形填空）
 % no-answer-type = none ：不显示
-\NewDocumentCommand \fillin { O{} o }
+\NewDocumentCommand \fillin { s O{} o }
   {
     \group_begin:
-      \IfNoValueTF {#2}
+      \IfNoValueTF {#3}
         {
-          % \fillin[]
-          % \tl_if_blank:nTF {#1}
-            % {
-              \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
-                {
-                  % 显示答案
-                  \__examzh_fillin:n {#1}
-                }
-                {
-                  % 不显示答案
-                  \__examzh_fillin_no_answer_typeset:
-                }
-            % }
-            % {
-              % \__examzh_fillin:n {#1}
-            % }
-        }
-        {
-          % \fillin[][]
-          \keys_set:nn { exam-zh / fillin }
-            {#1}
           \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
             {
               % 显示答案
-              \__examzh_fillin:n {#2}
+              \IfBooleanTF {#1}
+                {
+                  % \fillin*[]
+                  \__examzh_fillin_breakline:n {#2}
+                }
+                {
+                  % \fillin[]
+                  \__examzh_fillin:n {#2}
+                }
             }
             {
               % 不显示答案
               \__examzh_fillin_no_answer_typeset:
             }
-          % \tl_if_blank:nTF {#2}
-            % {
-              % \bool_lazy_and:nnTF
-                % {
-                %   !\bool_if_p:N \l__examzh_question_show_fillin_answer_bool
-                % }
-                % {
-                %   \bool_if_p:N \l__examzh_fillin_show_blacktriangle_bool
-                % }
-                % {
-                %   \__examzh_fillin_without_judge:n { \__examzh_fillin_blacktriangle: }
-                % }
-                % { \__examzh_fillin:n {#2} }
-            % }
-            % {
-              % \__examzh_fillin:n {#2}
-            % }
+        }
+        {
+          \keys_set:nn { exam-zh / fillin }
+            {#2}
+          \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+            {
+              % 显示答案
+              \IfBooleanTF {#1}
+                {
+                  % \fillin*[][]
+                  \__examzh_fillin_breakline:n {#3}
+                }
+                {
+                  % \fillin[][]
+                  \__examzh_fillin:n {#3}
+                }
+            }
+            {
+              % 不显示答案
+              \__examzh_fillin_no_answer_typeset:
+            }
         }
       \group_end:
     \space \ignorespaces
@@ -751,6 +742,19 @@
         \__examzh_fillin_output_F:
       }
   }
+\cs_new:Npn \__examzh_fillin_breakline:n #1
+  {
+    \bool_lazy_and:nnTF
+      { \bool_if_p:N \l__examzh_question_show_fillin_answer_bool }
+      { \bool_not_p:n { \tl_if_empty_p:n {#1} } }
+      {
+        \tl_set:Nn \l_tmpa_tl { \__examzh_fillin_print_answer:n {#1} }
+        \__examzh_fillin_output_breakline_T:
+      }
+      { 
+        \__examzh_fillin_output_F:
+      }
+  }
 \msg_new:nnn { exam-zh } { no-fillin-type }
   {
     There~is~no~type~of~\fillin~named~#1!\\
@@ -770,6 +774,23 @@
         \msg_error:nnx { exam-zh } { no-fillin-type }
           { \l__examzh_fillin_type_str }
       }
+  }
+\cs_new:Npn \__examzh_fillin_output_breakline_T:
+  {
+    \str_case:VnF \l__examzh_fillin_type_str
+      {
+        { line } { \__examzh_fillin_uline_breakline_T: }
+        { paren } { \__examzh_fillin_paren_breakline_T: }
+        { blank } { \__examzh_fillin_blank_breakline_T: }
+      }
+      {
+        \msg_error:nnx { exam-zh } { no-breakable-fillin-type }
+          { \l__examzh_fillin_type_str }
+      }
+  }
+\msg_new:nnn { exam-zh } { no-breakable-fillin-type }
+  {
+    The~type~:~#1~ cannot~be~used~in~breakable~fillin~cmd.
   }
 \cs_new:Npn \__examzh_fillin_output_F:
   {
@@ -805,11 +826,42 @@
   {
     \uline { \hspace* { \l__examzh_fillin_F_width_skip } } 
   }
+\cs_new:Nn \__examzh_fillin_uline:
+  {
+    \bgroup
+      \color{ \l__examzh_fillin_text_color_tl } 
+      \markoverwith{\textcolor{black}{\rule[-0.7ex]{2pt}{0.4pt}}}
+      \ULon
+  }
+\cs_new:Npn \__examzh_fillin_uline_breakline_T:
+  {
+    % \CJKunderline*
+    % \uline
+    \__examzh_fillin_uline:
+      {
+        \hspace* { 1em plus .5em minus .5em }
+        \l_tmpa_tl
+        % 答案很长时，不能完全显示，答案很长时，不能完全显示
+        \hspace* { 1em plus .5em minus .5em }
+      }
+  }
 \cs_new:Npn \__examzh_fillin_paren_T:
   {
     (
       \hspace* { 1em plus .5em minus .5em }
-      \box_use_drop:N \l_tmpa_box
+      \group_begin:
+        \box_use_drop:N \l_tmpa_box
+      \group_end:
+      \hspace* { 1em plus .5em minus .5em }
+    )
+  }
+\cs_new:Npn \__examzh_fillin_paren_breakline_T:
+  {
+    (
+      \hspace* { 1em plus .5em minus .5em }
+      \group_begin:
+        \l_tmpa_tl
+      \group_end:
       \hspace* { 1em plus .5em minus .5em }
     )
   }
@@ -820,7 +872,17 @@
 \cs_new:Npn \__examzh_fillin_blank_T:
   {
     \hspace* { 1em plus .5em minus .5em }
-    \box_use_drop:N \l_tmpa_box 
+    \group_begin:
+      \box_use_drop:N \l_tmpa_box
+    \group_end: 
+    \hspace* { 1em plus .5em minus .5em }
+  }
+\cs_new:Npn \__examzh_fillin_blank_breakline_T:
+  {
+    \hspace* { 1em plus .5em minus .5em }
+    \group_begin:
+      \l_tmpa_tl 
+    \group_end:
     \hspace* { 1em plus .5em minus .5em }
   }
 \cs_new:Npn \__examzh_fillin_blank_F:
