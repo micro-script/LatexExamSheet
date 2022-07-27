@@ -13,7 +13,7 @@
 3. 通过用户接口可以方便更改密封线样式；
 4. 在 Windows, macOS 和 Linux 跨平台编译。
 
-使用前请仔细阅读 [发行版](https://gitee.com/zepinglee/exam-zh/releases) 的用户手册 `exam-zh.pdf`。
+使用前请仔细阅读 [发行版](https://gitee.com/zepinglee/exam-zh/releases) 的用户手册 `exam-zh-doc.pdf`。
 
 ## 示例
 
@@ -48,7 +48,7 @@
 
 ## 使用方法
 
-下面简要叙述 `exam-zh` 的使用方法，**更多使用细节请阅读手册 `exam-zh.pdf`。**
+下面简要叙述 `exam-zh` 的使用方法，**更多使用细节请阅读手册 `exam-zh-doc.pdf`。**
 ### 西文和数学字体
 
 模板中可以设置西文和数学的字体。
@@ -214,7 +214,7 @@
   }
 ```
 
-具体密封线参数含义从参数名称基本可以知道，具体的可以看手册 `exam-zh.pdf`。
+具体密封线参数含义从参数名称基本可以知道，具体的可以看手册 `exam-zh-doc.pdf`。
 
 ## 反馈
 
