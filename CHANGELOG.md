@@ -5,6 +5,15 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.12] - 2022-07-27
+
+### Fixed
+
+- 修复 `chapter` 下的 `question` 的序号从0开始问题
+- 修复页脚 `lastpage` 前的空格自动化的问题
+
+
+
 ## [0.1.12] - 2022-07-26
 
 ### Added

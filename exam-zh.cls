@@ -390,7 +390,7 @@
 \RenewDocumentCommand{ \chapter }{ s o m }
   {
     \keys_set:nn { exam-zh / question }
-      { index = 0 }
+      { index = 1 }
     \int_set:Nn \c@section { 0 }
     \bool_if:NTF \g__examzh_page_show_chapter_bool
       {
@@ -1632,21 +1632,21 @@
 \cs_new:Npn \__examzh_foot_content_page_and_lastpage_output:
   {
     \l__examzh_foot_content_before_page_tl \thepage { }
-    \l__examzh_foot_content_after_page_tl  \pageref { LastPage }~
+    \l__examzh_foot_content_after_page_tl  \unskip \c_space_tl \pageref { LastPage }~
     \l__examzh_foot_content_after_lastpage_tl
   }
 \cs_new:cpn { __examzh_foot_content_page_and_lastpage_a3paper_left_output: }
   {
     \__examzh_foot_lastpage_tmp_set:
     \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page - 1 } { }
-    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }~
+    \l__examzh_foot_content_after_page_tl  ~\int_eval:n { 2 * \l__examzh_tmp_int }~
     \l__examzh_foot_content_after_lastpage_tl
   }
 \cs_new:cpn { __examzh_foot_content_page_and_lastpage_a3paper_right_output: }
   {
     \__examzh_foot_lastpage_tmp_set:
     \l__examzh_foot_content_before_page_tl \int_eval:n { 2 * \c@page } { }
-    \l__examzh_foot_content_after_page_tl  \int_eval:n { 2 * \l__examzh_tmp_int }~
+    \l__examzh_foot_content_after_page_tl  ~\int_eval:n { 2 * \l__examzh_tmp_int }~
     \l__examzh_foot_content_after_lastpage_tl
   }
 \cs_new_nopar:Npn \__examzh_relax: { \relax }
