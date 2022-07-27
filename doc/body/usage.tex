@@ -1,4 +1,4 @@
-% !TeX root = ../exam-zh.tex
+% !TeX root = ../exam-zh-doc.tex
 
 \section{使用说明}
 
@@ -952,6 +952,17 @@
     fullwidth-stop = (*<(catcode)|false>*)
   \end{ccnusyntax}
   是否将 |。| 映射为 |.|。\opt{catcode} 表示映射；\opt{false} 表示不映射。
+\end{function}
+
+\begin{function}[added = 2022-07-24]{style/footnote-style}
+  % 这里奇怪的东西是用来控制对齐的。ccnusyntax 会吃掉开头的几个空格，因此这里用 X 来占位。
+  \begin{ccnusyntax}[emph={[1]footnote-style}]
+    footnote-style = (*<plain|\\
+      XXXX\mbox{}~~~~~~~~~~~~~~~~~(libertinus)|libertinus*|libertinus-sans|\\
+      XXXX\mbox{}~~~~~~~~~~~~~~~~~pifont|pifont*|pifont-sans|pifont-sans*|\\
+      XXXX\mbox{}~~~~~~~~~~~~~~~~~xits|xits-sans|xits-sans*>*)
+  \end{ccnusyntax}
+  设置脚注编号样式。西文字体设置会影响其默认取值。因此，要使得该选项生效，需将其放置在 \opt{font} 选项之后。带有 sans 的为相应的无衬线字体版本。带有 * 的为 阴文样式(即黑底白字)。
 \end{function}
 
 
