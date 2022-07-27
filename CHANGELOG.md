@@ -7,6 +7,11 @@
 
 ## [0.1.12] - 2022-07-27
 
+### Changed
+
+- `exam-zh-chinese` 模块改名为 `exam-zh-chinese-english`
+
+
 ### Fixed
 
 - 修复 `chapter` 下的 `question` 的序号从0开始问题
@@ -45,6 +50,7 @@
 - 增加 `\subject` 的可选参数
 - 增加 `scoringbox/position` 键值
 - 增加 `material` 环境
+- 增加 `style/footnote-style` 键值
 
 ### Changed
 
