@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-26} {v0.1.12} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-27} {v0.1.12} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -86,7 +86,7 @@
 \RequirePackage { exam-zh-question }
 \RequirePackage { exam-zh-choices }
 \RequirePackage { exam-zh-symbols }
-\RequirePackage { exam-zh-chinese }
+\RequirePackage { exam-zh-chinese-english }
 
 \AtEndPreamble
   {
@@ -2117,7 +2117,7 @@
   }
 \keys_set:nn { exam-zh / style }
   {
-    footnote-style = xits
+    footnote-style = libertinus
   }
 \cs_new:Npn \__examzh_fn_symbol_libertinus:n #1
   {
