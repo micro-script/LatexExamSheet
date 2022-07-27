@@ -320,3 +320,5 @@ doc/test.hd
 *.pdf
 
 exam-zh-examples/
+
+*.hd
