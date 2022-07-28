@@ -1,8 +1,28 @@
-# 高考试卷 LaTeX 模板
+# exam-zh: LaTeX template for Chinese exam
+
+Provides a class exam-zh.cls and its several module packages like exam-zh-question.sty and exam-zh-choices.sty, where these module packages can be used individually. 
+
+Although there are several excellent exam packages or classes uploaded before like exam and bhcexam , they don't fit the chinese style very well or they cannot be customized easily for chinese exam of all types like exams in primary school, junior high school, senior high school and even college. Those are the main reason why exam-zh was created.
+
+In exam-zh, you can
+
+- seperate the format and the content very well;
+- use choices environment to typeset choice items easily and automatically;
+- design the sealline easily;
+- use it in Windows, macOS and Linux;
+- ... (for more that you can do with it, please read the manual（in Chinese）: `exam-zh-doc.pdf`
+
+
+Repository: https://gitee.com/zepinglee/exam-zh
+Author: Zeping Lee
+Maintainer: Kangwei Xia, Lijun Guo
+Issues and pull requests are welcome: [issues]( https://gitee.com/zepinglee/exam-zh/issues) and [pulls](https://gitee.com/zepinglee/exam-zh/pulls)
+
+# exam-zh：中国试卷 LaTeX 模板
 
 - 项目主页：<https://gitee.com/zepinglee/exam-zh>
 - 作者：Zeping Lee
-- 维护者：Zeping Lee, Kangwei Xia, Lijun Guo
+- 维护者：Kangwei Xia, Lijun Guo
 - 授权：[LaTeX Project Public License 1.3c](https://www.latex-project.org/lppl.txt)
 
 
@@ -15,7 +35,7 @@
 
 使用前请仔细阅读 [发行版](https://gitee.com/zepinglee/exam-zh/releases) 的用户手册 `exam-zh-doc.pdf`。
 
-## 示例
+## 示例（simple example）
 
 ```latex
 \section{选择题：本题共 8 小题，每小题 5 分，共 40 分。}
