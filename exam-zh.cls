@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-07-28} {v0.1.13} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-07-29} {v0.1.14} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -1025,7 +1025,7 @@
     \AddToHook { shipout / firstpage } [ sealline ]
       {
         \put (0cm, 0cm)
-          { \__examzh_sealline_odd: }
+          { \color{black} \__examzh_sealline_odd: }
       }
   }
 % 只在第一页和最后一页出现
@@ -1034,12 +1034,13 @@
     \AddToHook { shipout / firstpage } [ sealline ]
       {
         \put (0cm, 0cm)
-          { \__examzh_sealline_odd: }
+          { \color{black} \__examzh_sealline_odd: }
       }
     \AddToHook { shipout / lastpage } [ sealline ]
       {
         \put (0cm, 0cm)
           {
+            \color{black} 
             \int_if_odd:nTF { \c@page }
               { \__examzh_sealline_odd: }
               { \__examzh_sealline_even: }
@@ -1053,6 +1054,7 @@
       {
         \put (0cm, 0cm)
           {
+            \color{black} 
             \int_if_odd:nT { \c@page }
               { \__examzh_sealline_odd: }
           }
@@ -1065,6 +1067,7 @@
       {
         \put (0cm, 0cm)
           {
+            \color{black} 
             \int_if_odd:nTF { \c@page }
               { \__examzh_sealline_odd: }
               { \__examzh_sealline_even: }
@@ -1078,6 +1081,7 @@
       {
         \put (0cm, 0cm)
           {
+            \color{black} 
             \int_compare:nNnT { \int_mod:nn { \c@page } { 2 } } = {1} { \__examzh_sealline_odd: }
           }
       }
@@ -1089,6 +1093,7 @@
       {
         \put (0cm, 0cm)
           {
+            \color{black} 
             \int_compare:nNnT { \int_mod:nn { \c@page } { 3 } } = {1} { \__examzh_sealline_odd: }
           }
       }
@@ -1100,6 +1105,7 @@
       {
         \put (0cm, 0cm)
           {
+            \color{black} 
             \int_compare:nNnT { \int_mod:nn { \c@page } { 4 } } = {1} { \__examzh_sealline_odd: }
           }
       }
@@ -1111,11 +1117,14 @@
       {
         \put (0cm, 0cm)
           {
+            \color{black} 
             \int_compare:nNnT { \int_mod:nn { \c@page } { 6 } } = {1} { \__examzh_sealline_odd: }
           }
       }
   }
 
+% https://github.com/CTeX-org/ctex-kit/issues/632#issuecomment-1199675064
+\AddToHook{shipout/before}{\xeCJKShipoutHook}
 
 \AtBeginDocument
   { \__examzh_sealline_set: }
@@ -1256,7 +1265,7 @@
     \begin{tikzpicture}
       [
         remember~picture,
-        overlay,
+        overlay
       ]
       % 密封线：线
       \__examzh_sealline_odd_line:

@@ -9,8 +9,9 @@
 
 ### Fixed
 
-- 修复 solution 的颜色设置影响密封线问题（#I5JJT3）
+- 修复 `solution` 的颜色设置影响密封线问题（#I5JJT3）
 - 修复 `fillin*` 内包含文字和公式的问题（https://gitee.com/zepinglee/exam-zh/issues/I4TJTO#note_12005992_link）
+- 修复 `lstlistings` 环境影响密封线问题（#I5JJT3）
 
 ## [0.1.13] - 2022-07-28
 
