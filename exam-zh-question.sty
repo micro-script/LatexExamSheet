@@ -670,8 +670,8 @@
 \cs_new:Npn \__examzh_fillin_print_answer:n #1
   {
     % \group_begin:
-      \tl_if_eq:NnF \l__examzh_fillin_text_color_tl { black }
-        { \exp_args:NV \color \l__examzh_fillin_text_color_tl }
+      % \tl_if_eq:NnF \l__examzh_fillin_text_color_tl { black }
+        % { \exp_args:NV \color \l__examzh_fillin_text_color_tl }
       #1
     % \group_end:
   }
@@ -927,20 +927,42 @@
   {
     \uline { \hspace* { \l__examzh_fillin_F_width_skip } } 
   }
-\cs_new:Nn \__examzh_fillin_uline:
+% \cs_new:Nn \__examzh_fillin_uline:
+  % {
+    % \bgroup
+    %   \color{ \l__examzh_fillin_text_color_tl } 
+    %   \markoverwith{\textcolor{black}{\rule[-0.7ex]{2pt}{0.4pt}}}
+    %   \ULon
+% xeCJKfntef.sty
+% xeCJK: 修复下划线中数学公式的错误处理
+% https://github.com/CTeX-org/ctex-kit/commit/ad44c6674bb377653544349f23b7c629bc9e4677
+\RenewDocumentCommand \CJKunderline { s t- s o }
   {
-    \bgroup
-      \color{ \l__examzh_fillin_text_color_tl } 
-      \markoverwith{\textcolor{black}{\rule[-0.7ex]{2pt}{0.4pt}}}
-      \ULon
+    \xeCJK_ulem_group_begin:
+      \xeCJK_fntef_boot:nnNNNn { underline } { uline } #1#2#3 {#4}
+      \xeCJK_fntef_initial:nnn
+        { \l__xeCJK_uline_depth_tl }
+        { \l__xeCJK_uline_sep_tl }
+        {
+          \l__xeCJK_uline_format_tl
+          \tex_vrule:D
+            height \dim_eval:n { \l__xeCJK_uline_thickness_tl }
+            depth \c_zero_dim
+            width .2em
+        }
+      % 给 CJKunderline 加了颜色控制
+      \color { \l__examzh_fillin_text_color_tl }
+      \xeCJK_ulem_on:n
   }
+  % }
 \cs_new:Npn \__examzh_fillin_uline_breakline_T:
   {
-    % \CJKunderline*
+    \CJKunderline*
     % \uline
-    \__examzh_fillin_uline:
+    % \__examzh_fillin_uline:
       {
         \hspace* { 0.5em plus .5em minus .5em }
+        % \color{ \l__examzh_fillin_text_color_tl } 
         \l_tmpa_tl
         % 答案很长时，不能完全显示，答案很长时，不能完全显示
         \hspace* { 0.5em plus .5em minus .5em }
