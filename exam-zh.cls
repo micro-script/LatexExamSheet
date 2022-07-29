@@ -995,7 +995,7 @@
     text-xshift             = 11mm,
     text-yshift             = 0pt,
     text-width              = 0.8\textheight,
-    text-format             = \zihao{4}\sffamily,
+    text-format             = \zihao{4}\sffamily\color{black},
     text-xscale             = 1.0,
     text-yscale             = 0.8,
     text-direction-vertical = false,

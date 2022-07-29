@@ -267,9 +267,10 @@
 \prg_generate_conditional_variant:Nnn \regex_extract_once:nnN { nxN } { F } 
 \cs_new:Npn \__examzh_question_begin_fillin_type_set:
   {
-    \regex_count:nVN { \[ } %]
+    \regex_count:nVN { \[ } % \]
       \l__examzh_question_combine_fillin_args_tl
       \l__examzh_question_begin_fillin_args_bracket_num_int
+    \use_none:n { \] }  % 消去 \[ 的高亮影响
     % \int_use:N \l__examzh_question_begin_fillin_args_bracket_num_int
     \int_compare:nNnT { \l__examzh_question_begin_fillin_args_bracket_num_int } = {2}
       {

@@ -5,6 +5,11 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.14] - 2022-07-29
+
+### Fixed
+
+- 修复 solution 的颜色设置影响密封线问题（##I5JJT3）
 
 ## [0.1.13] - 2022-07-28
 
