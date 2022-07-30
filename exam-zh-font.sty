@@ -9,11 +9,12 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-font} {2022-07-29} {v0.1.14}
+\ProvidesExplPackage {exam-zh-font} {2022-07-30} {v0.1.14}
   {exam-zh font module}
 
 \RequirePackage { unicode-math }
 \RequirePackage { filehook }
+\RequirePackage { etoolbox }
 
 \tl_new:N \g__examzh_font_font_tl
 \tl_new:N \g__examzh_font_math_font_tl
