@@ -1958,6 +1958,26 @@
   控制 \kvopt{fillin/type}{line/paren/blank} 下 \tn{fillin} 不显示答案时的长度，默认为 |3em|。
 \end{function}
 
+\begin{function}[added = 2022-07-30]{fillin/width-type}
+  \begin{ccnusyntax}[emph={[1]width-type}]
+    width-type = (*<(fill)|normal>*)
+  \end{ccnusyntax}
+  \kvopt{show-answer}{false} 且 \kvopt{no-answer-type}{none} 时 \opt{fillin/width} 设置时若 \meta{width} 的长度超过了当前行的剩余长度，则多余部分在下一行的表现。\opt{fill} 表示多余部分只要不超过 \tn{linewidth} 就自动 fill 为 \tn{linewidth} 的长度（此时建议 \opt{width} 的值不是 \tn{linewidth} 的整数倍，而是（以最终一共两行为例）比如 |1.5\linewidth|）；\opt{normal} 表示多余部分严格按照 \meta{width} 的值排版。由于使用了 \pkg{linegoal}，需要编译至少两次才能获得正确的效果。
+\end{function}
+
+\begin{latexexample}{\opt{width-type} 示例}
+  \examsetup{fillin/no-answer-type=none}
+  测试 测试测试，测试 \fillin[width = 3em][答案]
+
+  测试 测试测试，测试 \fillin[width = 0.5\linewidth][答案]
+
+  测试
+  \fillin[width = 1.1\linewidth][答案] 测试
+
+  测试
+  \fillin[width-type = normal, width = 1.1\linewidth][答案] 测试
+\end{latexexample}
+
 \begin{function}[added = 2022-07-15]{fillin/color}
   \begin{ccnusyntax}[emph={[1]color}]
     color = (*\meta{color}*)
@@ -1971,6 +1991,14 @@
     text-color = (*\meta{color}*)
   \end{ccnusyntax}
   设置 \tn{fillin} 中答案的颜色。
+\end{function}
+
+
+\begin{function}[added = 2022-07-30]{fillin/paren-type}
+  \begin{ccnusyntax}[emph={[1]paren-type}]
+    paren-type = (*<(banjiao)|quanjiao>*)
+  \end{ccnusyntax}
+  设置 \tn{fillin} 中 \kvopt{type}{paren} 时的括号类型。\opt{banjiao} 表示半角括号；\opt{quanjiao} 表示全角括号。
 \end{function}
 
 

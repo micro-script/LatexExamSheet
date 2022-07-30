@@ -5,6 +5,13 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.14] - 2022-07-30
+
+### Added
+
+- 增加 `fillin/paren-type` 控制括号的半角全角
+- 增加 `fillin/width-type` 控制 `fillin/no-answer-type=none` 下 `width` 的表现
+
 ## [0.1.14] - 2022-07-29
 
 ### Fixed
