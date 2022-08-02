@@ -403,7 +403,7 @@
     format                 = \kaishu,
     title-author-sep       = 2em,
     top-sep                = 0pt,
-    bottom-sep             = 0pt,
+    bottom-sep             = 1em,
     title-poem-sep         = 0.25\baselineskip,
     type                   = chinese,
     align                  = l,
@@ -482,17 +482,20 @@
       }
       {
         \endcenter
-        \vspace*{-0.7em}
-        \small
-        \begin{description}[leftmargin = 2em]
-          \item[{[注]}] 
-            \seq_map_indexed_inline:Nn \g__examzh_poem_zhu_store_seq
-              % ##1: index
-              % ##2: content
-              {
-                \__examzh_chinese_circled_number:n {##1} ~ ##2 
-              }
-        \end{description}
+        \seq_if_empty:NF \g__examzh_poem_zhu_store_seq
+          {
+            \vspace*{-0.7em}
+            \small
+            \begin{description}[leftmargin = 2em]
+              \item[{[注]}] 
+                \seq_map_indexed_inline:Nn \g__examzh_poem_zhu_store_seq
+                  % ##1: index
+                  % ##2: content
+                  {
+                    \__examzh_chinese_circled_number:n {##1} ~ ##2 
+                  }
+            \end{description}
+          }
       }
   }
 
