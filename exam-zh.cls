@@ -777,10 +777,6 @@
   }
 
 
-% 正体的 e 和 i
-\NewDocumentCommand \eu { } { \mathrm{ e } }
-\NewDocumentCommand \iu { } { \mathrm{ i } }
-
 
 % 兼容 siunitx v2.x 的一些命令
 \AtEndOfPackageFile* { siunitx }

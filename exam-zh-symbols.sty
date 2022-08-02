@@ -17,6 +17,16 @@
   { symbols .meta:nn = { exam-zh / symbols } {#1} }
 
 
+% 正体的 e 和 i
+\NewDocumentCommand \eu { } { \mathrm{ e } }
+\NewDocumentCommand \upe { } { \mathrm{ e } }
+\NewDocumentCommand \iu { } { \mathrm{ i } }
+\NewDocumentCommand \upi { } { \mathrm{ i } }
+
+\NewDocumentCommand \uppi { } { \mathrm{ \pi } }
+
+
+
 % 分数 \frac \dfrac
 \int_new:N \l__examzh_symbols_frac_numerator_str_int       % frac 分子字符数
 \int_new:N \l__examzh_symbols_frac_denominator_str_int     % frac 分母字符数
