@@ -681,8 +681,8 @@
 \cs_new:Npn \__examzh_fillin_print_answer:n #1
   {
     % \group_begin:
-      % \tl_if_eq:NnF \l__examzh_fillin_text_color_tl { black }
-        % { \exp_args:NV \color \l__examzh_fillin_text_color_tl }
+      \tl_if_eq:NnF \l__examzh_fillin_text_color_tl { black }
+        { \exp_args:NV \color \l__examzh_fillin_text_color_tl }
       #1
     % \group_end:
   }
