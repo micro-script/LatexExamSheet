@@ -7,9 +7,9 @@
 
 ## [0.1.15] - 2022-08-09
 
-### Added
+### Fixed
 
-- 增加 `exam-zh-question` 模块对 `xeCJK` 和 `xeCJKfntef` 宏包的版本判断
+- 增加 `\tl_map_inline:nn` 的变体函数修复报错
 
 
 ## [0.1.15] - 2022-08-02

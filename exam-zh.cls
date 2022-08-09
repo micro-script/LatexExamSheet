@@ -127,6 +127,9 @@
 \examzh_package_conflict:nn { enumitem } { paralist }
 
 
+% 生成函数变体
+\cs_generate_variant:Nn \tl_map_inline:nn { xn }
+
 % 标点处理
 \tl_const:Nn \c__examzh_fwid_full_stop_tl { ^^^^ff0e }
 
