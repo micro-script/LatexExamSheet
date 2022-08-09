@@ -35,18 +35,6 @@
 \ExplSyntaxOn
 
 
-% 检测 xeCJK 宏包和 xeCJKfntef 宏包的版本
-\clist_map_inline:nn { xeCJK, xeCJKfntef }
-  {
-    \@ifpackagelater {#1} { 2022/08/05 }
-      { } { \msg_error:nnn { exam-zh } { package-too-old } {#1} }
-  }
-\msg_new:nnn { exam-zh } { package-too-old }
-  {
-    Package~ "#1"~ is~ too~ old. \\\\
-    Please~ update~ an~ up-to-date~ version~by~using~ your~ TeX~ package \\
-    manager~ or~ from~ CTAN.
-  }
 
 
 \NewDocumentCommand \questionsetup { m }
