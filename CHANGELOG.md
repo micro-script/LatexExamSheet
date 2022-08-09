@@ -5,6 +5,13 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.15] - 2022-08-09
+
+### Added
+
+- 增加 `exam-zh-question` 模块对 `xeCJK` 和 `xeCJKfntef` 宏包的版本判断
+
+
 ## [0.1.15] - 2022-08-02
 
 ### Added
