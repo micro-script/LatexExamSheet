@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-08-09} {v0.1.15}
+\ProvidesExplPackage {exam-zh-question} {2022-08-11} {v0.1.16}
   {exam-zh question module}
 
 
@@ -1155,11 +1155,13 @@
   % #1: CJKunderline / use:n
   % #2: \allowbreak
   {
+    \dim_set_eq:NN \l_tmpb_dim \linegoal
     % 比较 \l__examzh_fillin_F_width_dim 和 linegoal
     \dim_compare:nNnTF { \l__examzh_fillin_F_width_dim } > { \linegoal }
       {
         % 超过 linegoal 就排一段 linegoal，然后 \l__examzh_fillin_F_width_dim 减去 linegoal 长度
-        \dim_set:NV \l_tmpa_dim \linegoal
+        % \dim_set:NV \l_tmpa_dim \linegoal
+        \dim_set:NV \l_tmpa_dim \l_tmpb_dim
         % 是否处于 list 环境中
         \bool_if:NTF \l__if_list_bool
           {
@@ -1172,7 +1174,7 @@
           }
           {
             % 正文中
-            #1 { \hspace { \linegoal } }
+            #1 { \hspace { \l_tmpb_dim } }
           }
         \dim_sub:NV \l__examzh_fillin_F_width_dim \l_tmpa_dim
         \dim_while_do:nNnn { \l__examzh_fillin_F_width_dim } > { \linewidth }

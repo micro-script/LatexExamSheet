@@ -5,6 +5,13 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.16] - 2022-08-11
+
+### Fixed
+
+- 修复双栏下使用 `\fillin` 造成的 `linegoal` 干扰问题
+
+
 ## [0.1.15] - 2022-08-09
 
 ### Fixed
