@@ -1967,7 +1967,7 @@
     width-type = (*<(fill)|normal>*)
   \end{ccnusyntax}
   \kvopt{show-answer}{false} 且 \kvopt{no-answer-type}{none} 时 \opt{fillin/width} 设置时若 \meta{width} 的长度超过了当前行的剩余长度，则多余部分在下一行的表现。\opt{fill} 表示多余部分只要不超过 \tn{linewidth} 就自动 fill 为 \tn{linewidth} 的长度（此时建议 \opt{width} 的值不是 \tn{linewidth} 的整数倍，而是（以最终一共两行为例）比如 |1.5\linewidth|）；\opt{normal} 表示多余部分严格按照 \meta{width} 的值排版。由于使用了 \pkg{linegoal}，需要编译至少两次才能获得正确的效果。
-  \emph{注意：由于 \kvopt{no-answer-type}{none} 下的算法是基于 \pkg{linegoal} 获取当前行的剩余距离，如果此时同一行出现了两个 \tn{fillin} 就会互相干扰，导致编译异常。所以 \kvopt{no-answer-type}{none} 下尽可能避免同一行出现两个 \tn{fillin} 命令}
+  % \emph{注意：由于 \kvopt{no-answer-type}{none} 下的算法是基于 \pkg{linegoal} 获取当前行的剩余距离，如果此时同一行出现了两个 \tn{fillin} 就会互相干扰，导致编译异常。所以 \kvopt{no-answer-type}{none} 下尽可能避免同一行出现两个 \tn{fillin} 命令}
 \end{function}
 
 \begin{latexexample}{\opt{width-type} 示例}
