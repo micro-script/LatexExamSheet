@@ -7,6 +7,10 @@
 
 ## [0.1.17] - 2022-08-12
 
+### Added
+
+- 增加 `question` 的 `hang` 键值控制“悬挂效果”
+
 ### Fixed
 
 - 修复同一行的 `\fillin` 造成的 `\linegoal` 冲突问题

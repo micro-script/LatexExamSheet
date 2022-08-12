@@ -1633,6 +1633,28 @@
 \examsetup{
   fillin/show-answer = false,
   question/combine-fillin = false,
+  question/index = 1,
+}
+
+\begin{function}[added = 2022-08-12]{question/hang}
+  \begin{ccnusyntax}[emph={[1]hang}]
+    combine-fillin = (*\TTF*)
+  \end{ccnusyntax}
+  \env{question} 环境是否是“悬挂效果”。
+\end{function}
+
+\begin{latexexample}{\opt{question/hang} 的效果}
+  \begin{question}
+    劳仑衣普桑，认至将指点效则机，最你更枝。想极整月正进好志次回总般，段然取向使张规军证回，世市总李率英茄持伴。用阶千样响领交出，器程办管据家元写
+  \end{question}
+  
+  \begin{question}[hang = false]
+    劳仑衣普桑，认至将指点效则机，最你更枝。想极整月正进好志次回总般，段然取向使张规军证回，世市总李率英茄持伴。用阶千样响领交出，器程办管据家元写
+  \end{question}
+\end{latexexample}
+
+\examsetup{
+  question/index = 1,
 }
 
 
