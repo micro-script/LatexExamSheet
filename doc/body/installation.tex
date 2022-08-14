@@ -1,10 +1,24 @@
 % !TeX root = ../exam-zh-doc.tex
 
-\section{安装}
+\section{安装与更新}
 
-\subsection{获取 \cls{exam-zh}}
 
-目前模块还处于开发阶段，用户目前以「下载发行版」的方式获取最新版本的 \cls{exam-zh}：
+\subsection{标准安装}
+
+目前 \cls{exam-zh} 已经上传 CTAN，您可以使用宏包管理器安装 \cls{exam-zh}。
+例如在 \TeXLive{} 中，执行（可能需要管理员权限）
+\begin{shellcode}[morekeywords={tlmgr,install}]
+  tlmgr install exam-zh
+\end{shellcode}
+即可完成安装。
+
+在 \TeXLive{} 和 \MiKTeX{} 中，您还可以通过图形界面进行安装，
+此处不再赘述。
+
+
+\subsection{手动安装}
+
+您也可以通过访问 gitee 项目主页的方式获取最新版本的 \cls{exam-zh}（通常情况下，gitee 的版本会大于等于CTAN 的版本（因为 CTAN 从上传到审核到用户可以下载需要一天左右））。主要以「下载发行版」的方式获取最新版本的 \cls{exam-zh}：
 
 \begin{enumerate}
   \item 进入项目主页（\href{https://gitee.com/zepinglee/exam-zh}{gitee 项目主页} （界面见图~\ref{figure:gitee项目主页} ）
@@ -35,58 +49,6 @@
   \label{figure:gitee发行版}
 \end{figure}
 
-% % \subsubsection{标准安装}
-
-% % 如果没有特殊理由，始终建议您使用宏包管理器安装 \cls{exam-zh}。
-% % 例如在 \TeXLive{} 中，执行（可能需要管理员权限）
-% % \begin{shellexample}[morekeywords={tlmgr,install}]
-% %   tlmgr install exam-zh
-% % \end{shellexample}
-% % 即可完成安装。
-
-% % 在 \TeXLive{} 和 \MiKTeX{} 中，您还可以通过图形界面进行安装，
-% % 此处不再赘述。
-
-% % \subsubsection{手动安装}
-
-% % 如果您需要从 CTAN 上自行下载并手动安装，较好的方法是使用 TDS
-% % 安装包：
-% % \begin{itemize}
-% %   \item 从 CTAN 上下载 \cls{exam-zh} 的
-% %     \href{http://mirror.ctan.org/install/macros/latex/contrib/exam-zh.tds.zip}{TDS 安装包}；
-% %   \item 按目录结构将 \file{exam-zh.tds.zip} 中的文件复制到 \TeX{}
-% %     发行版的本地 TDS 根目录；
-% %   \item 执行 \bashcmd{mktexlsr} 刷新文件名数据库以完成安装。
-% % \end{itemize}
-% % %
-% % 您也可以从源代码直接生成模板（不推荐）：
-% % \begin{itemize}
-% %   \item 打开 \href{https://gitee.com/stone-zeng/exam-zh}{项目主页}，
-% %     点击“Code”按钮，并选择“Download ZIP”，下载 \file{exam-zh-main.zip}；
-% %     如果您的电脑中安装有 git 程序，也可通过以下命令直接克隆代码仓库：
-% %     \begin{shellexample}[gobble=6,alsoletter={.},morekeywords={git,clone}]
-% %       git clone https://gitee.com/stone-zeng/exam-zh.git
-% %     \end{shellexample}
-% %   \item 解压并进入到 \file{source} 文件夹，执行以下命令以生成
-% %     模板的各组件：
-% %     \begin{shellexample}[gobble=6,morekeywords={xetex}]
-% %       xetex exam-zh.dtx
-% %     \end{shellexample}
-% %   \item 将生成的文档类（\file{.cls}）、宏包（\file{.sty}）以及
-% %     参数配置文件（\file{.def}）复制到 \TeX{} 发行版本地 TDS 树
-% %     的 \path{texmf-local/tex/latex/exam-zh/} 目录下，并执行
-% %     \bashcmd{mktexlsr} 刷新文件名数据库，方可完成安装。
-% %   \item 使用 \cls{exam-zh} 撰写论文时，您还需要从代码仓库下的
-% %     \file{testfiles/support} 目录中复制 \file{fudan-name.pdf}
-% %     文件至工作目录，以确保封面中的校名图片可以正确显示。
-% % \end{itemize}
-
-% % \subsubsection{扁平化安装}
-
-% % 如果您不希望安装本模板，但需要立刻使用，也可以使用模板提供的安装脚本。
-% % 从 gitee 上获取代码仓库后，执行 \file{install-win.bat}（Windows 系统）
-% % 或 \file{install-linux.sh}（Linux 系统），所有需要的文件便会在
-% % \file{thesis} 文件夹中生成。
 
 
 \subsection{模板组成}
