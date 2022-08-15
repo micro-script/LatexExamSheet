@@ -5,6 +5,16 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.18] - 2022-08-15
+
+### Added
+
+- 增加新的字体
+
+### Changed
+
+- 修改示例文件的部分代码
+
 ## [0.1.17] - 2022-08-12
 
 ### Added
