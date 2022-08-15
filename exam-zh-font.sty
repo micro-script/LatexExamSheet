@@ -1,5 +1,5 @@
 %
-% Copyright (c) 2022 Zeping Lee
+% Copyright (c) 2022 Zeping Lee and AlphaZTX
 % Released under the LaTeX Project Public License v1.3c License.
 % Repository: https://gitee.com/zepinglee/exam-zh
 %
@@ -23,14 +23,15 @@
   {
     font .choices:nn =
       {
-        newcm ,
-        lm ,
-        times ,
-        termes ,
-        stix,
-        xits ,
+        garamond ,
         libertinus ,
-        % newtx ,
+        lm ,
+        newcm ,
+        pala ,
+        stix ,
+        termes ,
+        times ,
+        xits ,
         none
       }
       {
@@ -39,14 +40,16 @@
       } ,
     math-font .choices:nn =
       {
-        newcm ,
-        lm ,
-        termes ,
-        stix,
-        xits ,
-        libertinus ,
+        asana ,
         cambria ,
-        % newtx ,
+        garamond ,
+        libertinus ,
+        lm ,
+        newcm ,
+        pala ,
+        stix ,
+        termes ,
+        xits ,
         none
       }
       {
@@ -139,6 +142,52 @@
     \examzh_font_set_tex_gyre_sans_mono:
   }
 
+
+% Garamond (实际上是 EB Garamond)
+\cs_new:Npn \examzh_font_set_font_garamond:
+  {
+    \setmainfont { EBGaramond }
+      [
+        Extension      = .otf ,
+        UprightFont    = *-Regular ,
+        BoldFont       = *-Bold ,
+        ItalicFont     = *-Italic ,
+        BoldItalicFont = *-BoldItalic ,
+      ]
+    \setsansfont { LinBiolinum }
+      [
+        Extension      = .otf ,
+        UprightFont    = *_R ,
+        BoldFont       = *_RB ,
+        ItalicFont     = *_RI ,
+        BoldItalicFont = *_RBO ,
+      ]
+    \setmonofont { texgyrecursor }
+      [
+        Extension      = .otf ,
+        UprightFont    = *-regular ,
+        BoldFont       = *-bold ,
+        ItalicFont     = *-italic ,
+        BoldItalicFont = *-bolditalic ,
+      ]
+  }
+
+
+% Palatino (TeX Gyre Pagella)
+\cs_new:Npn \examzh_font_set_font_pala:
+  {
+    \setmainfont { texgyrepagella }
+      [
+        Extension      = .otf ,
+        UprightFont    = *-regular ,
+        BoldFont       = *-bold ,
+        ItalicFont     = *-italic ,
+        BoldItalicFont = *-bolditalic ,
+      ]
+    \examzh_font_set_tex_gyre_sans_mono:
+  }
+
+% TeX Gyre Heros / Cursor
 \cs_new:Npn \examzh_font_set_tex_gyre_sans_mono:
   {
     \setsansfont { texgyreheros }
@@ -553,7 +602,45 @@
       Extension    = .otf,
       range        = { \complement } ,
     ]
+  \message
+    {
+      Please~note~that~the~Cambria~font~family~cannot~be~used~on~commercial~purpose~unless~you~are~using~Windows~7/8/10/11~PROFESSIONAL.
+    }
 }
+
+% 新增的 asana, garamond, pala
+\cs_new:Npn \examzh_font_set_math_font_asana: 
+  {
+    \setmathfont { Asana-Math.otf }
+    \examzh_font_set_stix_names:
+    \setmathfont { \g__examzh_font_font_name_stix_math_tl }
+      [
+        Extension    = .otf,
+        range        = { \complement } ,
+      ]
+  }
+
+\cs_new:Npn \examzh_font_set_math_font_garamond: 
+  {
+    \setmathfont { Garamond-Math.otf }
+    \examzh_font_set_stix_names:
+    \setmathfont { \g__examzh_font_font_name_stix_math_tl }
+      [
+        Extension    = .otf,
+        range        = { \complement } ,
+      ]
+  }
+
+\cs_new:Npn \examzh_font_set_math_font_pala: 
+  {
+    \setmathfont { texgyrepagella-math.otf }
+    \examzh_font_set_stix_names:
+    \setmathfont { \g__examzh_font_font_name_stix_math_tl }
+      [
+        Extension    = .otf,
+        range        = { \complement } ,
+      ]
+  }
 
 
 
@@ -571,11 +658,23 @@
 % 兼容旧的粗体命令：\pkg{bm} 的 \cs{bm} 和 \pkg{amsmath} 的 \cs{boldsymbol}。
 \AtEndOfPackageFile* { unicode-math }
   {
-    \NewDocumentCommand \bm { m } { { \symbfit { ##1 } } }
-    \RenewDocumentCommand \boldsymbol { m } { { \symbfit { ##1 } } }
+    \NewDocumentCommand \bm { m } 
+      { 
+        \tl_if_head_eq_catcode:nNTF { ##1 } A 
+          { \symbfit{#1} }
+          { 
+            #1 
+            \PackageWarning { exam-zh-font } 
+              { 
+                Do~not~use~\string\bm \space ~with~`unicode-math',~normal~font~instead. 
+              }
+          }
+      }
+    \RenewDocumentCommand \boldsymbol { } { \bm }
     % 兼容 \pkg{amsfonts} 和 \pkg{amssymb} 中的一些命令。
     \NewDocumentCommand \square { } { \mdlgwhtsquare }
     \NewDocumentCommand \blacksquare { } { \mdlgblksquare }
-    \AtBeginDocument
-      { \RenewDocumentCommand \checkmark { } { \ensuremath{ ✓ } } }
+    \AtBeginDocument { \RenewDocumentCommand \checkmark { } { \ensuremath{ ✓ } } }
   }
+
+\endinput

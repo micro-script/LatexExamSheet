@@ -1416,16 +1416,16 @@
 \subsubsection{字体}
 
 
-\begin{function}{font}
+\begin{function}[updated = 2022-08-15]{font}
   \begin{ccnusyntax}[emph={[1]font}]
     font = (*(newcm)|lm|times|termes|stix|xits|libertinus|none*)
   \end{ccnusyntax}
   设置西文字体。具体配置见表~\ref{tab:font}。
 \end{function}
 
-\begin{function}{math-font}
+\begin{function}[updated = 2022-08-15]{math-font}
   \begin{ccnusyntax}[emph={[1]math-font}]
-    math-font = (*(newcm)|lm|termes|stix|xits|libertinus|cambria|none*)
+    math-font = (*(newcm)|lm|stix|xits|libertinus|cambria|garamond|pala|asana|none*)
   \end{ccnusyntax}
   设置数学字体。具体配置见表~\ref{tab:math-font}。
 \end{function}
@@ -1448,6 +1448,8 @@
       |stix|       & STIXTwoText\tnote{a}     & texgyreheros   & texgyrecursor \\
       |xits|       & XITS\tnote{b}         & texgyreheros   & texgyrecursor \\
       |libertinus| & LibertinusSerif\tnote{c}  & LibertinusSans\tnote{d} & lmmonolt10 \\
+      |garamond|   &  EB Garamond    &  Biolinum     & tgcursor\\
+      |pala|       &   tgpagella     & tgheros    &  tgcursor\\
       \bottomrule
     \end{tabular}
     \begin{tablenotes}
@@ -1475,6 +1477,9 @@
       |xits|       & XITSMath-Regular\tnote{b}       & & & \\
       |libertinus| & LibertinusMath-Regular\tnote{c} & & & \\
       |cambria|    & Cambria Math                & & & \\
+      |pala|       & tgpagella-math & & & \\
+      |garamond|   & Garamond-Math & & & \\
+      |asana|      & Asana Math & & & \\
       \bottomrule
     \end{tabular}
     \begin{tablenotes}
