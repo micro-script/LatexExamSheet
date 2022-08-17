@@ -13,14 +13,14 @@ In exam-zh, you can
 - ... (for more that you can do with it, please read the manual（in Chinese）: `exam-zh-doc.pdf`
 
 
-Repository: https://gitee.com/zepinglee/exam-zh
+Repository: https://gitee.com/xkwxdyy/exam-zh
 Author: Zeping Lee
 Maintainer: Kangwei Xia, Lijun Guo
-Issues and pull requests are welcome: [issues]( https://gitee.com/zepinglee/exam-zh/issues) and [pulls](https://gitee.com/zepinglee/exam-zh/pulls)
+Issues and pull requests are welcome: [issues]( https://gitee.com/xkwxdyy/exam-zh/issues) and [pulls](https://gitee.com/xkwxdyy/exam-zh/pulls)
 
 # exam-zh：中国试卷 LaTeX 模板
 
-- 项目主页：<https://gitee.com/zepinglee/exam-zh>
+- 项目主页：<https://gitee.com/xkwxdyy/exam-zh>
 - 作者：Zeping Lee
 - 维护者：Kangwei Xia, Lijun Guo
 - 授权：[LaTeX Project Public License 1.3c](https://www.latex-project.org/lppl.txt)
@@ -33,7 +33,7 @@ Issues and pull requests are welcome: [issues]( https://gitee.com/zepinglee/exam
 3. 通过用户接口可以方便更改密封线样式；
 4. 在 Windows, macOS 和 Linux 跨平台编译。
 
-使用前请仔细阅读 [发行版](https://gitee.com/zepinglee/exam-zh/releases) 的用户手册 `exam-zh-doc.pdf`。
+使用前请仔细阅读 [发行版](https://gitee.com/xkwxdyy/exam-zh/releases) 的用户手册 `exam-zh-doc.pdf`。
 
 ## 示例（simple example）
 
