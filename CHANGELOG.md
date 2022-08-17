@@ -5,6 +5,13 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.19] - 2022-08-17
+
+### Added
+
+- 增加 `solution/show-solution` 的等效键值：`solution/show-answer`
+
+
 ## [0.1.18] - 2022-08-15
 
 ### Added
