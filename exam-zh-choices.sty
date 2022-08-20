@@ -90,7 +90,7 @@
     % 尽量避免在选项中间换行
     \int_set:Nn \interlinepenalty { 301 }
     \noindent
-    \dim_set_eq:NN \l__examzh_choices_total_width_dim \linewidth
+    \dim_set:Nn \l__examzh_choices_total_width_dim { \linewidth - \leftskip - \rightskip }
     \int_zero:N \l__examzh_choices_columns_int
     \dim_zero:N \l__examzh_choices_label_width_dim
     \keys_set:nn { exam-zh / choices } {#1}
@@ -384,54 +384,63 @@
   }
 
 
-\coffin_new:N \l__examzh_choices_item_coffin
-\coffin_new:N \l__examzh_choices_label_coffin
+\box_new:N \l__examzh_choices_item_box
+\box_new:N \l__examzh_choices_label_box
 
 \cs_new:Npn \__examzh_print_single_choice:nn #1#2
   {
     % 选项标签
-    \__examzh_choices_make_label_coffin:n {#1}
+    \__examzh_choices_make_label_box:n {#1}
     % 选项内容
-    \__examzh_choices_make_item_coffin:n {#2}
+    \__examzh_choices_make_item_box:n {#2}
     % 合并选项的标签和内容
     \str_case:Vn \l__examzh_choices_label_pos_tl
       {
         { top-left }
           {
-            \coffin_join:NnnNnnnn
-              \l__examzh_choices_item_coffin  {l} {H}
-              \l__examzh_choices_label_coffin {r} {H}
-              { - \l__examzh_choices_label_sep_dim }
-              { 0pt }
+            \hbox_set:Nn \l__examzh_choices_item_box
+              {
+                \box_use_drop:N \l__examzh_choices_label_box
+                \kern \l__examzh_choices_label_sep_dim
+                \box_use_drop:N \l__examzh_choices_item_box
+              }
           }
         { left }
           {
-            \coffin_join:NnnNnnnn
-              \l__examzh_choices_item_coffin  {l} {vc}
-              \l__examzh_choices_label_coffin {r} {vc}
-              { - \l__examzh_choices_label_sep_dim }
-              { 0pt }
+            \hbox_set:Nn \l__examzh_choices_item_box
+              {
+                \box_move_down:nn
+                  {
+                    ( \box_ht_plus_dp:N \l__examzh_choices_label_box
+                      - \box_ht_plus_dp:N \l__examzh_choices_item_box ) / 2
+                  }
+                  { \box_use_drop:N \l__examzh_choices_label_box }
+                \kern \l__examzh_choices_label_sep_dim
+                \box_use_drop:N \l__examzh_choices_item_box
+              }
           }
         { bottom }
           {
-            \coffin_join:NnnNnnnn
-              \l__examzh_choices_item_coffin  {hc} {b}
-              \l__examzh_choices_label_coffin {hc} {t}
-              { 0pt }
-              % { - \l__examzh_choices_label_sep_dim }
-              { 0pt }
+            \hbox_set:Nn \l__examzh_choices_item_box
+              {
+                \vbox:n
+                  {
+                    \box_use_drop:N \l__examzh_choices_item_box
+                    \nointerlineskip
+                    % \kern \l__examzh_choices_label_sep_dim 
+                    \box_use_drop:N \l__examzh_choices_label_box
+                  }
+              }
           }
       }
     % 输出合并后
-    \coffin_typeset:Nnnnn \l__examzh_choices_item_coffin {l} {H} {0pt} {0pt}
-    \coffin_clear:N \l__examzh_choices_item_coffin
-    \coffin_clear:N \l__examzh_choices_label_coffin
+    \box_use_drop:N \l__examzh_choices_item_box
   }
 
-% 将标签内容存入 coffin
-\cs_new:Npn \__examzh_choices_make_label_coffin:n #1
+% 将标签内容存入 box
+\cs_new:Npn \__examzh_choices_make_label_box:n #1
   {
-    \hcoffin_set:Nn \l__examzh_choices_label_coffin
+    \hbox_set:Nn \l__examzh_choices_label_box
       {
         \hbox_to_wd:nn { \l__examzh_choices_label_width_dim }
           { \__examzh_choices_make_label:n {#1} \strut }
@@ -450,12 +459,12 @@
 
 \bool_new:N \l__examzh_choices_figure_mode_bool
 
-% 将选项内容存入 coffin
-\cs_new:Npn \__examzh_choices_make_item_coffin:n #1
+% 将选项内容存入 box
+\cs_new:Npn \__examzh_choices_make_item_box:n #1
   {
-    \hcoffin_set:Nn \l__examzh_choices_item_coffin
+    \hbox_set:Nn \l__examzh_choices_item_box
       {
-        % 优先尝试使用 hbox，这是因为在 \vcoffin_set 外部能保留原来的 \linewidth 和
+        % 优先尝试使用 hbox，这是因为在 \vbox_set 外部能保留原来的 \linewidth 和
         % \textwidth，方便用户在 \includegraphics 中使用
         \hbox_set:Nn \l_tmpa_box {#1}
         % 若盒子的自然高度大于 2 行，且深度为 0pt，设置为插图模式
@@ -466,11 +475,15 @@
           }
           { \dim_compare_p:nNn { \box_dp:N \l_tmpa_box } < { 1pt } }
           { \bool_set_true:N \l__examzh_choices_figure_mode_bool }
-        \vcoffin_set:Nnn \l_tmpa_coffin
-          { \l__examzh_choices_item_width_dim }
+        \vbox_set:Nn \l_tmpa_box
           {
+            \dim_set_eq:NN \hsize \l__examzh_choices_item_width_dim
+            \dim_set_eq:NN \linewidth \hsize
+            \dim_set_eq:NN \columnwidth \hsize
             \dim_set_eq:NN \parskip \c_zero_dim
             \dim_set_eq:NN \parindent \listparindent
+            \dim_set:Nn \leftskip { 0pt }
+            \dim_set:Nn \rightskip { 0pt }
             \noindent
             % \strut
             % 若标签在底部，将图片居中对齐。
@@ -483,14 +496,14 @@
             % 使用 \strut 将行距撑开，防止跟下一行选项的间距过小
             \mode_if_horizontal:T { \strut }
           }
-        \dim_set:Nn \l_tmpa_dim { \coffin_ht:N \l_tmpa_coffin }
-        \bool_if:NT \l__examzh_choices_figure_mode_bool
+        \dim_set:Nn \l_tmpa_dim { \box_ht:N \l_tmpa_box }
+        \bool_if:NTF \l__examzh_choices_figure_mode_bool
           {
-            \coffin_set_horizontal_pole:Nnn \l_tmpa_coffin {T}
-              { \l_tmpa_dim - 0.7 \baselineskip }
+            \box_move_up:nn { \l_tmpa_dim - 0.7 \baselineskip } { \box_use_drop:N \l_tmpa_box }
           }
-        \coffin_typeset:Nnnnn \l_tmpa_coffin {l} {T} {0pt} {0pt}
-        \coffin_clear:N \l_tmpa_coffin
+          {
+            \vbox_top:n { \box_use_drop:N \l_tmpa_box }
+          }
       }
   }
 
