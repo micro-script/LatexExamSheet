@@ -1,7 +1,7 @@
 %
 % Copyright (c) 2022 Zeping Lee
 % Released under the LaTeX Project Public License v1.3c License.
-% Repository: https://gitee.com/zepinglee/exam-zh
+% Repository: https://gitee.com/xkwxdyy/exam-zh
 %
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
@@ -86,6 +86,7 @@
 \RequirePackage { exam-zh-choices }
 \RequirePackage { exam-zh-symbols }
 \RequirePackage { exam-zh-chinese-english }
+\RequirePackage { exam-zh-textfigure }
 
 \AtEndPreamble
   {
@@ -182,8 +183,9 @@
 
 \NewDocumentCommand { \ExamPrintAnswer } { }
   {
-    \clist_use:Nn \g__examzh_print_answer_cmd_set_clist {}
-    \clist_if_empty:NF \g__examzh_print_answer_keys_set_clist
+    \clist_if_exist:NT \g__examzh_print_answer_cmd_set_clist
+      { \clist_use:Nn \g__examzh_print_answer_cmd_set_clist {} }
+    \clist_if_exist:NT \g__examzh_print_answer_keys_set_clist
       {
         \keys_set:nx { exam-zh }
           { \g__examzh_print_answer_keys_set_clist }
@@ -499,6 +501,11 @@
 \dim_set:Nn \lineskiplimit { .5em }
 \skip_set:Nn \lineskip { .5em }
 
+% 增加对 minipage 的处理
+% https://tex.stackexchange.com/a/358080/246645
+\dim_set:Nn \normallineskiplimit { .5em }
+\skip_set:Nn \normallineskip { .5em }
+
 
 
 % 设置 enumitem 列表格式
@@ -534,9 +541,14 @@
 
 \setlist[enumerate, 2]
   {
-    left       = 2em,
-    labelsep   = 0pt,
-    label      = { （ \arabic * ） }
+    % labelindent = *,
+    leftmargin  = 0pt, 
+    widest      = 0,
+    itemindent  = 4em,
+    labelsep    = 0pt,
+    % labelwidth  = 2em,
+    listparindent = \parindent,
+    label       = {（ \arabic * ）},
   }
 
 % 多种方法: method环境
@@ -1193,7 +1205,7 @@
   }
 \keys_set:nn { exam-zh / page }
   {
-    show-columnline  = true,
+    show-columnline  = false,
     columnline-width = 0.4pt
   }
 
