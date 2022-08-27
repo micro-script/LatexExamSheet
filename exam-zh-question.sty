@@ -1,7 +1,7 @@
 %
 % Copyright (c) 2022 Zeping Lee
 % Released under the LaTeX Project Public License v1.3c License.
-% Repository: https://gitee.com/zepinglee/exam-zh
+% Repository: https://gitee.com/xkwxdyy/exam-zh
 %
 
 \NeedsTeXFormat{LaTeX2e}
@@ -755,6 +755,7 @@
       { \bool_set_true:N \l__examzh_fillin_paren_banjiao_bool },
     paren-type / quanjiao .code:n = 
       { \bool_set_false:N \l__examzh_fillin_paren_banjiao_bool },
+    depth .dim_set:N = \l__examzh_fillin_line_depth_dim
   }
 \keys_set:nn { exam-zh / fillin }
   {
@@ -767,7 +768,8 @@
     no-answer-counter-index  = 1,
     no-answer-counter-label  = \arabic*,
     paren-type               = banjiao,
-    width-type               = fill,
+    width-type               = normal,
+    depth                    = 0.4em
   }
 
 \keys_define:nn { exam-zh }
@@ -801,7 +803,9 @@
             }
             {
               % 不显示答案
-              \__examzh_fillin_no_answer_typeset:
+              \IfBooleanTF {#1}
+                { \__examzh_fillin_no_answer_breakble_typeset: }
+                { \__examzh_fillin_no_answer_unbreakble_typeset: }
             }
         }
         {
@@ -821,7 +825,9 @@
             }
             {
               % 不显示答案
-              \__examzh_fillin_no_answer_typeset:
+              \IfBooleanTF {#1}
+                { \__examzh_fillin_no_answer_breakble_typeset: }
+                { \__examzh_fillin_no_answer_unbreakble_typeset: }
             }
         }
     \group_end:
@@ -832,13 +838,26 @@
     There~is~no~such~noanswertype~named~#1!\\
     Please~read~the~manual~carefully!
   }
-\cs_new:Npn \__examzh_fillin_no_answer_typeset:
+\cs_new:Npn \__examzh_fillin_no_answer_unbreakble_typeset:
   {
     \str_case:VnF \l__examzh_fillin_no_answer_type_str
       {
         { blacktriangle } { \__examzh_fillin_no_answer_typeset_blacktriangle: }
         { counter } { \__examzh_fillin_no_answer_typeset_counter: }
-        { none } { \__examzh_fillin_no_answer_typeset_none: }
+        { none } { \__examzh_fillin_output_unbreakable_F: }
+      }
+      {
+        \msg_error:nnx { exam-zh / fillin } { no-such-noanswertype }
+          { \l__examzh_fillin_no_answer_type_str }
+      }
+  }
+\cs_new:Npn \__examzh_fillin_no_answer_breakble_typeset:
+  {
+    \str_case:VnF \l__examzh_fillin_no_answer_type_str
+      {
+        { blacktriangle } { \__examzh_fillin_no_answer_typeset_blacktriangle: }
+        { counter } { \__examzh_fillin_no_answer_typeset_counter: }
+        { none } { \__examzh_fillin_output_breakable_F: }
       }
       {
         \msg_error:nnx { exam-zh / fillin } { no-such-noanswertype }
@@ -855,10 +874,6 @@
     \__examzh_fillin_without_judge:n
       { \__examzh_fillin_the_label: }
       % { \int_eval:n { \g__examzh_fillin_no_answer_counter_int - 1 } }
-  }
-\cs_new:Npn \__examzh_fillin_no_answer_typeset_none:
-  {
-    \__examzh_fillin_output_F:
   }
 \cs_new:Npn \__examzh_fillin_without_judge:n #1
   {
@@ -887,7 +902,7 @@
         \__examzh_fillin_output_T:
       }
       { 
-        \__examzh_fillin_output_F:
+        \__examzh_fillin_output_unbreakable_F:
       }
   }
 \cs_new:Npn \__examzh_fillin_breakline:n #1
@@ -900,7 +915,7 @@
         \__examzh_fillin_output_breakline_T:
       }
       { 
-        \__examzh_fillin_output_F:
+        \__examzh_fillin_output_breakable_F:
       }
   }
 \msg_new:nnn { exam-zh } { no-fillin-type }
@@ -940,14 +955,29 @@
   {
     The~type~:~#1~ cannot~be~used~in~breakable~fillin~cmd.
   }
-\cs_new:Npn \__examzh_fillin_output_F:
+\cs_new:Npn \__examzh_fillin_output_breakable_F:
   {
     \str_case:VnF \l__examzh_fillin_type_str
       {
-        { line } { \__examzh_fillin_uline_F: }
-        { paren } { \__examzh_fillin_paren_F: }
+        { line } { \__examzh_fillin_uline_breakable_F: }
+        { paren } { \__examzh_fillin_paren_breakable_F: }
         { circle } { \__examzh_fillin_circle_F: }
-        { blank } { \__examzh_fillin_blank_F: }
+        { blank } { \__examzh_fillin_blank_breakable_F: }
+        { rectangle } { \__examzh_fillin_rectangle_F: }
+      }
+      {
+        \msg_error:nnx { exam-zh } { no-fillin-type }
+          { \l__examzh_fillin_type_str }
+      }
+  }
+\cs_new:Npn \__examzh_fillin_output_unbreakable_F:
+  {
+    \str_case:VnF \l__examzh_fillin_type_str
+      {
+        { line } { \__examzh_fillin_uline_unbreakable_F: }
+        { paren } { \__examzh_fillin_paren_unbreakable_F: }
+        { circle } { \__examzh_fillin_circle_F: }
+        { blank } { \__examzh_fillin_blank_unbreakable_F: }
         { rectangle } { \__examzh_fillin_rectangle_F: }
       }
       {
@@ -957,7 +987,9 @@
   }
 \cs_new:Npn \__examzh_fillin_uline_T:
   {
-    \uline
+    % \uline
+    \CJKunderline*
+      [ depth = \l__examzh_fillin_line_depth_dim ]
       {
         \hspace* { 0.5em plus .5em minus .5em }
         \dim_compare:nNnTF { \l__examzh_question_answer_depth_dim } > { 0.2em }
@@ -970,10 +1002,17 @@
         \hspace* { 0.5em plus .5em minus .5em }
       }
   }
-\cs_new:Npn \__examzh_fillin_uline_F:
+\cs_new:Npn \__examzh_fillin_uline_breakable_F:
   {
     % \uline { \hspace* { \l__examzh_fillin_F_width_dim } } 
     \__examzh_fillin_breakable_hspace:NN \CJKunderline \allowbreak
+  }
+\cs_new:Npn \__examzh_fillin_uline_unbreakable_F:
+  {
+    \unskip
+    \hspace* { 0.5em plus .5em minus .5em }
+    \uline { \hspace* { \l__examzh_fillin_F_width_dim } }
+    \ignorespaces
   }
 % \cs_new:Nn \__examzh_fillin_uline:
   % {
@@ -1006,6 +1045,7 @@
 \cs_new:Npn \__examzh_fillin_uline_breakline_T:
   {
     \CJKunderline*
+      [ depth = \l__examzh_fillin_line_depth_dim ]
     % \uline
     % \__examzh_fillin_uline:
       {
@@ -1018,6 +1058,7 @@
   }
 \cs_new:Npn \__examzh_fillin_paren_T:
   {
+    \unskip
     \bool_if:NTF \l__examzh_fillin_paren_banjiao_bool
       {
         (
@@ -1037,9 +1078,11 @@
           \hspace* { 0.5em plus .5em minus .5em }
         ）
       }
+    \ignorespaces
   }
 \cs_new:Npn \__examzh_fillin_paren_breakline_T:
   {
+    \unskip
     \bool_if:NTF \l__examzh_fillin_paren_banjiao_bool
       {
         (
@@ -1059,6 +1102,7 @@
           \hspace* { 0.5em plus .5em minus .5em }
         ）
       }
+    \ignorespaces
   }
 \box_new:N \c__examzh_banjiao_right_brace_box
 \box_new:N \c__examzh_quanjiao_right_brace_box
@@ -1068,8 +1112,10 @@
   { \box_wd:N \c__examzh_banjiao_right_brace_box }
 \dim_const:Nn \c__examzh_quanjiao_right_brace_width_dim  % (
   { \box_wd:N \c__examzh_quanjiao_right_brace_box }
-\cs_new:Npn \__examzh_fillin_paren_F:
+\cs_new:Npn \__examzh_fillin_paren_breakable_F:
   {
+    \unskip
+    \hspace* { 0.5em plus .5em minus .5em }
     \bool_if:NTF \l__examzh_fillin_paren_banjiao_bool
       {
         ( \__examzh_fillin_breakable_hspace:NN \use:n \nobreak \kern-\c__examzh_banjiao_right_brace_width_dim ) \allowbreak
@@ -1077,27 +1123,48 @@
       {
         （ \__examzh_fillin_breakable_hspace:NN \use:n \nobreak \kern-\c__examzh_quanjiao_right_brace_width_dim ）\allowbreak
       }
+    \ignorespaces
+  }
+\cs_new:Npn \__examzh_fillin_paren_unbreakable_F:
+  {
+    \unskip
+    \hspace* { 0.5em plus .5em minus .5em }
+    \bool_if:NTF \l__examzh_fillin_paren_banjiao_bool
+      {
+        ( \hspace* { \l__examzh_fillin_F_width_dim } )
+      }
+      {
+        （ \hspace* { \l__examzh_fillin_F_width_dim } ）
+      }
+    \ignorespaces
   }
 \cs_new:Npn \__examzh_fillin_blank_T:
   {
+    \unskip
     \hspace* { 0.5em plus .5em minus .5em }
     \group_begin:
       \box_use_drop:N \l_tmpa_box
     \group_end: 
-    \hspace* { 0.5em plus .5em minus .5em }
+    \ignorespaces
   }
 \cs_new:Npn \__examzh_fillin_blank_breakline_T:
   {
+    \unskip
     \hspace* { 0.5em plus .5em minus .5em }
     \group_begin:
       \l_tmpa_tl 
     \group_end:
-    \hspace* { 0.5em plus .5em minus .5em }
+    \ignorespaces
   }
-\cs_new:Npn \__examzh_fillin_blank_F:
+\cs_new:Npn \__examzh_fillin_blank_breakble_F:
   {
     % \hspace* { \l__examzh_fillin_F_width_dim }
     \__examzh_fillin_breakable_hspace:NN \use:n \allowbreak
+  }
+\cs_new:Npn \__examzh_fillin_blank_unbreakble_F:
+  {
+    \hspace* { \l__examzh_fillin_F_width_dim }
+    % \__examzh_fillin_breakable_hspace:NN \use:n \allowbreak
   }
 \tikzset
   {
