@@ -5,6 +5,10 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.19] - 2022-08-27
+
+- 修复不同字体可能导致的 `bigstar` 缺失问题
+
 ## [0.1.19] - 2022-08-17
 
 ### Added
