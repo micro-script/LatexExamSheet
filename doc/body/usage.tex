@@ -684,7 +684,7 @@
 \end{function}
 
 \begin{function}{\chapter}
-  用于排一份的试卷标题。并可以用 \opt{page/show-chapter} 键值控制显示与否。
+  用于排一份的试卷标题。并可以用 \opt{page/show-chapter} 键值控制显示与否。新的 \tn{chapter} 下 \env{question} 环境计数器会重置。
 \end{function}
 
 其余的见~\ref{subsubsec:抬头} 节。
@@ -883,6 +883,22 @@
 \end{itemize}
 
 关于师生两版的键值设置见~\ref{subsubsec:参数-师生两版} 节。
+
+
+
+\subsubsection{图文排版}
+
+图文排版模块为 \file{exam-zh-textfigure.sty}，基于 xkwxdyy 的 \href{https://gitee.com/xkwxdyy/text-figure}{text-figure} 宏包优化而来，\pkg{text-figure} 宏包不再维护。
+
+试卷中的图文排版主要有三种类型：
+\begin{enumerate}
+  \item 多张图片并排，文字处于上方和下方；
+  \item 文字和图片左右或上下排版
+  \item 文字绕排（主要基于李清的 \pkg{wrapstuff} 宏包）
+\end{enumerate}
+
+其中，文字绕排一般用于语文英语等文字较多的情形。
+
 
 
 
@@ -1826,6 +1842,27 @@
   选项的最大列数。排版选项时会优先尝试该列数，如果无法排下内容，依次将列数除以 2 并取整再进行尝试，直到可以排下全部选项。默认为 |4| 。
 \end{function}
 
+\begin{function}[added = 2022-08-27]{choices/top-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep}]
+    top-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{choices} 环境上方弹性间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-08-27]{choices/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]bottom-sep}]
+    bottom-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{choices} 环境下方弹性间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-08-27]{choices/linesep}
+  \begin{ccnusyntax}[emph={[1]linesep}]
+    linesep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{choices} 环境的行数多于 1 时的行额外弹性间距。默认为 |0pt plus .5ex|。
+\end{function}
+
 
 
 \begin{function}{paren}
@@ -1910,6 +1947,7 @@
   \end{ccnusyntax}
   \env{question} 标签的对齐方式。
 \end{function}
+
 
 
 \subsubsection{填空题} \label{subsubsec:参数-填空题}
@@ -2182,19 +2220,6 @@
   \env{solution} 环境内容的颜色。默认为 |black|。
 \end{function}
 
-\begin{function}[added = 2022-07-19]{solution/top-sep}
-  \begin{ccnusyntax}[emph={[1]top-sep}]
-    top-sep = (*\meta{dimension}*)
-  \end{ccnusyntax}
-  \env{solution} 环境上方间距。默认为 |.5em plus .5em minus .2em|。
-\end{function}
-
-\begin{function}[added = 2022-07-19]{solution/bottom-sep}
-  \begin{ccnusyntax}[emph={[1]bottom-sep}]
-    bottom-sep = (*\meta{dimension}*)
-  \end{ccnusyntax}
-  \env{solution} 环境下方间距。默认为 |.5em plus .5em minus .2em|。
-\end{function}
 
 \begin{function}[added = 2022-07-19]{solution/blank-type}
   \begin{ccnusyntax}[emph={[1]blank-type}]
