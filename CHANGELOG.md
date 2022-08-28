@@ -7,7 +7,23 @@
 
 ## [0.1.19] - 2022-08-27
 
+### Added
+
+- 增加 `choices` 的 `top-sep`, `bottom-sep`, `linesep` 键值
+- 增加对 `minipage` 的最小行距的控制
+- 增加 `\fillin` 的 `depth` 键值控制下划线的深度
+- 增加图文排版模块 `exam-zh-textfigure.sty`
+- 增加示例文件的图文排版
+
+### Changed
+
+- 修改列表环境 `enumerate` 参数
+- `show-columnline` 默认值改为 `false`
+
+### Fixed
+
 - 修复不同字体可能导致的 `bigstar` 缺失问题
+- 修复 `\ExamPrintAnswer` 的未设置编译报错问题
 
 ## [0.1.19] - 2022-08-17
 
