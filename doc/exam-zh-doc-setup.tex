@@ -6,6 +6,7 @@
 \usepackage{../exam-zh-question}
 \usepackage{../exam-zh-symbols}
 \usepackage{../exam-zh-chinese-english}
+\usepackage{../exam-zh-textfigure}
 
 \ExplSyntaxOn
 \NewDocumentCommand \examsetup { m }
@@ -32,7 +33,7 @@
 \title{\textcolor{MaterialIndigo800}{%
   \textbf{exam-zh: 高考试卷 \LaTeX \xpinyin[font=\sffamily,format=\color{MaterialIndigo800}]{模}{mu2}板}}}
 \author{李泽平，夏康玮，郭李军}
-\date{2022/08/15\quad v0.1.18%
+\date{2022/08/28\quad v0.1.19%
   \thanks{%
     \url{https://gitee.com/xkwxdyy/exam-zh}
   }
@@ -62,3 +63,10 @@
     \end{tabular}
   }
 \ExplSyntaxOff
+
+\AddToHook{env/latexexample/after}
+  {%
+    \examsetup{
+      question/index=1
+    }
+  }
