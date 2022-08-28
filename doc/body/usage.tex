@@ -894,12 +894,103 @@
 \begin{enumerate}
   \item 多张图片并排，文字处于上方和下方；
   \item 文字和图片左右或上下排版
-  \item 文字绕排（主要基于李清的 \pkg{wrapstuff} 宏包）
+  \item 文字绕排（主要基于李清的 \pkg{wrapstuff} 宏包（\file{exam-zh-textfigure.sty} 中已加载））
 \end{enumerate}
 
 其中，文字绕排一般用于语文英语等文字较多的情形。
 
+\begin{function}[added = 2022-08-28]{multifigures 环境}
+  \begin{ccnusyntax}[emph={[2]multifigures}]
+    \begin{multifigures}(*\oarg{键值列表}*)
+      \item[标签1] (*\meta{内容1}*)
+      \item[标签2] (*\meta{内容2}*)
+      ...
+    \end{multifigures}
+  \end{ccnusyntax}
+  多张图片（无超链接引用）排版环境。\meta{键值列表} 见~\ref{subsubsec:参数-图文排版}。
+\end{function}
 
+\begin{latexexample}{\env{multifigures} 环境示例1}
+  \begin{multifigures}
+    \item[题 9 图：勾股数] \includegraphics[width=3cm]{example-image.png}
+    \item[题 11 图：圆锥曲线] \includegraphics[width=3cm]{example-image.png}
+  \end{multifigures}
+\end{latexexample}
+
+\begin{latexexample}{\env{multifigures} 环境示例2}
+  \begin{multifigures}[columns=2]
+    \item[题 9 图] \includegraphics[width=3cm]{example-image.png}
+    \item[题 10 图] \includegraphics[width=3cm]{example-image.png}
+    \item[题 11 图] \includegraphics[width=3cm]{example-image.png}
+    \item[题 12 图] \includegraphics[width=3cm]{example-image.png}
+  \end{multifigures}
+\end{latexexample}
+
+
+\begin{function}[added = 2022-08-28]{\textfigure}
+  \begin{ccnusyntax}[emph={[2]textfigure}]
+    \textfigure(*\oarg{参数列表}\marg{文本}\marg{图片}*)
+  \end{ccnusyntax}
+  图文排版命令。\meta{键值列表} 见~\ref{subsubsec:参数-图文排版}。
+\end{function}
+
+\begin{latexexample}{\tn{textfigure} 命令示例1}
+  \textfigure{
+    江州司马平安否？ 惠远东林住得无？ \par
+    湓浦曾闻似衣带，庐峰见说胜香炉。\par
+    题诗岁晏离鸿断，望阙天遥病鹤孤。\par
+    莫谩拘牵雨花社，青云依旧是前途。
+  }{
+    \includegraphics[width=3cm]{example-image.png}
+  }
+\end{latexexample}
+
+\begin{latexexample}{\tn{textfigure} 命令示例2}
+  \textfigure[text-width=\columnwidth,fig-pos=bottom-flushright]{
+    如图，在三棱锥 $A$-$BCD$ 中，$\text{平面} ABD \perp \text{平面} BCD$，
+    $AB = AD$，$O$ 为 $BD$ 的重点。
+    \begin{enumerate}
+      \item 证明：$OA \perp CD$；
+      \item 若 $\triangle OCD$ 是变长为 $1$ 的等边三角形，点 $E$ 在棱 $AD$ 上，
+        $DE = 2 EA$，且二面角 $E$-$BC$-$D$ 的大小为 $45^{\circ}$，
+        求三棱锥 $A$-$BCD$ 的体积。
+    \end{enumerate}
+  }{
+    \includegraphics[width=3cm]{example-image.png}
+  }
+\end{latexexample}
+
+
+\begin{latexexample}{\tn{textfigure} 命令示例3}
+  \textfigure{
+    \begin{question}
+      双曲线 $C: \frac{x^{2}}{4}-\frac{y^{2}}{2}=1$ 的右焦点为 $F$, 为点 $P$ 在 $C$ 的一条渐近线上, $O$ 为坐标原点, 若 $|P O|=|P F|$, 则 $\triangle P F O$ 的面积为 \paren
+      \begin{choices}
+        \item $\frac{3 \sqrt{2}}{4}$
+        \item $\frac{3 \sqrt{2}}{2}$
+        \item $2 \sqrt{2}$
+        \item $3 \sqrt{2}$
+      \end{choices}
+    \end{question}
+    
+    \begin{question}
+      设 $f(x)$ 是定义域为 $\mathbf{R}$ 的偶函数, 且在 $(0,+\infty)$ 单调递减, 则
+      \begin{choices}
+        \item $f\left(\log _{3} \frac{1}{4}\right)>f\left(2^{-\frac{3}{2}}\right)>f\left(2^{-\frac{2}{3}}\right)$
+        \item $f\left(\log _{3} \frac{1}{4}\right)>f\left(2^{-\frac{2}{3}}\right)>f\left(2^{-\frac{3}{2}}\right)$
+        \item $f\left(2^{-\frac{3}{2}}\right)>f\left(2^{-\frac{2}{3}}\right)>f\left(\log _{3} \frac{1}{4}\right)$
+        \item $f\left(2^{-\frac{2}{3}}\right)>f\left(2^{-\frac{3}{2}}\right)>f\left(\log _{3} \frac{1}{4}\right)$
+      \end{choices}
+    \end{question}
+  }{
+    \includegraphics[width = 2cm, height = 5cm]{example-image.png} \\ （第 9 题）
+  }
+\end{latexexample}
+
+
+\begin{function}{wrapstuff 环境}
+  \file{exam-zh-textfigure.sty} 模块默认加载 \pkg{wrapstuff} 宏包。具体 \env{wrapstuff} 环境使用请阅读手册。
+\end{function}
 
 
 \subsection{参数设置}
@@ -1842,21 +1933,21 @@
   选项的最大列数。排版选项时会优先尝试该列数，如果无法排下内容，依次将列数除以 2 并取整再进行尝试，直到可以排下全部选项。默认为 |4| 。
 \end{function}
 
-\begin{function}[added = 2022-08-27]{choices/top-sep}
+\begin{function}[added = 2022-08-28]{choices/top-sep}
   \begin{ccnusyntax}[emph={[1]top-sep}]
     top-sep = (*\meta{dimension}*)
   \end{ccnusyntax}
   \env{choices} 环境上方弹性间距。默认为 |0pt|。
 \end{function}
 
-\begin{function}[added = 2022-08-27]{choices/bottom-sep}
+\begin{function}[added = 2022-08-28]{choices/bottom-sep}
   \begin{ccnusyntax}[emph={[1]bottom-sep}]
     bottom-sep = (*\meta{dimension}*)
   \end{ccnusyntax}
   \env{choices} 环境下方弹性间距。默认为 |0pt|。
 \end{function}
 
-\begin{function}[added = 2022-08-27]{choices/linesep}
+\begin{function}[added = 2022-08-28]{choices/linesep}
   \begin{ccnusyntax}[emph={[1]linesep}]
     linesep = (*\meta{dimension}*)
   \end{ccnusyntax}
@@ -2661,4 +2752,174 @@
     zhu-circlednumber-base = (*<tikz|(font)>*)
   \end{ccnusyntax}
   在 \kvopt{poem/type}{chinese} 键值下，\tn{zhu} 的带圈数字的源。\opt{tikz} 表示此时带圈数字基于 \TikZ，\opt{font} 表示此时带圈数字基于字体。
+\end{function}
+
+
+\subsubsection{图文排版} \label{subsubsec:参数-图文排版}
+
+
+\begin{function}[updated = 2022-08-28]{multifigures}
+  \begin{ccnusyntax}[emph={[1]multifigures}]
+    multifigures = (*\marg{键值列表}*)
+    multifigures/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含多个子项目。用于设置 \env{multifigures} 环境。可以在 \tn{examsetup} 中使用，也可以在 \env{multifigures} 环境的可选参数中使用。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{multifigures/columns}
+  \begin{ccnusyntax}[emph={[1]columns}]
+    columns = (*\meta{integer}*)
+  \end{ccnusyntax}
+  每行多少项。默认为 |3|。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{multifigures/fig-pos}
+  \begin{ccnusyntax}[emph={[1]fig-pos}]
+    fig-pos = (*<top|(above)|bottom|below|left|right>*)
+  \end{ccnusyntax}
+  图片相对于标签的位置。\opt{top} 和 \opt{above} 同义、\opt{bottom} 和 \opt{below} 同义。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{multifigures/top-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep}]
+    top-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{multifigures} 环境上方额外弹性间距。默认为 |1ex plus .5ex minus .5ex|。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{multifigures/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]bottom-sep}]
+    bottom-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \env{multifigures} 环境下方额外弹性间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{multifigures/align}
+  \begin{ccnusyntax}[emph={[1]align}]
+    align = (*<t|m|(b)>*)
+  \end{ccnusyntax}
+  图片和标签的整体对齐方式。\opt{t} 表示顶部对齐、\opt{m} 表示居中对齐、\opt{b} 表示底部对齐。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{multifigures/xshift,multifigures/hshift,multifigures/yshift,multifigures/vshift}
+  \begin{ccnusyntax}[emph={[1]xshift,hshift,yshift,vshift}]
+    xshift = (*\meta{dimension}*)
+    hshift = (*\meta{dimension}*)
+    yshift = (*\meta{dimension}*)
+    vshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  图片和标签整体的水平和垂直的偏移量。\opt{xshift} 和 \opt{hshift} 同义，表示水平；\opt{yshift} 和 \opt{vshift} 同义，表示垂直。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{multifigures/label-xshift,multifigures/label-hshift,multifigures/label-yshift,multifigures/label-vshift}
+  \begin{ccnusyntax}[emph={[1]xshift,hshift,yshift,vshift}]
+    label-xshift = (*\meta{dimension}*)
+    label-hshift = (*\meta{dimension}*)
+    label-yshift = (*\meta{dimension}*)
+    label-vshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  标签相对图片的水平和垂直的偏移量。\opt{label-xshift} 和 \opt{label-hshift} 同义，表示水平；\opt{label-yshift} 和 \opt{label-vshift} 同义，表示垂直。
+\end{function}
+
+
+
+
+\begin{function}[updated = 2022-08-28]{textfigure}
+  \begin{ccnusyntax}[emph={[1]textfigure}]
+    textfigure = (*\marg{键值列表}*)
+    textfigure/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含多个子项目。用于设置 \tn{textfigure} 命令。可以在 \tn{examsetup} 中使用，也可以在 \tn{textfigure} 命令的可选参数中使用。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{textfigure/fig-pos}
+  \begin{ccnusyntax}[emph={[1]fig-pos}]
+    fig-pos = (*\meta{postion}*)
+  \end{ccnusyntax}
+  图片相对于文本的方位。方位可选参数见下列表，默认为 \opt{right}
+\end{function}
+\begin{itemize}
+  \item \opt{top}：图片在文本上方
+  \item \opt{bottom}：图片在文本下方
+  \item \opt{left}：图片在文本左边，垂直中心对齐
+  \item \opt{right}：图片在文本右边，垂直中心对齐
+  \item \opt{top-left}：图片在文本的左上方
+  \item \opt{top-center}：图片在文本的上方，位于整行的水平中心
+  \item \opt{top-right}：图片在文本的右上方
+  \item \opt{top-flushright}：图片在文本的右上方，位于水平末端
+  \item \opt{bottom-left}：图片在文本的左下方
+  \item \opt{bottom-center}：图片在文本的下方，位于整行的水平中心
+  \item \opt{bottom-right}：图片在文本的右下方
+  \item \opt{bottom-flushright}：图片在文本的右下方，位于水平末端
+  \item \opt{left-top}：图片在文本左边，顶部对齐
+  \item \opt{left-center}：等价于 \opt{left}
+  \item \opt{left-bottom}：图片在文本左边，底部对齐
+  \item \opt{right-top}：图片在文本右边边，顶部对齐
+  \item \opt{right-center}：等价于 \opt{right}
+  \item \opt{right-bottom}：图片在文本右边，底部对齐
+\end{itemize}
+
+
+\begin{function}[added = 2022-08-28]{textfigure/xshift,textfigure/hshift,textfigure/yshift,textfigure/vshift}
+  \begin{ccnusyntax}[emph={[1]xshift,hshift,yshift,vshift}]
+    xshift = (*\meta{dimension}*)
+    hshift = (*\meta{dimension}*)
+    yshift = (*\meta{dimension}*)
+    vshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  图片和文本整体的水平和垂直的偏移量。\opt{xshift} 和 \opt{hshift} 同义，表示水平；\opt{yshift} 和 \opt{vshift} 同义，表示垂直。\opt{yshift} 的默认值为 |.5\baselineskip|。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{textfigure/figure-xshift,textfigure/figure-hshift,textfigure/figure-yshift,textfigure/figure-vshift}
+  \begin{ccnusyntax}[emph={[1]xshift,hshift,yshift,vshift}]
+    figure-xshift = (*\meta{dimension}*)
+    figure-hshift = (*\meta{dimension}*)
+    figure-yshift = (*\meta{dimension}*)
+    figure-vshift = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  图片相对于文本的水平和垂直的偏移量。\opt{figure-xshift} 和 \opt{figure-hshift} 同义，表示水平；\opt{figure-yshift} 和 \opt{figure-vshift} 同义，表示垂直。
+\end{function}
+
+
+\begin{function}[added = 2022-08-28]{textfigure/top-sep}
+  \begin{ccnusyntax}[emph={[1]top-sep}]
+    top-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{textfigure} 命令上方弹性间距。默认为 |0pt|。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{textfigure/bottom-sep}
+  \begin{ccnusyntax}[emph={[1]bottom-sep}]
+    bottom-sep = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  \tn{textfigure} 命令下方弹性间距。默认为 |1.5ex plus .5ex minus 0.5ex|。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{textfigure/text-width}
+  \begin{ccnusyntax}[emph={[1]text-width}]
+    text-width = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  文本部分的 \env{varwidth} 宽度。默认为 |\columnwidth|。但有时需要手动输入 \kvopt{text-width}{\textbackslash columnwidth} 才会变成整行，比如解答题。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{textfigure/figure-width}
+  \begin{ccnusyntax}[emph={[1]figure-width}]
+    figure-width = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  图片部分的 \env{varwidth} 宽度。默认为 |\columnwidth|。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{textfigure/ratio,textfigure/text-ratio}
+  \begin{ccnusyntax}[emph={[1]ratio,text-ratio}]
+    ratio = (*\meta{比例}*)
+    text-ratio = (*\meta{比例}*)
+  \end{ccnusyntax}
+  图片部分占比。默认为 |0.95|。有时 |1| 的效果并不是整行，这主要和使用了 \env{varwidth} 环境有关，此时建议改 \opt{text-width}。
+\end{function}
+
+\begin{function}[added = 2022-08-28]{textfigure/top}
+  \begin{ccnusyntax}[emph={[1]top}]
+    top = (*\meta{integer}*)
+  \end{ccnusyntax}
+  \kvopt{fig-pos}{left-top} 时，图片顶部从文本的第几行开始排，效果和 \pkg{wrapstuff} 宏包的 \opt{top} 键值效果类似。
 \end{function}
