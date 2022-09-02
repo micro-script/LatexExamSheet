@@ -16,7 +16,7 @@ for i in CHANGELOG.md README.md LICENSE ; do
   cp -r "$originpath"/$i "$targetpath"/$i
 done
 
-# # 到 CTAN/exam-zh/tex/ 的文件
+# 到 CTAN/exam-zh/tex/ 的文件
 cp -r "$originpath"/*.sty "$targettex/"
 cp -r "$originpath"/*.cls "$targettex/"
 
