@@ -33,3 +33,14 @@ cp -r "$origindoc"/figures/* "$targetdoc"/figures/
 for i in example-single.tex example-single.pdf example-multiple.tex example-multiple.pdf ; do
   cp -r "$originpath"/$i "$targetexamples"/$i
 done
+
+echo "exam-zh.zip" | pbcopy
+
+# 去掉旧的 zip 文件
+rm "$targetpath"/../*.zip
+
+# 打开目录
+open "$targetpath"/../
+
+# 打开 YemuZip 程序进行压缩
+open -a YemuZip.app "$targetpath"/../exam-zh

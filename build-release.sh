@@ -15,3 +15,14 @@ done
 cp -r "$originpath"/*.sty "$targetpath"/
 cp -r "$originpath"/exam-zh.cls "$targetpath"/
 cp -r "$origindoc"/exam-zh-doc.pdf "$targetpath"/
+
+# 去掉原来的 zip 文件
+rm "$targetpath"/*.zip
+
+# 复制 "exam-zh-v.zip" 到剪切板
+echo "exam-zh-v" | pbcopy
+
+open "$targetpath"/
+
+# 打开 YemuZip 程序进行压缩
+open -a YemuZip.app "$targetpath"/*
