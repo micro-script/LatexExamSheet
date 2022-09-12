@@ -719,20 +719,6 @@
     \par
   }
 
-% 祝考试顺利
-\NewDocumentCommand \goodluck { O{祝考试顺利} }
-  {
-    \group_begin:
-      \centering
-      \examzh_if_defined:NTF \lishu
-        { \lishu }
-        { \bfseries }
-      \Large
-      $\bigstar$ #1 $\bigstar$
-      \par
-    \group_end:
-  }
-
 
 % 注意事项环境 notice
 \keys_define:nn { exam-zh / notice }
@@ -1224,6 +1210,7 @@
                 margin = 1in,
                 inner  = 1.3in,
                 outer  = 0.8in,
+                headheight  = 0.7in
               }
           }
           {
@@ -1232,6 +1219,7 @@
               {
                 paper  = a4paper,
                 margin = 1in,
+                headheight  = 0.7in
               }
           }
       }
@@ -1252,6 +1240,7 @@
                 margin     = 1in,
                 inner      = 1.2in,
                 outer      = 0.8in,
+                headheight  = 0.7in
                 % showframe
               }
           }
@@ -1264,6 +1253,7 @@
                 twocolumn,
                 columnsep  = 30mm,
                 margin     = 1in,
+                headheight  = 0.7in
               }
           }
       }
@@ -1589,13 +1579,16 @@
 
 \keys_define:nn { exam-zh / page }
   {
+    show-head .bool_set:N = \l__examzh_show_head_bool,
     show-foot .bool_set:N = \l__examzh_show_foot_bool,
+    head-content .tl_set:N = \l__examzh_head_content_tl,
     foot-content .tl_set:N = \l__examzh_foot_content_format_tl
       % foo, bar: foo <page> bar
       % foo, bar, baz: foo <page> bar <lastpage> baz
   }
 \keys_set:nn { exam-zh / page }
   {
+    show-head    = false,
     show-foot    = true,
     foot-content = {数学试题第;页（共~;页）}
   }
@@ -1778,74 +1771,81 @@
   }
 
 
-\fancypagestyle { plain }
+\AtEndPreamble
   {
-    \fancyhf { }
-    \bool_if:cTF { g__examzh_page_size_a4paper_bool }
+    \fancypagestyle { plain }
       {
-        % a4paper
-        \bool_if:NT \l__examzh_show_foot_bool
+        \fancyhf { }
+        \bool_if:NT \l__examzh_show_head_bool
           {
-            \fancyfoot [ C ]
-              {
-                \small
-                \use:c { __examzh_foot_content_a4paper_output: }
-                % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-              }
+            \l__examzh_head_content_tl
           }
-      }
-      {
-        % a3paper
-        \bool_if:NT \l__examzh_show_foot_bool
+        \bool_if:cTF { g__examzh_page_size_a4paper_bool }
           {
-            \bool_if:cTF 
-              { g__examzh_page_a3paper_foot_common_bool }
+            % a4paper
+            \bool_if:NT \l__examzh_show_foot_bool
               {
-                % 两页共用一个页脚
                 \fancyfoot [ C ]
                   {
                     \small
+                    \use:c { __examzh_foot_content_a4paper_output: }
                     % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
-                    \use:c { __examzh_foot_content_a3paper_common_output: }
                   }
               }
+          }
+          {
+            % a3paper
+            \bool_if:NT \l__examzh_show_foot_bool
               {
-                % 每页一个页脚
-                \fancyfoot [ L ]
+                \bool_if:cTF 
+                  { g__examzh_page_a3paper_foot_common_bool }
                   {
-                    \__examzh_column_box:n
+                    % 两页共用一个页脚
+                    \fancyfoot [ C ]
                       {
                         \small
-                        \use:c { __examzh_foot_content_a3paper_separate_left_output: }
-                        % \l__exam_zh_subject_tl 试题第 
-                        % % \thepage 
-                        % \int_eval:n { 2 * \c@page - 1 }
-                        % { } 页
-                        % （共 
-                        % % \pageref { LastPage } 
-                        % \int_eval:n { 2 * \l__examzh_tmp_int }
-                        % ~ 页）
-                        % \use:c { l__examzh_foot_content_a3paper_left_tl }
+                        % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                        \use:c { __examzh_foot_content_a3paper_common_output: }
                       }
                   }
-                \fancyfoot [ R ]
                   {
-                    \__examzh_column_box:n
+                    % 每页一个页脚
+                    \fancyfoot [ L ]
                       {
-                        \small
-                        \use:c { __examzh_foot_content_a3paper_separate_right_output: }
-                        % % \int_gincr:N \c@page
-                        % \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
-                        
-                        % \l__exam_zh_subject_tl 试题第 
-                        % \int_eval:n { 2 * \c@page }
-                        % { } 
-                        % 页
-                        % （共 
-                        % % \pageref { LastPage }
-                        % \int_eval:n { 2 * \l__examzh_tmp_int }
-                        % ~ 页）
-                        % % \use:c { l__examzh_foot_content_a3paper_right_tl }
+                        \__examzh_column_box:n
+                          {
+                            \small
+                            \use:c { __examzh_foot_content_a3paper_separate_left_output: }
+                            % \l__exam_zh_subject_tl 试题第 
+                            % % \thepage 
+                            % \int_eval:n { 2 * \c@page - 1 }
+                            % { } 页
+                            % （共 
+                            % % \pageref { LastPage } 
+                            % \int_eval:n { 2 * \l__examzh_tmp_int }
+                            % ~ 页）
+                            % \use:c { l__examzh_foot_content_a3paper_left_tl }
+                          }
+                      }
+                    \fancyfoot [ R ]
+                      {
+                        \__examzh_column_box:n
+                          {
+                            \small
+                            \use:c { __examzh_foot_content_a3paper_separate_right_output: }
+                            % % \int_gincr:N \c@page
+                            % \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
+                            
+                            % \l__exam_zh_subject_tl 试题第 
+                            % \int_eval:n { 2 * \c@page }
+                            % { } 
+                            % 页
+                            % （共 
+                            % % \pageref { LastPage }
+                            % \int_eval:n { 2 * \l__examzh_tmp_int }
+                            % ~ 页）
+                            % % \use:c { l__examzh_foot_content_a3paper_right_tl }
+                          }
                       }
                   }
               }

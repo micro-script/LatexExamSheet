@@ -5,6 +5,13 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.20] - 2022-09-12
+
+### Added
+
+- 增加页眉接口
+
+
 ## [0.1.19] - 2022-08-27
 
 ### Added

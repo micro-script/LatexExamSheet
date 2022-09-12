@@ -239,12 +239,12 @@
   “绝密 $\bigstar$ 启用前”。格式命令默认为 |\bfseries|。
 \end{function}
 
-\begin{function}[updated = 2022-07-03]{\goodluck}
-  \begin{ccnusyntax}[emph={[1]goodluck}]
-    \goodluck(*\oarg{祝福语}*)
-  \end{ccnusyntax}
-  祝福语命令。祝福语默认为 |祝考试顺利|。
-\end{function}
+% \begin{function}[updated = 2022-07-03]{\goodluck}
+%   \begin{ccnusyntax}[emph={[1]goodluck}]
+%     \goodluck(*\oarg{祝福语}*)
+%   \end{ccnusyntax}
+%   祝福语命令。祝福语默认为 |祝考试顺利|。
+% \end{function}
 
 \begin{function}[updated = 2022-07-26]{notice 环境}
   \begin{ccnusyntax}[emph={[2]notice}]
@@ -1153,6 +1153,26 @@
     foot-type = (*<common|(separate)>*)
   \end{ccnusyntax}
   \kvopt{page/size}{a3paper} 时页脚的类型。\opt{common} 表示两页 A4 纸（即一页 A3 纸）共用一个页脚；\opt{separate} 表示两页 A4 纸各自有一个页脚。
+\end{function}
+
+\begin{function}[added = 2022-09-12]{page/show-head}
+  \begin{ccnusyntax}[emph={[1]show-head}]
+    show-head = (*\TFF*)
+  \end{ccnusyntax}
+  是否显示页眉。
+\end{function}
+
+\begin{function}[added = 2022-09-12]{page/head-content}
+  \begin{ccnusyntax}[emph={[1]foot-content}]
+    foot-content = (*\meta{页眉格式}*)
+  \end{ccnusyntax}
+  页眉内容设置。内容为 \pkg{fancyhdr} 宏包的页眉命令，比如
+\begin{latexcode}
+  head-content = {
+    \fancyhead[ER, OL]{测试文本}
+    \fancyhead[C]{\includegraphics[height=1cm]{example-image.png}}
+  }
+\end{latexcode}
 \end{function}
 
 \begin{function}[added = 2022-07-04]{page/foot-content}
