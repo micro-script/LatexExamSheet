@@ -12,6 +12,8 @@ from pathlib import Path
 import datetime
 import re
 import zipfile
+
+import pyperclip
 import send2trash
 import pyinputplus as pyip
 
@@ -178,3 +180,7 @@ if out != '':  # 表示编译已经结束
         for file in ctanZip.namelist():
             if file.endswith('DS_Store'):
                 print('Something went wrong! Check it!')
+
+# 复制版本和时间信息到剪切板
+
+pyperclip.copy('v' + version + ' - ' + date)
