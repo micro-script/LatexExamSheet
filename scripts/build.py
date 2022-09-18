@@ -110,7 +110,7 @@ with open(docPath / docFiles[0], 'r') as file:
 # （其实就是相对路径要相对 tex 文件，所以要到那个目录下）
 os.chdir(originPath)
 for i in range(2):
-    subprocess.run(['xelatex', exampleFiles[i]])  # 编译示例文件
+    subprocess.run(['latexmk', '-xelatex', exampleFiles[i]])  # 编译示例文件
 os.chdir(docPath)
 LaTeXcompile = subprocess.run(['latexmk', '-xelatex', docFiles[0]], capture_output=True)
 
