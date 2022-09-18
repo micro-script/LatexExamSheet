@@ -7,20 +7,24 @@
 
 \RequirePackage{expl3}
 
-\ProvidesExplPackage {exam-zh-textfigure} {2022-08-28} {v0.1.19}
+\ProvidesExplPackage {exam-zh-textfigure} {2022-9-17} {v0.1.20}
   {exam-zh text with figure module}
 
-\RequirePackage { wrapstuff }
+
 \RequirePackage { tabularray }
 \RequirePackage { varwidth }
 \RequirePackage { graphicx }
 \RequirePackage { filehook }
-
-\AtEndOfPackageFile* { exam-zh-choices }
+\file_if_exist:nT { wrapstuff.sty }
   {
-    \AddToHook { env / choices / before }
-      { \wrapstuffclear }
+    \RequirePackage { wrapstuff }
+    \AtEndOfPackageFile* { exam-zh-choices }
+      {
+        \AddToHook { env / choices / before }
+          { \wrapstuffclear }
+      }
   }
+
 
 %% multifigures 环境，排版多张图片 %%
 
@@ -365,7 +369,8 @@
     % 环境下方的额外距离
     bottom-sep .skip_set:N = \l__examzh_textfigure_bottom_sep_skip,
     % 类似于 wrapstuff 的 top
-    top .int_set:N = \l__examzh_textfigure_top_int
+    top .int_set:N = \l__examzh_textfigure_top_int,
+    parindent .dim_set:N = \l__examzh_textfigure_text_parindent_dim
   }
 
 \keys_set:nn { exam-zh / textfigure }
@@ -377,7 +382,8 @@
     text-ratio      = 0.95,
     top-sep         = 0pt,
     bottom-sep      = 1.5ex plus .5ex minus 0.5ex,
-    top             = 0
+    top             = 0,
+    parindent       = 2em 
   }
 
 
@@ -455,7 +461,7 @@
     \hcoffin_set:Nn \l__examzh_textfigure_text_coffin 
       {
         \begin{varwidth}{ \l__examzh_textfigure_text_width_dim }
-          \dim_set:Nn \parindent {2em}
+          \dim_set:Nn \parindent { \l__examzh_textfigure_text_parindent_dim }
           \ignorespaces
           #1
           \unskip

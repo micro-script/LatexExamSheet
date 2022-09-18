@@ -5,6 +5,19 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.20] - 2022-09-18
+
+### Added
+
+- 增加了 `textfigure/parindent` 键值
+- 增加 `exam-zh-textfigure` 模块对 `wrapstuff` 的检测
+
+### Changed
+
+- 将 `question` 和 `problem` 的键值分开
+
+
+
 ## [0.1.20] - 2022-09-12
 
 ### Added
