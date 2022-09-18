@@ -1,5 +1,4 @@
 % !TeX root = ../exam-zh-doc.tex
-
 \section{使用说明}
 
 \subsection{基本用法}
@@ -1148,12 +1147,6 @@
   试卷尺寸。\opt{a4paper} 表示一页为 A4 纸大小；\opt{a3paper} 表示一页为 A3 纸大小，内容为连续两页 A4 拼接。此设置只能放在导言区。
 \end{function}
 
-\begin{function}[updated = 2022-07-24]{page/foot-type}
-  \begin{ccnusyntax}[emph={[1]foot-type}]
-    foot-type = (*<common|(separate)>*)
-  \end{ccnusyntax}
-  \kvopt{page/size}{a3paper} 时页脚的类型。\opt{common} 表示两页 A4 纸（即一页 A3 纸）共用一个页脚；\opt{separate} 表示两页 A4 纸各自有一个页脚。
-\end{function}
 
 \begin{function}[added = 2022-09-12]{page/show-head}
   \begin{ccnusyntax}[emph={[1]show-head}]
@@ -1173,6 +1166,13 @@
     \fancyhead[C]{\includegraphics[height=1cm]{example-image.png}}
   }
 \end{latexcode}
+\end{function}
+
+\begin{function}[updated = 2022-07-24]{page/foot-type}
+  \begin{ccnusyntax}[emph={[1]foot-type}]
+    foot-type = (*<common|(separate)>*)
+  \end{ccnusyntax}
+  \kvopt{page/size}{a3paper} 时页脚的类型。\opt{common} 表示两页 A4 纸（即一页 A3 纸）共用一个页脚；\opt{separate} 表示两页 A4 纸各自有一个页脚。
 \end{function}
 
 \begin{function}[added = 2022-07-04]{page/foot-content}
@@ -1664,7 +1664,19 @@
     question = (*\marg{键值列表}*)
     question/(*\meta{key}*) = (*\meta{value}*)
   \end{ccnusyntax}
-  该选项包含许多子项目，用于设置题干。具体内容见下。
+  该选项包含许多子项目，用于设置 \env{question} 环境。具体内容见下。
+\end{function}
+
+\begin{function}[added = 2022-09-18]{problem}
+  \begin{ccnusyntax}[emph={[1]problem}]
+    problem = (*\marg{键值列表}*)
+    problem/(*\meta{key}*) = (*\meta{value}*)
+  \end{ccnusyntax}
+  该选项包含许多子项目，用于设置 \env{problem} 环境。具体内容和下面所述的 \opt{question/} 类的键值基本相同，除了有以下区别：\env{problem} 环境
+  \begin{enumerate}
+    \item 没有 \opt{combine-fillin} 和 \opt{combine-fillin-args} 键
+    \item 没有 \opt{hang} 键
+  \end{enumerate}
 \end{function}
 
 
@@ -1770,7 +1782,7 @@
 
 \begin{function}[added = 2022-08-12]{question/hang}
   \begin{ccnusyntax}[emph={[1]hang}]
-    combine-fillin = (*\TTF*)
+    hang = (*\TTF*)
   \end{ccnusyntax}
   \env{question} 环境是否是“悬挂效果”。
 \end{function}
@@ -1789,6 +1801,14 @@
   question/index = 1,
 }
 
+
+\begin{function}[added = 2022-09-18]{question/points-prelabel,question/points-postlabel}
+  \begin{ccnusyntax}[emph={[1]points-prelabel,points-postlabel}]
+    points-prelabel = (*\meta{points 前面的内容}*)
+    points-postlabel = (*\meta{points 后面的内容}*)
+  \end{ccnusyntax}
+  \env{question} 环境的 \opt{points} 键值的显示前后内容设置，\opt{points-prelabel} 默认为 |（|，\opt{points-postlabel} 默认为 |分）|，即默认为 |（2分）| 效果。
+\end{function}
 
 \subsubsection{选择题} \label{subsubsec:参数-选择题}
 
@@ -2942,4 +2962,11 @@
     top = (*\meta{integer}*)
   \end{ccnusyntax}
   \kvopt{fig-pos}{left-top} 时，图片顶部从文本的第几行开始排，效果和 \pkg{wrapstuff} 宏包的 \opt{top} 键值效果类似。
+\end{function}
+
+\begin{function}[added = 2022-09-18]{textfigure/parindent}
+  \begin{ccnusyntax}[emph={[1]parindent}]
+    parindent = (*\meta{dimension}*)
+  \end{ccnusyntax}
+  文本部分的缩进长度，默认为 |2em|。
 \end{function}

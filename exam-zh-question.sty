@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-08-28} {v0.1.19}
+\ProvidesExplPackage {exam-zh-question} {2022-9-17} {v0.1.20}
   {exam-zh question module}
 
 
@@ -74,6 +74,8 @@
 
 \keys_define:nn { exam-zh }
   { question .meta:nn = { exam-zh / question } {#1} }
+\keys_define:nn { exam-zh }
+  { problem .meta:nn = { exam-zh / problem } {#1} }
 
 
 \keys_define:nn { exam-zh / question }
@@ -122,7 +124,10 @@
       { left, center, right }
       { \tl_set_eq:NN \l__examzh_question_label_align_tl \l_keys_choice_tl },
     hang .bool_set:N = \l__examzh_question_hang_bool,
+    points-prelabel .tl_set:N = \l__examzh_question_points_prelabel_tl,
+    points-postlabel .tl_set:N = \l__examzh_question_points_postlabel_tl,
   }
+
 
 \keys_set:nn { exam-zh / question }
   {
@@ -136,10 +141,72 @@
     label               = \arabic*.,
     combine-fillin      = false,
     label-align         = right,
-    hang                = true
+    hang                = true,
+    points-prelabel     = {（},
+    points-postlabel    = {分）}
   }
 
+\keys_define:nn { exam-zh / problem }
+  {
+    % 手动调整 question 环境的计数器
+    index               .int_gset:N = \g__examzh_question_index_int ,
+    % 分数
+    points              .int_set:N = \l__examzh_question_points_int ,
+    % 分数显示控制
+    show-points         .choice: ,
+    show-points / auto  .code:n =
+      { \bool_set_true:N \l__examzh_question_show_points_auto_bool } ,
+    show-points / true  .code:n =
+      {
+        \bool_set_true:N  \l__examzh_question_show_points_bool
+        \bool_set_false:N \l__examzh_question_show_points_auto_bool
+      } ,
+    show-points / false .code:n =
+      {
+        \bool_set_false:N \l__examzh_question_show_points_bool
+        \bool_set_false:N \l__examzh_question_show_points_auto_bool
+      } ,
+    % 分数是否单独成段
+    points-separate-par .bool_set:N = \l__examzh_problem_points_separate_par_bool,
+    % 是否显示答案
+    % show-answer         .bool_set:N = \l__examzh_question_show_answer_bool ,
+    show-answer         .choice: ,
+    show-answer / true .code:n = 
+      {
+        \bool_set_true:N \l__examzh_question_show_fillin_answer_bool
+        \bool_set_true:N \l__examzh_question_show_paren_answer_bool
+      },
+    show-answer / false .code:n = 
+      {
+        \bool_set_false:N \l__examzh_question_show_fillin_answer_bool
+        \bool_set_false:N \l__examzh_question_show_paren_answer_bool
+      },
+    % 上方间距
+    top-sep             .skip_set:N = \l__examzh_problem_top_sep_skip ,
+    % 下方间距
+    bottom-sep          .skip_set:N = \l__examzh_problem_bottom_sep_skip ,
+    label .tl_set:N = \l__examzh_question_label_tl,
+    label-align .choices:nn =
+      { left, center, right }
+      { \tl_set_eq:NN \l__examzh_question_label_align_tl \l_keys_choice_tl },
+    points-prelabel .tl_set:N = \l__examzh_problem_points_prelabel_tl,
+    points-postlabel .tl_set:N = \l__examzh_problem_points_postlabel_tl,
+  }
 
+\keys_set:nn { exam-zh / problem }
+  {
+    index               = 1,
+    points              = 0 ,
+    show-points         = auto ,
+    points-separate-par = true ,
+    show-answer         = false ,
+    top-sep             = .25em plus .25em minus .1em ,
+    bottom-sep          = .25em plus .25em minus .1em ,
+    label               = \arabic*.,
+    label-align         = right,
+    points-prelabel     = {（},
+    points-postlabel    = {分）}
+  }
 
 % 是否按照解答题的格式排版
 \bool_new:N \l__examzh_question_problem_style_bool
@@ -157,18 +224,14 @@
 \NewDocumentEnvironment { problem } { O { } +b }
   {
     \bool_set_true:N \l__examzh_question_problem_style_bool
-    \__examzh_question_begin:nn {#1}{#2}
+    \__examzh_problem_begin:nn {#1}{#2}
   }
-  { \__examzh_question_end:nn {#1}{#2} }
+  { \__examzh_problem_end:nn {#1}{#2} }
 
 \prg_generate_conditional_variant:Nnn \int_compare:nNn { xNn } { T }
 \cs_new:Npn \__examzh_question_begin:nn #1#2
   {
     \par
-    % 根据是否按解答题方式排版来设置是否分数要分段
-    \bool_if:NTF \l__examzh_question_problem_style_bool
-      { \keys_set:nn { exam-zh / question } { points-separate-par = true  } }
-      { \keys_set:nn { exam-zh / question } { points-separate-par = false } }
     % \bool_if:NTF \l__examzh_question_combine_fillin_bool
     %   { \keys_set:nn { exam-zh / question } { label-align = left } }
     %   { \keys_set:nn { exam-zh / question } { label-align = right } }
@@ -194,9 +257,7 @@
     % 而解答题不太一样
     \bool_if:NT \l__examzh_question_show_points_auto_bool
       {
-        \bool_if:NTF \l__examzh_question_problem_style_bool
-          { \bool_set_true:N  \l__examzh_question_show_points_bool }
-          { \bool_set_false:N \l__examzh_question_show_points_bool }
+        \bool_set_false:N \l__examzh_question_show_points_bool
       }
     % 使用列表环境输出
     \list 
@@ -233,33 +294,33 @@
             \__examzh_question_begin_fillin_type_set:
             \__examzh_question_begin_labelsep_labelwidth_set:
           % \group_end:
-          \bool_if:NTF \l__examzh_question_problem_style_bool
-            {
-              % 解答题是正文 + 缩进 2em 的效果
-              \bool_if:NTF \l__examzh_question_combine_fillin_bool
-                {
-                  % 如果 combine 的话就和 question 一样的缩进
-                  \bool_if:NTF \l__examzh_question_hang_bool
-                    { \dim_gset:Nn \itemindent { 0em } }
-                    { \dim_gset:Nn \itemindent { 2em } }
-                  \bool_if:NTF \l__examzh_question_combine_fillin_bool
-                    {
-                      \bool_if:NTF \l__examzh_question_hang_bool
-                        { \dim_gset:Nn \leftmargin { 6em } }
-                        { \dim_gset:Nn \leftmargin { 4em } }
-                    }
-                    {
-                      \bool_if:NTF \l__examzh_question_hang_bool
-                        { \dim_gset:Nn \leftmargin { 2em } }
-                        { \dim_gset:Nn \leftmargin { 0em } }
-                    }
-                }
-                {
-                  \dim_gset:Nn \leftmargin { 0pt }
-                  \dim_gset:Nn \itemindent { 2em }
-                }
-            }
-            {
+          % \bool_if:NTF \l__examzh_question_problem_style_bool
+          %   {
+          %     % 解答题是正文 + 缩进 2em 的效果
+          %     \bool_if:NTF \l__examzh_question_combine_fillin_bool
+          %       {
+          %         % 如果 combine 的话就和 question 一样的缩进
+          %         \bool_if:NTF \l__examzh_question_hang_bool
+          %           { \dim_gset:Nn \itemindent { 0em } }
+          %           { \dim_gset:Nn \itemindent { 2em } }
+          %         \bool_if:NTF \l__examzh_question_combine_fillin_bool
+          %           {
+          %             \bool_if:NTF \l__examzh_question_hang_bool
+          %               { \dim_gset:Nn \leftmargin { 6em } }
+          %               { \dim_gset:Nn \leftmargin { 4em } }
+          %           }
+          %           {
+          %             \bool_if:NTF \l__examzh_question_hang_bool
+          %               { \dim_gset:Nn \leftmargin { 2em } }
+          %               { \dim_gset:Nn \leftmargin { 0em } }
+          %           }
+          %       }
+          %       {
+          %         \dim_gset:Nn \leftmargin { 0pt }
+          %         \dim_gset:Nn \itemindent { 2em }
+          %       }
+          %   }
+            % {
               % 选择和填空题是悬挂效果
               \bool_if:NTF \l__examzh_question_hang_bool
                 { \dim_gset:Nn \itemindent { 0em } }
@@ -275,7 +336,7 @@
                     { \dim_gset:Nn \leftmargin { 2em } }
                     { \dim_gset:Nn \leftmargin { 0em } }
                 }
-            }
+            % }
           \dim_gset_eq:NN \listparindent \itemindent
         \group_end:
       }
@@ -285,7 +346,7 @@
       {
         % 如果设置了分数且 show-points 的 bool 是 true 的话就显示
         \int_compare:nNnT { \l__examzh_question_points_int } > { 0 }
-          { （ \int_use:N \l__examzh_question_points_int ~ 分 ） }
+          { \l__examzh_question_points_prelabel_tl \int_use:N \l__examzh_question_points_int ~ \l__examzh_question_points_postlabel_tl }
         % 是否分段（解答题需要分段）
         \bool_if:NT \l__examzh_question_points_separate_par_bool
           % \par 分段之后使用 \nopagebreak 避免分页导致序号和分数出现在页面最后一行
@@ -400,6 +461,87 @@
     % 增加下方间距
     % \addvspace { \l__examzh_question_bottom_sep_skip }
     \vspace { \l__examzh_question_bottom_sep_skip }
+  }
+
+\cs_new:Npn \__examzh_problem_begin:nn #1#2
+  {
+    \par
+    % \bool_if:NTF \l__examzh_question_combine_fillin_bool
+    %   { \keys_set:nn { exam-zh / question } { label-align = left } }
+    %   { \keys_set:nn { exam-zh / question } { label-align = right } }
+    % 设置键值
+    \keys_set:nn { exam-zh / problem } { #1 }
+    % 题干计数器的值加一
+    \int_gincr:N \g__examzh_question_index_int
+    % 设置上方间距
+    % \addvspace { \l__examzh_question_top_sep_skip }
+    \vspace { \l__examzh_problem_top_sep_skip }
+    % 严格禁止孤行和寡行
+    \int_set:Nn \clubpenalty { 10000 }
+    \int_set:Nn \widowpenalty { 10000 }
+    % 尽量避免在题目中间换行
+    \int_set:Nn \interlinepenalty { 301 }
+    % 这部分是仿照 source2e 中 enumerate 的定义写的
+    % \@enumdepth 主要控制 enumerate 不同层级的编号
+    % 这样设置后，在 problem 中使用 enumerate 会调用 level 2 的编号
+    % 也就是 question 中的 enumerate 环境直接从第二层开始
+    \int_incr:N \@enumdepth
+    % 如果 show-points = auto 那么解答题显示分数，选择题和填空题不显示分数
+    % 这样设置考虑到选择题和填空题都是每道题一样的分数，在最开始的地方说明即可
+    % 而解答题不太一样
+    \bool_if:NT \l__examzh_question_show_points_auto_bool
+      {
+        \bool_set_true:N  \l__examzh_question_show_points_bool
+      }
+    % 使用列表环境输出
+    \list 
+      {
+        % \int_use:N \g__examzh_question_index_int . 
+        \__examzh_question_make_label:n
+          {
+            \__examzh_question_the_label:
+          }
+      }
+      {
+        % 用 group 是为了防止 combine-fillin 的 type 影响了环境里面的 fillin 的type
+        \group_begin:
+          \dim_gset:Nn \topsep       { 0pt }
+          \dim_gset:Nn \partopsep    { 0pt }
+          \dim_gset:Nn \itemsep      { 0pt }
+          \dim_gset:Nn \parsep       { 0pt }
+          % \group_begin:
+            % 上面 \fillin 里面的设置是局部的，这样的问题是 question 的可选参数改 type 的时候不会影响 \l__examzh_fillin_type_str 的值
+            % 所以要把 \l__examzh_question_combine_fillin_args_tl 里关于 type 的选取出来
+            \__examzh_question_begin_fillin_type_set:
+            \__examzh_question_begin_labelsep_labelwidth_set:
+          % \group_end:
+          \dim_gset:Nn \leftmargin { 0pt }
+          \dim_gset:Nn \itemindent { 2em }
+          \dim_gset_eq:NN \listparindent \itemindent
+        \group_end:
+      }
+    \item \relax
+    % 输出题目分数
+    \bool_if:NT \l__examzh_question_show_points_bool
+      {
+        % 如果设置了分数且 show-points 的 bool 是 true 的话就显示
+        \int_compare:nNnT { \l__examzh_question_points_int } > { 0 }
+          { \l__examzh_problem_points_prelabel_tl \int_use:N \l__examzh_question_points_int ~ \l__examzh_problem_points_postlabel_tl }
+        % 是否分段（解答题需要分段）
+        \bool_if:NT \l__examzh_problem_points_separate_par_bool
+          % \par 分段之后使用 \nopagebreak 避免分页导致序号和分数出现在页面最后一行
+          { \par \nopagebreak }   
+      }
+  }
+
+\cs_new:Npn \__examzh_problem_end:nn #1#2
+  {
+    #2
+    % 结束列表环境
+    \endlist
+    % 增加下方间距
+    % \addvspace { \l__examzh_question_bottom_sep_skip }
+    \vspace { \l__examzh_problem_bottom_sep_skip }
   }
 
 % 处理 question / problem 的 label
