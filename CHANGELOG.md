@@ -16,6 +16,9 @@
 
 - 将 `question` 和 `problem` 的键值分开
 
+### Removed
+
+- 去掉 `\goodluck` 命令
 
 
 ## [0.1.20] - 2022-09-12
