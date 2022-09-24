@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-9-18} {v0.1.20}
+\ProvidesExplPackage {exam-zh-question} {2022-9-24} {v0.1.21}
   {exam-zh question module}
 
 
@@ -19,6 +19,7 @@
   { \RequirePackage [ most ] { tcolorbox } }
 % \RequirePackage { zref-savepos }
 \RequirePackage { xeCJKfntef }
+\RequirePackage { enumitem }
 
 % https://github.com/CTeX-org/forum/issues/264#issuecomment-1200087776
 \disable@package@load { etex }
@@ -141,7 +142,7 @@
     bottom-sep          = .25em plus .25em minus .1em ,
     label               = \arabic*.,
     combine-fillin      = false,
-    label-align         = left,
+    label-align         = right,
     hang                = true,
     points-prelabel     = {（},
     points-postlabel    = {分）}
@@ -216,18 +217,24 @@
 % 选择题和填空题的题干
 \NewDocumentEnvironment { question } { O { } +b }
   {
-    \bool_set_false:N \l__examzh_question_problem_style_bool
-    \__examzh_question_begin:nn {#1}{#2}
+    % \bool_set_false:N \l__examzh_question_problem_style_bool
+    \group_begin:
+      \__examzh_question_begin:nn {#1}{#2}
+      \__examzh_question_end:nn {#1}{#2} 
+    \group_end:
   }
-  { \__examzh_question_end:nn {#1}{#2}  }
+  {}
 
 % 解答题
 \NewDocumentEnvironment { problem } { O { } +b }
   {
-    \bool_set_true:N \l__examzh_question_problem_style_bool
-    \__examzh_problem_begin:nn {#1}{#2}
+    % \bool_set_true:N \l__examzh_question_problem_style_bool
+    \group_begin:
+      \__examzh_problem_begin:nn {#1}{#2}
+      \__examzh_problem_end:nn {#1}{#2} 
+    \group_end:
   }
-  { \__examzh_problem_end:nn {#1}{#2} }
+  { }
 
 \prg_generate_conditional_variant:Nnn \int_compare:nNn { xNn } { T }
 \cs_new:Npn \__examzh_question_begin:nn #1#2
@@ -264,11 +271,14 @@
     \list 
       {
         % \int_use:N \g__examzh_question_index_int . 
-        \__examzh_question_make_label:n
+        \bool_if:NTF \l__examzh_question_combine_fillin_bool
           {
-            \bool_if:NT \l__examzh_question_combine_fillin_bool
+            % \framebox[6em]
+            % \fbox
+              % {
+            \__examzh_question_make_label:n
               {
-                \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
+                  \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
                   { \fillin }
                   {
                     \use:x
@@ -276,11 +286,36 @@
                         \exp_not:N \fillin \l__examzh_question_combine_fillin_args_tl
                       }
                   }
+                  \__examzh_question_the_label:
               }
-            \int_compare:xNnT { \g__examzh_question_index_int } < { 11 }
-              { \phantom {1} }
-            \__examzh_question_the_label:
+              % }
           }
+          {
+            \__examzh_question_make_label:n
+              {
+                \__examzh_question_the_label:
+              }
+          }
+        % \__examzh_question_make_label:n
+        %   {
+        %     \bool_if:NT \l__examzh_question_combine_fillin_bool
+        %       {
+        %         % \makebox
+        %           % {
+        %             \tl_if_blank:VTF \l__examzh_question_combine_fillin_args_tl
+        %               { \fillin }
+        %               {
+        %                 \use:x
+        %                   {
+        %                     \exp_not:N \fillin \l__examzh_question_combine_fillin_args_tl
+        %                   }
+        %               }
+        %           % }
+        %       }
+        %     \int_compare:xNnT { \g__examzh_question_index_int } < { 11 }
+        %       { \phantom {1} }
+        %     \__examzh_question_the_label:
+        %   }
       }
       {
         % 用 group 是为了防止 combine-fillin 的 type 影响了环境里面的 fillin 的type
@@ -406,14 +441,32 @@
                     { paren } 
                       { 
                         % combin-left-paren
-                        \dim_gset:Nn \labelsep { 2.8em } 
-                        \dim_gset:Nn \labelwidth { 4.2em } 
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 2.6em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 4.5em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          }
                       }
                     { line }
                       { 
                         % combin-left-line
-                        \dim_gset:Nn \labelsep { 2.4em } 
-                        \dim_gset:Nn \labelwidth { 3.8em } 
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 2.2em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 3.8em } 
+                            \dim_gset:Nn \labelwidth { 3.8em } 
+                          } 
                       }
                   }
                   { 
@@ -447,8 +500,44 @@
               }
             { right  }
               {
-                \dim_gset:Nn \labelsep { .7em } 
-                \dim_gset:Nn \labelwidth { 1.3em }
+                \str_case:VnF \l__examzh_fillin_type_str
+                  {
+                    { paren } 
+                      { 
+                        % combin-left-paren
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 3.8em } 
+                            \dim_gset:Nn \labelwidth { 2em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 5.8em } 
+                            \dim_gset:Nn \labelwidth { 2em } 
+                          }
+                      }
+                    { line }
+                      { 
+                        % combin-left-line
+                        \bool_if:NTF \l__examzh_question_show_fillin_answer_bool
+                          {
+                            % 显示答案
+                            \dim_gset:Nn \labelsep { 0.7em } 
+                            \dim_gset:Nn \labelwidth { 1.3em } 
+                          }
+                          {
+                            % 不显示答案
+                            \dim_gset:Nn \labelsep { 5.2em } 
+                            \dim_gset:Nn \labelwidth { 2em } 
+                          }
+                      }
+                  }
+                  { 
+                    % combin-left-paren/line 外的
+                    \dim_gset:Nn \labelsep { 2.8em } 
+                    \dim_gset:Nn \labelwidth { 1.3em }
+                  }
               }
           }
       }
@@ -519,7 +608,7 @@
     \list 
       {
         % \int_use:N \g__examzh_question_index_int . 
-        \__examzh_question_make_label:n
+        \__examzh_problem_make_label:n
           {
             \__examzh_question_the_label:
           }
@@ -576,6 +665,15 @@
 \cs_new:Npn \__examzh_question_make_label:n #1
   {
     \str_case:Vn \l__examzh_question_label_align_tl
+      {
+        { left   } { \rlap { #1 } \hss }
+        { center } { \hss \clap { #1 } \hss }
+        { right  } { \hss \llap { #1 } }
+      }
+  }
+\cs_new:Npn \__examzh_problem_make_label:n #1
+  {
+    \str_case:Vn \l__examzh_problem_label_align_tl
       {
         { left   } { \rlap { #1 } \hss }
         { center } { \hss \clap { #1 } \hss }
