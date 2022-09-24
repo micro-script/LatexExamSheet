@@ -5,6 +5,14 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.21] - 2022-09-24
+
+### Fixed
+
+- 修复 `question` 环境结合 `\fillin` 的 label 对齐问题
+
+
+
 ## [0.1.20] - 2022-09-18
 
 ### Added

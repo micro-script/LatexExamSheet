@@ -70,6 +70,7 @@
 \skip_new:N \l__examzh_question_bottom_sep_skip
 % label 的对齐
 \tl_new:N \l__examzh_question_label_align_tl
+\tl_new:N \l__examzh_problem_label_align_tl
 
 
 \keys_define:nn { exam-zh }
@@ -140,7 +141,7 @@
     bottom-sep          = .25em plus .25em minus .1em ,
     label               = \arabic*.,
     combine-fillin      = false,
-    label-align         = right,
+    label-align         = left,
     hang                = true,
     points-prelabel     = {（},
     points-postlabel    = {分）}
@@ -188,7 +189,7 @@
     label .tl_set:N = \l__examzh_question_label_tl,
     label-align .choices:nn =
       { left, center, right }
-      { \tl_set_eq:NN \l__examzh_question_label_align_tl \l_keys_choice_tl },
+      { \tl_set_eq:NN \l__examzh_problem_label_align_tl \l_keys_choice_tl },
     points-prelabel .tl_set:N = \l__examzh_problem_points_prelabel_tl,
     points-postlabel .tl_set:N = \l__examzh_problem_points_postlabel_tl,
   }
@@ -286,7 +287,7 @@
         \group_begin:
           \dim_gset:Nn \topsep       { 0pt }
           \dim_gset:Nn \partopsep    { 0pt }
-          \dim_gset:Nn \itemsep      { 0pt }
+          \dim_gset:Nn \itemsep      { 0em }
           \dim_gset:Nn \parsep       { 0pt }
           % \group_begin:
             % 上面 \fillin 里面的设置是局部的，这样的问题是 question 的可选参数改 type 的时候不会影响 \l__examzh_fillin_type_str 的值
@@ -369,6 +370,27 @@
         \seq_pop_left:NN \l_tmpa_seq \l_tmpa_tl
         % \seq_use:Nn \l_tmpa_seq {,}
         \keys_set:nx { exam-zh / fillin } { \seq_use:Nn \l_tmpa_seq {,} }
+      }
+  }
+\cs_new:Npn \__examzh_problem_begin_labelsep_labelwidth_set:
+  {
+    \str_case:Vn \l__examzh_problem_label_align_tl 
+      {
+        { left } 
+          { 
+            \dim_gset:Nn \labelsep { .7em }
+            \dim_gset:Nn \labelwidth { 1.8em } 
+          }
+        { center }
+          {
+            \dim_gset:Nn \labelsep { .7em } 
+            \dim_gset:Nn \labelwidth { 1.3em } 
+          }
+        { right  } 
+          {
+            \dim_gset:Nn \labelsep { .7em } 
+            \dim_gset:Nn \labelwidth { 1.3em } 
+          }
       }
   }
 \cs_new:Npn \__examzh_question_begin_labelsep_labelwidth_set:
@@ -509,12 +531,7 @@
           \dim_gset:Nn \partopsep    { 0pt }
           \dim_gset:Nn \itemsep      { 0pt }
           \dim_gset:Nn \parsep       { 0pt }
-          % \group_begin:
-            % 上面 \fillin 里面的设置是局部的，这样的问题是 question 的可选参数改 type 的时候不会影响 \l__examzh_fillin_type_str 的值
-            % 所以要把 \l__examzh_question_combine_fillin_args_tl 里关于 type 的选取出来
-            \__examzh_question_begin_fillin_type_set:
-            \__examzh_question_begin_labelsep_labelwidth_set:
-          % \group_end:
+          \__examzh_problem_begin_labelsep_labelwidth_set:
           \dim_gset:Nn \leftmargin { 0pt }
           \dim_gset:Nn \itemindent { 2em }
           \dim_gset_eq:NN \listparindent \itemindent
