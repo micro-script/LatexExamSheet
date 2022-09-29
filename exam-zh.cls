@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2022-9-24} {v0.1.21} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2022-9-28} {v0.1.21} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -531,6 +531,10 @@
   { list .meta:nn = { exam-zh / list } {#1} }
 
 \setlist{nosep}
+\setlist
+  {
+    labelsep    = 4pt,
+  }
 
 \setlist[enumerate, 1]
   {
@@ -550,13 +554,6 @@
     % labelwidth  = 2em,
     listparindent = \parindent,
     label       = {（ \arabic * ）},
-  }
-
-\setlist[itemize, 1]
-  {
-    labelindent = \parindent,
-    labelsep    = 4pt,
-    leftmargin  = *,
   }
 % 多种方法: method环境
 \newlist{method}{enumerate}{1}
@@ -1604,7 +1601,7 @@
 \tl_new:N \l__examzh_foot_content_before_page_tl
 \tl_new:N \l__examzh_foot_content_after_page_tl
 \tl_new:N \l__examzh_foot_content_after_lastpage_tl
-\cs_generate_variant:Nn \regex_count:nnN { nxN }
+\cs_generate_variant:Nn \regex_count:nnN { nxN, noN }
 
 \cs_new:Npn \__examzh_foot_content_only_page_input:ww #1 ; #2 \q_stop
   {
@@ -1682,7 +1679,9 @@
 \cs_new:cpn { __examzh_foot_content_a4paper_output: }
   {
     % 检测输入有多少个 ;
-    \regex_count:nxN { ; } 
+    % \regex_count:nxN { ; }
+    % https://gitee.com/xkwxdyy/exam-zh/issues/I5NNR8#note_13447684_link
+    \regex_count:noN { ; } 
       { \l__examzh_foot_content_format_tl }
       \l__examzh_foot_content_count_semicolon_int
     \int_case:nnF { \l__examzh_foot_content_count_semicolon_int }

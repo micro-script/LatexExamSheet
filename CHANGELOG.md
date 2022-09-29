@@ -5,6 +5,12 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.22] - 2022-09-30
+
+### Fixed
+
+- 修复 `foot-content` 中无法使用命令的问题（#I5NNR8）
+
 ## [0.1.21] - 2022-09-24
 
 ### Fixed
