@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-9-24} {v0.1.21}
+\ProvidesExplPackage {exam-zh-question} {2022-10-04} {v0.1.22}
   {exam-zh question module}
 
 
@@ -46,6 +46,11 @@
 % ulem 宏包重定义了 \emph，使用 \normalem 恢复
 \normalem
 
+\setlist{nosep}
+\setlist
+  {
+    labelsep    = 4pt,
+  }
 
 % question 环境相关变量
 
@@ -916,7 +921,7 @@
   {
     show-answer = false,
     text-color  = black,
-    show-paren  = false,
+    show-paren  = true,
     type        = hfill
   }
 \keys_define:nn { exam-zh }
@@ -1603,8 +1608,8 @@
 \NewDocumentEnvironment { solution } { O{ } +b }
   {
     % \addvspace { \l__examzh_solution_top_sep_skip }
-    \vspace { \l__examzh_solution_top_sep_skip }
     \keys_set:nn { exam-zh / solution } {#1}
+    \vspace { \l__examzh_solution_top_sep_skip }
     % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
     \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
     \bool_if:NTF \l__examzh_solution_show_bool

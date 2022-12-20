@@ -992,6 +992,20 @@
 \end{function}
 
 
+
+\subsubsection{页面设置}
+
+\cls{exam-zh} 根据是 |a3paper| 还是 |a4paper| 有不同页面设置，而为了能够实现用户接口，将页面设置部分放在了 \tn{AtEndPreamble} 命令中，所以用户如果想要修改页面设置，也需要在导言区使用
+
+\begin{latexcode}
+  \AtEndPreamble{%
+    \geometry{
+      ...
+    }
+  }
+\end{latexcode}
+将用户设置放在 \cls{exam-zh} 的默认设置后从而使其产生作用。
+
 \subsection{参数设置}
 
 \begin{function}{\examsetup}
@@ -2011,9 +2025,9 @@
   控制 \tn{paren} 答案的显示与否。注意和 \opt{question/show-answer} 的先后顺序可能会影响结果。
 \end{function}
 
-\begin{function}[added = 2022-07-15]{paren/show-paren}
+\begin{function}[added = 2022-07-15,updated = 2022-12-25]{paren/show-paren}
   \begin{ccnusyntax}[emph={[1]show-paren}]
-    show-paren = (*\TFF*)
+    show-paren = (*\TTF*)
   \end{ccnusyntax}
   是否显示 \tn{paren} 命令的括号。
 \end{function}

@@ -5,6 +5,14 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+
+## [0.1.23] - 2022-12-20
+
+### Changed
+
+- `\paren` 默认更改为 `show`
+
+
 ## [0.1.22] - 2022-09-30
 
 ### Fixed

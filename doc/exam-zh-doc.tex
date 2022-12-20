@@ -1,7 +1,7 @@
 \documentclass{xdyydoc}
 
-\newcommand{\DocDate}{2022-9-24}
-\newcommand{\DocVersion}{v0.1.21}
+\newcommand{\DocDate}{2022-10-4}
+\newcommand{\DocVersion}{v0.1.22}
 \input{exam-zh-doc-setup.tex}
 \usepackage{amssymb}
 
@@ -60,7 +60,7 @@
 \section{\cls{exam-zh}：TODO}
 
 \begin{itemize}
-  \item 增加试卷范例（语文，英语）
+  % \item 增加试卷范例（语文，英语）
   \item 答案控制
     \begin{itemize}
       \item 选择题
@@ -82,8 +82,15 @@
         \end{itemize}
     \end{itemize}
   \item 选择题答案标记
-  \item 图文排版（参考 xkwxdyy 的 \pkg{text-figure} 宏包和 qinglee 的 \pkg{wrapstuff} 宏包）
+  \item \env{choices} 环境“均分”效果
+  % \item 图文排版（参考 xkwxdyy 的 \pkg{text-figure} 宏包和 qinglee 的 \pkg{wrapstuff} 宏包）
   \item 测试兼容性
+  \item \env{question} 环境的引用
+  \item \tn{fillin} 的进一步优化
+    \begin{itemize}
+      \item 根据答案的宽度留白
+      \item \tn{fillin*} 的基线能否自动调整
+    \end{itemize}
 \end{itemize}
 
 

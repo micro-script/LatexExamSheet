@@ -54,7 +54,12 @@ except IndexError:
 
 # 时间
 dateNow = datetime.datetime.now()
-date = str(dateNow.year) + '-' + str(dateNow.month) + '-' + str(dateNow.day)
+day = ''
+if dateNow.day < 10:
+    day = '0' + str(dateNow.day)
+else:
+    day = str(dateNow.day)
+date = str(dateNow.year) + '-' + str(dateNow.month) + '-' + day
 
 # 压缩包名称
 ctanZipName = 'exam-zh.zip'
@@ -63,8 +68,8 @@ releaseZipName = 'exam-zh-v' + version + '.zip'
 # 1. 更新 sty 和 cls 的版本
 
 # 正则表达式
-styDateRegex = re.compile(r'\\ProvidesExplPackage\s\{.*\}\s\{(\d{4}-\d{1,2}-\d{2})\}\s\{v(\d+\.\d+\.?\d*)\}')
-clsDateRegex = re.compile(r'\\ProvidesExplClass\s\{.*\}\s\{(\d{4}-\d{1,2}-\d{2})\}\s\{v(\d+\.\d+\.?\d*)\}')
+styDateRegex = re.compile(r'\\ProvidesExplPackage\s\{.*\}\s\{(\d{4}-\d{1,2}-\d{1,2})\}\s\{v(\d+\.\d+\.?\d*)\}')
+clsDateRegex = re.compile(r'\\ProvidesExplClass\s\{.*\}\s\{(\d{4}-\d{1,2}-\d{1,2})\}\s\{v(\d+\.\d+\.?\d*)\}')
 docDateRegex = re.compile(r'\\newcommand\{\\DocDate\}\{(\d{4}-\d{1,2}-\d{2})\}')
 docVersionRegex = re.compile(r'\\newcommand\{\\DocVersion\}\{v(\d+\.\d+\.?\d*)\}')
 
