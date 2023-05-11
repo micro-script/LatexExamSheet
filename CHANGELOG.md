@@ -6,6 +6,12 @@
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
 
+## [0.1.24] - 2023-05-11
+
+### Fixed
+
+- 修复 TeXLive2023 造成的师生两版编译失效问题
+
 ## [0.1.23] - 2022-12-20
 
 ### Changed

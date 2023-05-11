@@ -1666,9 +1666,19 @@
     \l__examzh_foot_content_after_lastpage_tl
   }
 \cs_new_nopar:Npn \__examzh_relax: { \relax }
+% \cs_new:Npn \__examzh_foot_lastpage_tmp_set:
+%   {
+%     \cs_if_eq:NNTF \lastpage@lastpage \__examzh_relax:
+%       { \int_set:Nn \l__examzh_tmp_int { 0 } }
+%       { \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage } }
+%   }
+
+% https://gitee.com/xkwxdyy/exam-zh/issues/I6B7MU#note_17945353_link
 \cs_new:Npn \__examzh_foot_lastpage_tmp_set:
   {
-    \cs_if_eq:NNTF \lastpage@lastpage \__examzh_relax:
+    \bool_lazy_or:nnTF 
+      { \cs_if_eq_p:NN \lastpage@lastpage \__examzh_relax: }
+      { \str_if_eq_p:ee \lastpage@lastpage {??} }
       { \int_set:Nn \l__examzh_tmp_int { 0 } }
       { \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage } }
   }
