@@ -6,6 +6,13 @@
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
 
+## [0.1.25] - 2023-05-25
+
+### Changed
+
+- 修改 `\sim*` 的效果为原来的 `\sim`(I6Z0MD)
+
+
 ## [0.1.24] - 2023-05-11
 
 ### Fixed
