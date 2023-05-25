@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2022-10-04} {v0.1.22}
+\ProvidesExplPackage {exam-zh-question} {2023-05-11} {v0.1.24}
   {exam-zh question module}
 
 
@@ -992,6 +992,9 @@
 % no-answer-type = counter 的计数器
 \int_new:N \g__examzh_fillin_no_answer_counter_int
 
+% 控制fillin 没答案的时候的长度由内容长度决定
+\bool_new:N \l__examzh_fillin_width_type_hidden_bool
+
 \keys_define:nn { exam-zh / fillin }
   {
     type .code:n = 
@@ -1008,7 +1011,7 @@
     color .tl_set:N = \l__examzh_fillin_color_tl,
     text-color .tl_set:N = \l__examzh_fillin_text_color_tl,
     no-answer-type .choices:nn =
-      { blacktriangle, counter, none }
+      { blacktriangle, counter, none, hidden }
       { \str_set:Nx \l__examzh_fillin_no_answer_type_str { \l_keys_choice_tl } },
     no-answer-counter-index .int_gset:N = \g__examzh_fillin_no_answer_counter_int,
     no-answer-counter-label .tl_set:N = \l__examzh_fillin_label_tl,

@@ -505,7 +505,7 @@
     fillin/type = paren,
     paren/show-paren = true
   }
-  \newcommand{\true}{$\surd$}
+  \newcommand{\true}{$\checkmark$}
   \newcommand{\false}{$\times$}
 
   \begin{question}
@@ -1170,8 +1170,8 @@
 \end{function}
 
 \begin{function}[added = 2022-09-12]{page/head-content}
-  \begin{ccnusyntax}[emph={[1]foot-content}]
-    foot-content = (*\meta{页眉格式}*)
+  \begin{ccnusyntax}[emph={[1]head-content}]
+    head-content = (*\meta{页眉格式}*)
   \end{ccnusyntax}
   页眉内容设置。内容为 \pkg{fancyhdr} 宏包的页眉命令，比如
 \begin{latexcode}

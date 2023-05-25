@@ -54,12 +54,12 @@ except IndexError:
 
 # 时间
 dateNow = datetime.datetime.now()
-day = ''
-if dateNow.day < 10:
-    day = '0' + str(dateNow.day)
-else:
-    day = str(dateNow.day)
-date = str(dateNow.year) + '-' + str(dateNow.month) + '-' + day
+# 将月份和日期都变成两位数，否则编译会报错
+month = dateNow.month
+month = f"{month:02d}"
+day = dateNow.day
+day = f"{day:02d}"
+date = str(dateNow.year) + '-' + str(month) + '-' + str(day)
 
 # 压缩包名称
 ctanZipName = 'exam-zh.zip'
