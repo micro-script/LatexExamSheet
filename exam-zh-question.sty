@@ -1612,12 +1612,14 @@
   {
     % \addvspace { \l__examzh_solution_top_sep_skip }
     \keys_set:nn { exam-zh / solution } {#1}
-    \vspace { \l__examzh_solution_top_sep_skip }
     % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
     \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
     \bool_if:NTF \l__examzh_solution_show_bool
       {
+        \vspace { \l__examzh_solution_top_sep_skip }
         \__examzh_solution_print_answer:n {#2}
+        \par    
+        \vspace { \l__examzh_solution_bottom_sep_skip }
       }
       {
         \str_case:VnF \l__examzh_solution_blank_type_str
@@ -1631,7 +1633,6 @@
     \par
     % \mode_leave_vertical:
     % \addvspace { \l__examzh_solution_bottom_sep_skip }
-    \vspace { \l__examzh_solution_bottom_sep_skip }
   }
   {}
 \cs_new:Npn \__examzh_solution_simply_hide_solution:n #1
