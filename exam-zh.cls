@@ -6,7 +6,7 @@
 
 \NeedsTeXFormat{LaTeX2e}[2017/04/15]
 \RequirePackage{expl3}
-\ProvidesExplClass {exam-zh} {2023-05-11} {v0.1.24} {LaTeX template for Chinese exam}
+\ProvidesExplClass {exam-zh} {2023-06-22} {v0.1.26} {LaTeX template for Chinese exam}
 
 % 检查 LaTeX2e kernel 版本
 \msg_new:nnn { exam-zh } { latex-too-old }
@@ -661,7 +661,7 @@
   }
 
 % 科目
-\tl_new:N \l__exam_zh_subject_tl
+\tl_new:N \l__examzh_subject_tl
 \NewDocumentCommand \subject { o m }
   {
     \IfNoValueTF {#1}
@@ -669,14 +669,14 @@
         % 默认使用自然宽度
         \hbox_set:Nn \l_tmpa_box {#2}
         \dim_set:Nn \l_tmpa_dim { \box_wd:N \l_tmpa_box * 2 }
-        \tl_set:Nn \l__exam_zh_subject_tl
+        \tl_set:Nn \l__examzh_subject_tl
           {
             \__examzh_spread_box:nn { \l_tmpa_dim } {#2}
           }
       }
       {
         % 手动调整宽度
-        \tl_set:Nn \l__exam_zh_subject_tl
+        \tl_set:Nn \l__examzh_subject_tl
           {
             \__examzh_spread_box:nn {#1} {#2}
           }
@@ -691,10 +691,10 @@
     \begin { center }
       \let \footnote \thanks
       { \l__examzh_title_format_tl \@title \par }
-      \tl_if_blank:VF \l__exam_zh_subject_tl
+      \tl_if_blank:VF \l__examzh_subject_tl
         {
           \addvspace { 1em }
-          { \l__examzh_subject_format_tl \l__exam_zh_subject_tl }
+          { \l__examzh_subject_format_tl \l__examzh_subject_tl }
         }
     \end { center }
     \par
@@ -1805,7 +1805,7 @@
                   {
                     \small
                     \use:c { __examzh_foot_content_a4paper_output: }
-                    % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                    % \l__examzh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
                   }
               }
           }
@@ -1820,7 +1820,7 @@
                     \fancyfoot [ C ]
                       {
                         \small
-                        % \l__exam_zh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
+                        % \l__examzh_subject_tl 试题第 \thepage { } 页（共 \pageref { LastPage } ~ 页）
                         \use:c { __examzh_foot_content_a3paper_common_output: }
                       }
                   }
@@ -1832,7 +1832,7 @@
                           {
                             \small
                             \use:c { __examzh_foot_content_a3paper_separate_left_output: }
-                            % \l__exam_zh_subject_tl 试题第 
+                            % \l__examzh_subject_tl 试题第 
                             % % \thepage 
                             % \int_eval:n { 2 * \c@page - 1 }
                             % { } 页
@@ -1852,7 +1852,7 @@
                             % % \int_gincr:N \c@page
                             % \int_set:Nn \l__examzh_tmp_int { \lastpage@lastpage }
                             
-                            % \l__exam_zh_subject_tl 试题第 
+                            % \l__examzh_subject_tl 试题第 
                             % \int_eval:n { 2 * \c@page }
                             % { } 
                             % 页
