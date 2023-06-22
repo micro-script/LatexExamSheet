@@ -174,7 +174,7 @@ if out != '':  # 表示编译已经结束
     os.chdir(ctanZipPath)
     with zipfile.ZipFile(ctanZipName, 'w') as ctanZip:
         for path, dirnames, filenames in os.walk(ctanPath):
-            relativePath = path.replace(str(ctanPath), '')  # 把父目录路径去掉，剩下相对路径
+            relativePath = path.replace(str(ctanZipPath), '')  # 把父目录路径去掉，剩下相对路径
             # print(path)
             # print(relativePath)
             # print()
