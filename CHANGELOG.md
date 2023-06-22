@@ -5,6 +5,14 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+## [0.1.26] - 2023-06-22
+
+
+### Fixed
+
+- 修复 `choices` 环境的 `columns` 失效问题（#I7FBVF）
+
+
 
 ## [0.1.25] - 2023-05-25
 
