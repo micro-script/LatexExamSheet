@@ -555,6 +555,17 @@
     listparindent = \parindent,
     label       = {（ \arabic * ）},
   }
+\setlist[enumerate, 3]
+  {
+    % labelindent = *,
+    leftmargin  = 4em, 
+    widest      = 0,
+    itemindent  = 2em,
+    labelsep    = 0pt,
+    % labelwidth  = 2em,
+    listparindent = \parindent,
+    label       = {（ \roman * ）},
+  }
 % 多种方法: method环境
 \newlist{method}{enumerate}{1}
 \setlist[method, 1]
