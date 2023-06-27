@@ -242,6 +242,77 @@
   { }
 
 \prg_generate_conditional_variant:Nnn \int_compare:nNn { xNn } { T }
+
+% question 和 problem 环境的 list 间距设置
+\cs_new:Npn \__examzh_enumerate_set_question:
+  {
+    \setlist[enumerate, 1]
+      {
+        labelindent = \parindent,
+        labelsep    = 2pt,
+        leftmargin  = *,
+        % label       = { \arabic * .}
+        label       = {（ \arabic * ）},
+      }
+
+    \setlist[enumerate, 2]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \alph * ）},
+      }
+    \setlist[enumerate, 3]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \roman * ）},
+      }
+  }
+\cs_new:Npn \__examzh_enumerate_set_problem:
+  {
+    \setlist[enumerate, 1]
+      {
+        labelindent = 2em,
+        labelsep    = 4pt,
+        leftmargin  = *,
+        % label       = { \arabic * .}
+        label       = {（ \arabic * ）},
+      }
+
+    \setlist[enumerate, 2]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \alph * ）},
+      }
+    \setlist[enumerate, 3]
+      {
+        % labelindent = *,
+        leftmargin  = 2em, 
+        widest      = 0,
+        itemindent  = 0em,
+        labelsep    = 0pt,
+        % labelwidth  = 2em,
+        listparindent = \parindent,
+        label       = {（ \roman * ）},
+      }
+  }
+
 \cs_new:Npn \__examzh_question_begin:nn #1#2
   {
     \par
@@ -255,6 +326,8 @@
     % 设置上方间距
     % \addvspace { \l__examzh_question_top_sep_skip }
     \vspace { \l__examzh_question_top_sep_skip }
+    % 设置 enumerate 环境间距
+    \__examzh_enumerate_set_question:
     % 严格禁止孤行和寡行
     \int_set:Nn \clubpenalty { 10000 }
     \int_set:Nn \widowpenalty { 10000 }
@@ -264,7 +337,9 @@
     % \@enumdepth 主要控制 enumerate 不同层级的编号
     % 这样设置后，在 question 中使用 enumerate 会调用 level 2 的编号
     % 也就是 question 中的 enumerate 环境直接从第二层开始
-    \int_incr:N \@enumdepth
+
+    % \int_incr:N \@enumdepth
+
     % 如果 show-points = auto 那么解答题显示分数，选择题和填空题不显示分数
     % 这样设置考虑到选择题和填空题都是每道题一样的分数，在最开始的地方说明即可
     % 而解答题不太一样
@@ -592,6 +667,8 @@
     % 设置上方间距
     % \addvspace { \l__examzh_question_top_sep_skip }
     \vspace { \l__examzh_problem_top_sep_skip }
+    % 设置 enumerate 环境间距
+    \__examzh_enumerate_set_problem:
     % 严格禁止孤行和寡行
     \int_set:Nn \clubpenalty { 10000 }
     \int_set:Nn \widowpenalty { 10000 }
@@ -601,7 +678,7 @@
     % \@enumdepth 主要控制 enumerate 不同层级的编号
     % 这样设置后，在 problem 中使用 enumerate 会调用 level 2 的编号
     % 也就是 question 中的 enumerate 环境直接从第二层开始
-    \int_incr:N \@enumdepth
+    % \int_incr:N \@enumdepth
     % 如果 show-points = auto 那么解答题显示分数，选择题和填空题不显示分数
     % 这样设置考虑到选择题和填空题都是每道题一样的分数，在最开始的地方说明即可
     % 而解答题不太一样
@@ -1069,8 +1146,8 @@
             {
               % 不显示答案
               \IfBooleanTF {#1}
-                { \__examzh_fillin_no_answer_breakble_typeset: }
-                { \__examzh_fillin_no_answer_unbreakble_typeset: }
+                { \__examzh_fillin_no_answer_breakable_typeset: }
+                { \__examzh_fillin_no_answer_unbreakable_typeset: }
             }
         }
         {
@@ -1091,8 +1168,8 @@
             {
               % 不显示答案
               \IfBooleanTF {#1}
-                { \__examzh_fillin_no_answer_breakble_typeset: }
-                { \__examzh_fillin_no_answer_unbreakble_typeset: }
+                { \__examzh_fillin_no_answer_breakable_typeset: }
+                { \__examzh_fillin_no_answer_unbreakable_typeset: }
             }
         }
     \group_end:
@@ -1103,7 +1180,7 @@
     There~is~no~such~noanswertype~named~#1!\\
     Please~read~the~manual~carefully!
   }
-\cs_new:Npn \__examzh_fillin_no_answer_unbreakble_typeset:
+\cs_new:Npn \__examzh_fillin_no_answer_unbreakable_typeset:
   {
     \str_case:VnF \l__examzh_fillin_no_answer_type_str
       {
@@ -1116,7 +1193,7 @@
           { \l__examzh_fillin_no_answer_type_str }
       }
   }
-\cs_new:Npn \__examzh_fillin_no_answer_breakble_typeset:
+\cs_new:Npn \__examzh_fillin_no_answer_breakable_typeset:
   {
     \str_case:VnF \l__examzh_fillin_no_answer_type_str
       {
@@ -1421,12 +1498,12 @@
     \group_end:
     \ignorespaces
   }
-\cs_new:Npn \__examzh_fillin_blank_breakble_F:
+\cs_new:Npn \__examzh_fillin_blank_breakable_F:
   {
     % \hspace* { \l__examzh_fillin_F_width_dim }
     \__examzh_fillin_breakable_hspace:NN \use:n \allowbreak
   }
-\cs_new:Npn \__examzh_fillin_blank_unbreakble_F:
+\cs_new:Npn \__examzh_fillin_blank_unbreakable_F:
   {
     \hspace* { \l__examzh_fillin_F_width_dim }
     % \__examzh_fillin_breakable_hspace:NN \use:n \allowbreak

@@ -533,7 +533,7 @@
 \setlist{nosep}
 \setlist
   {
-    labelsep    = 4pt,
+    labelsep    = 2pt,
   }
 
 \setlist[enumerate, 1]
@@ -541,26 +541,27 @@
     labelindent = \parindent,
     labelsep    = 4pt,
     leftmargin  = *,
-    label       = { \arabic * .}
+    % label       = { \arabic * .}
+    label       = {（ \arabic * ）},
   }
 
 \setlist[enumerate, 2]
   {
     % labelindent = *,
-    leftmargin  = 0pt, 
+    leftmargin  = 2em, 
     widest      = 0,
-    itemindent  = 4em,
+    itemindent  = 0em,
     labelsep    = 0pt,
     % labelwidth  = 2em,
     listparindent = \parindent,
-    label       = {（ \arabic * ）},
+    label       = {（ \alph * ）},
   }
 \setlist[enumerate, 3]
   {
     % labelindent = *,
-    leftmargin  = 4em, 
+    leftmargin  = 2em, 
     widest      = 0,
-    itemindent  = 2em,
+    itemindent  = 0em,
     labelsep    = 0pt,
     % labelwidth  = 2em,
     listparindent = \parindent,
