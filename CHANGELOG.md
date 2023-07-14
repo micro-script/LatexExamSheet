@@ -5,6 +5,14 @@
 格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)，
 并且此项目遵守 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)。
 
+
+## [0.1.28] - 2023-07-14
+
+### Changed
+
+- 修改 `\paren` 的宽度细节
+
+
 ## [0.1.27] - 2023-06-27
 
 ### Added

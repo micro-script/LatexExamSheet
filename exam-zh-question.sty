@@ -1003,7 +1003,9 @@
   }
 \keys_define:nn { exam-zh }
   { paren .meta:nn = { exam-zh / paren } {#1} }
-\NewDocumentCommand \paren { O { } }
+
+% TODO：在 paren 里面增加键值控制
+\NewDocumentCommand \paren { s O { } }
   {
     % 如果开了 show answer 就默认 show paren 
     \bool_if:NT \l__examzh_question_show_paren_answer_bool
@@ -1026,11 +1028,25 @@
         \hbox:n
           {
             （
-            \hbox_to_wd:nn { 3em }
-              {
-                \bool_if:NT \l__examzh_question_show_paren_answer_bool
-                  { \hfill \__examzh_paren_print_answer:n {#1} \hfill }
-              }
+            % \hbox_to_wd:nn { 2em }
+              % {
+                \bool_if:NTF \l__examzh_question_show_paren_answer_bool
+                  % { \hfill \__examzh_paren_print_answer:n {#1} \hfill }
+                  {
+                    \IfBlankTF{#2}
+                      {
+                        % 显示答案，但是 \paren 里没有输入答案
+                        \kern 2em
+                      }
+                      {
+                        \kern0.7em \__examzh_paren_print_answer:n {#2} \kern0.7em
+                      }
+                  }
+                  {
+                    % \paren* 表示不显示答案时是长宽度，\paren 表示不显示答案时是短宽度
+                    \IfBooleanTF{#1}{ \kern 3em }{ \kern 2em }
+                  }
+              % }
             ） \kern -.4em
           }
       }
