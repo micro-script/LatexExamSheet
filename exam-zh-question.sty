@@ -9,7 +9,7 @@
 \RequirePackage{expl3}
 \RequirePackage{xparse}
 
-\ProvidesExplPackage {exam-zh-question} {2023-06-22} {v0.1.26}
+\ProvidesExplPackage {exam-zh-question} {2023-07-15} {v0.1.28}
   {exam-zh question module}
 
 
@@ -205,7 +205,7 @@
     index               = 1,
     points              = 0 ,
     show-points         = auto ,
-    points-separate-par = true ,
+    points-separate-par = false ,
     show-answer         = false ,
     top-sep             = .25em plus .25em minus .1em ,
     bottom-sep          = .25em plus .25em minus .1em ,
@@ -1101,7 +1101,7 @@
       { \bool_set_true:N \l__examzh_fillin_width_fill_bool },
     width-type / normal .code:n =
       { \bool_set_false:N \l__examzh_fillin_width_fill_bool },
-    color .tl_set:N = \l__examzh_fillin_color_tl,
+    box-color .tl_set:N = \l__examzh_fillin_box_color_tl,
     text-color .tl_set:N = \l__examzh_fillin_text_color_tl,
     no-answer-type .choices:nn =
       { blacktriangle, counter, none, hidden }
@@ -1120,7 +1120,7 @@
     type                     = line,
     show-answer              = false,
     width                    = 3em,
-    color                    = black,
+    box-color                = black,
     text-color               = black,
     no-answer-type           = blacktriangle,
     no-answer-counter-index  = 1,
@@ -1530,7 +1530,7 @@
       {
         rounded~rectangle~west~arc = convex,
         draw, rounded~rectangle,
-        color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl
+        color = \l__examzh_fillin_box_color_tl, text = \l__examzh_fillin_text_color_tl
       }
   }
 \cs_new:Npn \__examzh_fillin_circle_T:
@@ -1557,7 +1557,7 @@
   {
     \hspace* { .5em minus .5em }
     \begin{tikzpicture}[baseline = -3pt]
-      \node[draw, color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl] 
+      \node[draw, color = \l__examzh_fillin_box_color_tl, text = \l__examzh_fillin_text_color_tl] 
         { \box_use_drop:N \l_tmpa_box };
     \end{tikzpicture}
     \hspace* { .5em minus .5em }
@@ -1566,7 +1566,7 @@
   {
     \hspace* { 0.5em plus .5em minus .5em }
     \begin{tikzpicture}[baseline = -3pt]
-      \node[draw, color = \l__examzh_fillin_color_tl, text = \l__examzh_fillin_text_color_tl] 
+      \node[draw, color = \l__examzh_fillin_box_color_tl, text = \l__examzh_fillin_text_color_tl] 
         { \phantom{a} };
     \end{tikzpicture}
     \hspace* { 0.5em plus .5em minus .5em }
@@ -1701,6 +1701,10 @@
 \keys_define:nn { exam-zh }
   { solution .meta:nn = { exam-zh / solution } {#1} }
 % 解答题环境
+\iow_new:N \g__write_soltion_to_auxfile
+% 生成变体函数
+\cs_generate_variant:Nn \iow_open:Nn { Nx }
+\int_new:N \g__examzh_solution_aux_index_int
 \NewDocumentEnvironment { solution } { O{ } +b }
   {
     % \addvspace { \l__examzh_solution_top_sep_skip }
@@ -1726,8 +1730,38 @@
     \par
     % \mode_leave_vertical:
     % \addvspace { \l__examzh_solution_bottom_sep_skip }
+    \int_gincr:N \g__examzh_solution_aux_index_int
+    \iow_open:Nn \g__write_soltion_to_auxfile {examzh \int_use:N \g__examzh_solution_aux_index_int .solution}
+    \iow_now:Nx \g__write_soltion_to_auxfile 
+      {
+        \int_use:N \g__examzh_solution_aux_index_int
+        #2
+        % \begin{enumerate}[leftmargin = 0pt, label = {\arabic*.}, resume, partopsep = 0.2em]
+        %   \item 【解析】
+        %   #2
+        % \end{enumerate}
+      }
   }
-  {}
+  {
+    \iow_close:N \g__write_soltion_to_auxfile
+  }
+\AtEndDocument
+  {
+    \newpage
+    \begin{center}
+      \zihao{-2} \heiti \makebox[5em][s]{参考答案}
+    \end{center}
+
+    \kaishu
+    \int_compare:nNnT { \g__examzh_solution_aux_index_int } > { 0 }
+      {
+        \int_step_inline:nn { \g__examzh_solution_aux_index_int }
+          {
+            \file_input:n { examzh #1 .solution }
+          }
+      }
+  }
+
 \cs_new:Npn \__examzh_solution_simply_hide_solution:n #1
   {
     \begin{tcolorbox}
