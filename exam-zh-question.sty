@@ -1657,10 +1657,27 @@
   }
 
 \str_new:N \l__examzh_solution_blank_type_str
+\bool_new:N \g__examzh_solution_show_bool
+\bool_new:N \g__examzh_solution_show_move_bool
 \keys_define:nn { exam-zh / solution }
   {
-    show-solution .bool_set:N = \l__examzh_solution_show_bool,
-    show-answer .bool_set:N = \l__examzh_solution_show_bool,
+    % show-solution .bool_set:N = \g__examzh_solution_show_bool,
+    show-solution .choice:,
+    show-solution / hide .code:n =
+      {
+        \bool_gset_false:N \g__examzh_solution_show_bool
+      },
+    show-solution / show-stay .code:n =
+      {
+        \bool_gset_true:N \g__examzh_solution_show_bool
+        \bool_gset_false:N \g__examzh_solution_show_move_bool
+      },
+    show-solution / show-move .code:n =
+      {
+        \bool_gset_true:N \g__examzh_solution_show_bool
+        \bool_gset_true:N \g__examzh_solution_show_move_bool
+      },
+    show-answer .bool_set:N = \g__examzh_solution_show_bool,
     show-qed      .bool_set:N = \l__examzh_solution_show_qed_bool,
     qedsymbol     .tl_set:N = \l__examzh_solution_qedsymbol_tl,
     label-content  .tl_set:N   = \l__examzh_solution_label_content_tl,
@@ -1682,7 +1699,7 @@
   }
 \keys_set:nn { exam-zh / solution }
   {
-    show-solution      = false,
+    show-solution      = hide,
     show-qed           = true,
     qedsymbol          = $\square$,
     label-content      = {解答},
@@ -1711,12 +1728,35 @@
     \keys_set:nn { exam-zh / solution } {#1}
     % 放在这是使得 \examsetup 设置 qedsymbol 可以放在正文区
     \cs_set_eq:NN \qedsymbol \l__examzh_solution_qedsymbol_tl
-    \bool_if:NTF \l__examzh_solution_show_bool
+    \bool_if:NTF \g__examzh_solution_show_bool
       {
-        \vspace { \l__examzh_solution_top_sep_skip }
-        \__examzh_solution_print_answer:n {#2}
-        \par    
-        \vspace { \l__examzh_solution_bottom_sep_skip }
+        \bool_if:NTF \g__examzh_solution_show_move_bool
+          {
+            % 这个方法成功
+            % \iow_open:Nn \g__write_soltion_to_auxfile {examzh \int_use:N \g__examzh_question_index_int .solution}
+            % \iow_now:Nx \g__write_soltion_to_auxfile 
+            %   {
+            %     \par \noindent
+            %     \int_eval:n { \g__examzh_question_index_int - 1 }.  【解析】
+            %     \exp_not:n {#2}
+            %     \par \exp_not:n { \vspace*{1ex} }
+            %   }
+            % \iow_close:N \g__write_soltion_to_auxfile
+
+            % 下面的方法失败
+            \group_begin:
+            \tl_set:Nn \tcb@verbatim@begin@hook 
+              { \iow_now:Nx \tcb@out { \int_use:N \g__examzh_question_index_int } }
+            \tcbverbatimwrite {examzh \int_use:N \g__examzh_question_index_int .solution} #2
+            \endtcbverbatimwrite
+            \group_end:
+          }
+          {
+            \vspace { \l__examzh_solution_top_sep_skip }
+            \__examzh_solution_print_answer:n {#2}
+            \par    
+            \vspace { \l__examzh_solution_bottom_sep_skip }
+          }
       }
       {
         \str_case:VnF \l__examzh_solution_blank_type_str
@@ -1730,37 +1770,32 @@
     \par
     % \mode_leave_vertical:
     % \addvspace { \l__examzh_solution_bottom_sep_skip }
-    \int_gincr:N \g__examzh_solution_aux_index_int
-    \iow_open:Nn \g__write_soltion_to_auxfile {examzh \int_use:N \g__examzh_solution_aux_index_int .solution}
-    \iow_now:Nx \g__write_soltion_to_auxfile 
-      {
-        \int_use:N \g__examzh_solution_aux_index_int
-        #2
-        % \begin{enumerate}[leftmargin = 0pt, label = {\arabic*.}, resume, partopsep = 0.2em]
-        %   \item 【解析】
-        %   #2
-        % \end{enumerate}
-      }
   }
-  {
-    \iow_close:N \g__write_soltion_to_auxfile
-  }
+  {}
+
 \AtEndDocument
   {
-    \newpage
-    \begin{center}
-      \zihao{-2} \heiti \makebox[5em][s]{参考答案}
-    \end{center}
-
-    \kaishu
-    \int_compare:nNnT { \g__examzh_solution_aux_index_int } > { 0 }
+    \bool_if:NT \g__examzh_solution_show_move_bool
       {
-        \int_step_inline:nn { \g__examzh_solution_aux_index_int }
+        \newpage
+        \begin{center}
+          \zihao{-2} \heiti \makebox[5em][s]{参考答案}
+        \end{center}
+        \vspace*{3ex}
+
+        \kaishu
+        \int_compare:nNnT { \g__examzh_question_index_int } > { 0 }
           {
-            \file_input:n { examzh #1 .solution }
+            \int_step_inline:nn { \g__examzh_question_index_int }
+              {
+                \file_if_exist:nT { examzh #1 .solution }
+                  { \file_input:n { examzh #1 .solution } }
+              }
           }
       }
   }
+
+
 
 \cs_new:Npn \__examzh_solution_simply_hide_solution:n #1
   {
